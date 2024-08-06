@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a615bfb-b57f-4d06-92ad-42d123bb3953" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/заметки.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/DB/packs.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/DB/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +36,11 @@
     "git-widget-placeholder": "main"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\pythonProject\WhatWhereWhen\WhatWhereWhen\WhatWhereWhen\DB" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="manage" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="WhatWhereWhen" />
