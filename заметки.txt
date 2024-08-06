@@ -1,0 +1,5 @@
+python -m pip install Django
+django-admin
+django-admin startproject WhatWhereWhen
+cd WhatWhereWhen
+python manage.py runserver
