@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a615bfb-b57f-4d06-92ad-42d123bb3953" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="1a615bfb-b57f-4d06-92ad-42d123bb3953" name="Changes" comment="2">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/DB/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/WhatWhereWhen/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/DB/packs.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/заметки.txt" beforeDir="false" afterPath="$PROJECT_DIR$/заметки.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +75,28 @@
       <option name="presentableId" value="Default" />
       <updated>1722934845401</updated>
     </task>
+    <task id="LOCAL-00001" summary="1">
+      <option name="closed" value="true" />
+      <created>1724672749239</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1724672749239</updated>
+    </task>
+    <task id="LOCAL-00002" summary="2">
+      <option name="closed" value="true" />
+      <created>1724672783476</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1724672783476</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="1" />
+    <MESSAGE value="2" />
+    <option name="LAST_COMMIT_MESSAGE" value="2" />
   </component>
 </project>
