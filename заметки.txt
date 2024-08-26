@@ -3,6 +3,8 @@ django-admin
 django-admin startproject WhatWhereWhen
 cd WhatWhereWhen
 python manage.py runserver
+python manage.py startapp main
+
 
 Синхронизация баз данных¶
 Команда управления migrate работает одновременно с одной базой данных. По умолчанию она работает с базой данных default, но, указав опцию --database, можно указать ей на синхронизацию другой базы данных. Так, для синхронизации всех моделей по всем базам данных в первом примере необходимо вызвать команду:
