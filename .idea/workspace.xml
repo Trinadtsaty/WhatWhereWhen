@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a615bfb-b57f-4d06-92ad-42d123bb3953" name="Changes" comment="3">
-      <change afterPath="$PROJECT_DIR$/WhatWhereWhen/main/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/WhatWhereWhen.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/WhatWhereWhen.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/WhatWhereWhen/main/templates/main/test_include.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/WhatWhereWhen/WhatWhereWhen/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/WhatWhereWhen/main/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WhatWhereWhen/main/templates/main/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/WhatWhereWhen/main/templates/main/layout.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +40,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -113,7 +109,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724673426384</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="3">
+      <option name="closed" value="true" />
+      <created>1724675122456</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1724675122456</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
