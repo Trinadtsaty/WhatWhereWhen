@@ -1,0 +1,159 @@
+@font-face {
+    font-family: 'Oswald'; /* Название шрифта */
+    src: url('/static/fonts/Oswald-VariableFont_wght.ttf') format('truetype'); /* Можно указать несколько форматов */
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+
+
+    background-image: url('../img/background.png'); /* Укажите путь к вашему изображению */
+    background-size: cover; /* Это свойство позволяет изображению покрывать весь элемент */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Отключает повторение изображения */
+}
+
+.container {
+    height: 100%;
+    width: 100vw;
+    display: flex; /* Включаем Flexbox */
+    flex-direction: column; /* Вертикальное расположение элементов */
+    align-items: center; /* Центрируем по горизонтали */
+    height: 100%; /* Занимает всю высоту родителя */
+}
+
+#name {
+    width: 100vw;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    color: white;
+    font-size: 6vh;
+    margin-bottom: 20px;
+}
+.W {
+    font-size: 10vh;
+}
+
+#button {
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.main_button{
+    font-family: 'Oswald', sans-serif;
+    font-size: 10vh;
+    -webkit-text-stroke: 0.2vh black;
+    margin-bottom: 3vh;
+    border: 0.6vh solid #524F52;
+    background-color: #C0A610;
+    text-align: center;
+    border-radius: 5vh;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+
+    width: 33vw;
+    height: 11.5vw;
+    min-width: 400px;
+    min-height: 140px;
+/*    max-width: 600px;*/
+    transition: .5s;
+}
+
+.main_button:hover {
+    background-color: #524F52;
+    font-size: 11vh;
+    border: 0.6vh solid #C0A610;
+}
+
+
+#profile {
+    display: flex; /* Центрирование содержимого */
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+
+    position: absolute;
+    height: 100vh;
+    width: 16vw;
+    background-color: gray;
+    overflow: hidden; /* Скрыть все, что выходит за пределы */
+}
+
+#image {
+    margin-top: 2vh;
+    width: 90%; /* Занять всю ширину родителя */
+    height: auto; /* Занять всю высоту родителя */
+    display: flex; /* Центрирование изображения */
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center; /* Центрирование по вертикали */
+}
+
+
+
+#IMG {
+    width: 100%; /* Ширина изображения */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    border-radius: 50%; /* Сделать изображение круглым */
+}
+
+#nick_name {
+    font-family: 'Oswald', sans-serif;
+    background-color: rgba(217, 217, 217, 0.5);
+    color: white;
+    margin-top: 3vh;
+    width: 90%; /* Занять 90% ширины родителя */
+    text-align: center; /* Центрирование текста по горизонтали */
+
+    height: auto;
+    font-size: 4vh;
+    cursor: text;
+    margin-bottom: 3vh;
+/*    max-width: 200px;*/
+}
+
+.profile_button {
+    background-color: rgba(217, 217, 217, 1);
+    cursor: pointer;
+    width: 90%;
+    height: 6vh;
+    border-radius: 2vh;
+    text-align: center;
+    font-size: 4vh;
+    margin-bottom: 3vh;
+    transition: .5s;
+}
+
+.profile_button:hover {
+    color: red;
+    font-size: 4.3vh;
+    height: 6vh;
+}
+
+
+
+
+
+#Rank_scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 90%;
+    height: 40%;
+    background-color: rgba(217, 217, 217, 0.5);
+    margin-bottom: 3vh;
+}
+
+#hint {
+    position: fixed; /* Фиксированное позиционирование относительно окна браузера */
+    bottom: 20px; /* Отступ от нижнего края */
+    right: 20px; /* Отступ от правого края */
+    z-index: 1000; /* Уровень наложения, чтобы элемент был поверх других */
+    cursor: pointer;
+}
