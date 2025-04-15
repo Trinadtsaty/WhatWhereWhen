@@ -1,6 +1,3 @@
-console.log('123')
-
-
 document.querySelectorAll('.achievement').forEach(item => {
     item.addEventListener('click', function() {
 

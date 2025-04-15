@@ -176,3 +176,36 @@ body {
 .line_scroll {
 
 }
+
+#achievement_description {
+    font-family: 'Oswald', sans-serif;
+    width: 50vw;
+    height: 50vw;
+    background-color: rgba(136, 128, 136, 1);
+    border: 3px solid rgba(33, 32, 32, 1);
+}
+#close {
+    width: 10vw;
+    height: 4vw;
+    cursor: pointer;
+    background-color: #C0A610;
+    border: 0.6vw solid rgba(82, 79, 82, 1);
+    color: white;
+    text-align: center;
+    font-size: 3vw
+    transition: .5s;
+    float: right;
+
+}
+#close:hover {
+    background-color: rgba(82, 79, 82, 1);
+    border: 0.6vw solid #C0A610;
+}
+#description_box {
+    margin-top: 6vw;
+
+    text-align: center;
+    color: white;
+    font-size: 5vw;
+    -webkit-text-stroke: 0.2vh black;
+}
