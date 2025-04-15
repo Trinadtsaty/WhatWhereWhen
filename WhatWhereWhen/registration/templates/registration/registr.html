@@ -1,16 +1,17 @@
-<!--{% load static %}-->
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="../../static/registration/css/reg_log.css">
+<!--    <link rel="stylesheet" href="../../static/registration/css/reg_log.css">-->
+    <link rel="stylesheet" href="{% static 'registration/css/reg_log.css' %}">
 </head>
 <body>
     <div class="container">
         <form id="reg" method="post">
-<!--            {% csrf_token %}-->
-            <div id="image"><img id="IMG" alt="Фото профиля" src="../../static/registration/img/choose_avatar.png"></div>
+            {% csrf_token %}
+            <div id="image"><img id="IMG" alt="Фото профиля" src="{% static 'registration/img/choose_avatar.png' %}"></div>
             <input class="input_line" placeholder="Ник" type="text" id="nick_name" name="nick_name">
             <input class="input_line" placeholder="E-mail" type="text" id="e-mail" name="e-mail">
             <input class="input_line" placeholder="Пароль" type="password" id="Password" name="password">
@@ -19,6 +20,6 @@
         </form>
     </div>
     <div id="log_page" class="reg_log_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="#">Вход</a></div>
-    <div id="hint"><a href="https://translate.yandex.ru/"><img id="question_mark"  alt="?" src="../../static/registration/img/hint.png"></a></div>
+    <div id="hint"><a href="https://translate.yandex.ru/"><img id="question_mark"  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
 </body>
 </html>

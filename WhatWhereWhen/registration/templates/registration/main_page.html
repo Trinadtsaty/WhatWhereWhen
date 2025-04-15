@@ -1,14 +1,15 @@
-<!--{% load static %}-->
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Главная</title>
-    <link rel="stylesheet" href="../../static/registration/css/main.css">
+<!--    <link rel="stylesheet" href="../../static/registration/css/main.css">-->
+    <link rel="stylesheet" href="{% static 'registration/css/main.css' %}">
 </head>
 <body>
     <div id="profile">
-        <div id="image"><img class="change" id="IMG" alt="Фото профиля" src="../../static/registration/img/Avatar.png"></div>
+        <div id="image"><img class="change" id="IMG" alt="Фото профиля" src="{% static 'registration/img/Avatar.png' %}"></div>
         <div id="nick_name" class="change">Ник</div>
         <div id="register" class="profile_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="#">Регистрация</a></div>
         <div id="Rank_scroll" >
@@ -36,7 +37,7 @@
             <div id="questions" class="main_button">Вопросы</div>
         </div>
     </div>
-    <div id="hint"><a href="https://translate.yandex.ru/"><img  alt="?" src="../../static/registration/img/hint.png"></a></div>
-    <script src="../../static/registration/js/main.js"></script>
+    <div id="hint"><a href="https://translate.yandex.ru/"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
+    <script src="{% static 'registration/js/main.js' %}"></script>
 </body>
 </html>

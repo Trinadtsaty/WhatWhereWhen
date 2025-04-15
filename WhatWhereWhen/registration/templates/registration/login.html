@@ -1,22 +1,26 @@
-<!--{% load static %}-->
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
-    <link rel="stylesheet" href="../../static/registration/css/reg_log.css">
+    <link rel="stylesheet" href="{% static 'registration/css/reg_log.css' %}">
+<!--    <link rel="stylesheet" href="../../static/registration/css/reg_log.css">-->
 </head>
+
 <body>
     <div class="container">
-        <form id="Log_In" method="post">
-<!--            {% csrf_token %}-->
-            <input class="input_line" placeholder="E-mail" type="text" id="e-mail" name="e-mail">
-            <input class="input_line" placeholder="Пароль" type="password" id="Password" name="password">
+        <form id="Log_In" action="{% url 'Login' %}" method="post">
+            {% csrf_token %}
+            <input class="input_line" placeholder="E-mail" type="text" id="Mail" name="mail" value="{{ username|default:'' }}">
+            <input class="input_line" placeholder="Пароль" type="password" id="Password" name="password" value="{{ password|default:'' }}">
             <input class="form_button" type="submit" value="Вход" class="register_button" id="register_button">
-
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
         </form>
     </div>
     <div id="reg_page" class="reg_log_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="#">Регистрация</a></div>
-    <div id="hint"><a href="https://translate.yandex.ru/"><img  alt="?" src="../../static/registration/img/hint.png"></a></div>
+    <div id="hint"><a href="https://translate.yandex.ru/"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
 </body>
 </html>

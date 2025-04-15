@@ -20,20 +20,6 @@ body {
     cursor: pointer;
 }
 
-/*@media (max-width: 1050px) {*/
-/*    #hint {*/
-/*        transform: scale(0.5); *//* Уменьшаем размер кнопки до 80% */
-/*        right: -2vw; *//* Центрируем кнопку */
-/*        bottom: -2vh;*/
-/*    }*/
-/*}*/
-/*@media (max-width: 650px) {*/
-/*    #hint {*/
-/*        transform: scale(0.5); *//* Уменьшаем размер кнопки до 80% */
-/*        right: -4vw; *//* Центрируем кнопку */
-/*        bottom: -2vh;*/
-/*    }*/
-/*}*/
 .reg_log_button {
     display: flex;
     justify-content: center;
@@ -59,25 +45,6 @@ body {
     transition: .5s;
     box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
 }
-
-/* Медиа-запрос для уменьшения размера экрана */
-/*@media (max-width: 1050px) {*/
-/*    .reg_log_button {*/
-/*        transform: scale(0.5); *//* Уменьшаем размер кнопки до 80% */
-/*        left: -5vw; *//* Центрируем кнопку */
-/*        bottom: -1vh;*/
-/*    }*/
-/*}*/
-
-/* Медиа-запрос для уменьшения размера экрана */
-/*@media (max-width: 750px) {*/
-/*    .reg_log_button {*/
-/*        transform: scale(0.5); *//* Уменьшаем размер кнопки до 80% */
-/*        left: -10vw; *//* Центрируем кнопку */
-/*        bottom: -1vh;*/
-/*    }*/
-/*}*/
-
 
 .reg_log_button:hover {
     background-color: #524F52;
