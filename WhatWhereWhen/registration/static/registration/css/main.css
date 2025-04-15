@@ -1,11 +1,12 @@
 @font-face {
     font-family: 'Oswald'; /* Название шрифта */
-    src: url('/static/fonts/Oswald-VariableFont_wght.ttf') format('truetype'); /* Можно указать несколько форматов */
+    src: url('../fonts/Oswald-VariableFont_wght.ttf') format('truetype'); /* Можно указать несколько форматов */
     font-weight: normal;
     font-style: normal;
 }
 
 body {
+    font-family: 'Oswald', sans-serif;
     padding: 0;
     margin: 0;
     height: 100vh;
@@ -87,6 +88,7 @@ body {
 
 #image {
     margin-top: 2vh;
+
     width: 90%; /* Занять всю ширину родителя */
     height: auto; /* Занять всю высоту родителя */
     display: flex; /* Центрирование изображения */
@@ -95,9 +97,10 @@ body {
 }
 
 #IMG {
-    width: 100%; /* Ширина изображения */
-    height: auto; /* Автоматическая высота для сохранения пропорций */
-    border-radius: 50%; /* Сделать изображение круглым */
+    width: 14vw; /* Ширина изображения */
+    height: 14vw; /* Высота изображения */
+    object-fit: cover; /* Обрезка изображения, чтобы оно заполнило контейнер */
+    border-radius: 50%;
 }
 
 #nick_name {
@@ -114,6 +117,7 @@ body {
 }
 
 .profile_button {
+    margin-top: 3vh;
     background-color: rgba(217, 217, 217, 1);
     cursor: pointer;
     width: 90%;
@@ -121,7 +125,7 @@ body {
     border-radius: 2vh;
     text-align: center;
     font-size: 2vw;
-    margin-bottom: 3vh;
+/*    margin-bottom: 3vh;*/
     transition: .5s;
 }
 
@@ -130,12 +134,13 @@ body {
 }
 
 #Rank_scroll {
+    margin-top: 3vh;
     overflow-y: auto;
     overflow-x: hidden;
     width: 90%;
     height: 40%;
     background-color: rgba(217, 217, 217, 0.5);
-    margin-bottom: 3vh;
+/*    margin-bottom: 3vh;*/
 }
 
 #hint {
@@ -153,4 +158,21 @@ body {
 
 .change:hover {
     border: 2px solid black;
+}
+
+#achievement_name {
+    font-size: 3vw;
+}
+.achievement {
+    cursor: pointer;
+    font-size: 2vw;
+/*    transition: .5s;*/
+}
+
+.achievement:hover {
+    border: 2px solid black;
+}
+
+.line_scroll {
+
 }

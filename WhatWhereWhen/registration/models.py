@@ -18,7 +18,7 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_root', True)
+        # extra_fields.setdefault('is_root', True)
         extra_fields.setdefault('is_superuser', True)
 
         return self.create_user(email, password, **extra_fields)
@@ -39,7 +39,12 @@ class Users(AbstractBaseUser, PermissionsMixin):
     leader_games = models.BigIntegerField(default=0)
     # Победил в играх
     win_games = models.BigIntegerField(default=0)
+    #admin@example.com
 
+    # Активен ли пользователь сейчас
+    is_active = models.BooleanField(default=True)
+    # Активен ли пользователь сейчас
+    online = models.BooleanField(default=False)
     # Является ли пользователь разработчиком
     is_root = models.BooleanField(default=False)
     # Является ли пользователь модератором
@@ -69,7 +74,7 @@ class Titles(models.Model):
     #Звание
     titles_name = models.CharField( max_length=50, unique=True)
     #Описание
-    type_unit = models.TextField()
+    titles_description = models.TextField()
 
     def __str__(self):
         return self.titles_name
@@ -80,11 +85,11 @@ class Titles(models.Model):
 
 
 class Users_and_Titles(models.Model):
-    #'id юнита'
+    # id юнита
     id = models.BigAutoField(primary_key=True)
-    #Пользователь
+    # Пользователь
     users = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='Users')
-    #Звание
+    # Звание
     titles_units = models.ForeignKey(Titles, on_delete=models.CASCADE, related_name='Titles')
 
     def __str__(self):

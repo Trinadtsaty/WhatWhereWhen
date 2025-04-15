@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from .models import Titles, Users_and_Titles
 # Create your views here.
 
 def user_login(request):
@@ -22,4 +23,20 @@ def user_register(request):
     return render(request, "registration/registr.html")
 
 def menu(request):
-    return render(request, "registration/main_page.html")
+    # Извлечение всех титулов
+    titles = Titles.objects.all()
+    # Извлечение всех связей пользователей и титулов
+    users_and_titles = Users_and_Titles.objects.select_related('users', 'titles_units').all()
+
+    # Передача данных в контекст
+    context = {
+        'titles': titles,
+        'users_and_titles': users_and_titles,
+    }
+
+    return render(request, "registration/main_page.html", context)
+
+def custom_logout(request):
+    next_url = request.META.get('HTTP_REFERER', '/')
+    logout(request)
+    return redirect(next_url)
