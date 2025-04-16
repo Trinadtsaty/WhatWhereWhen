@@ -1,17 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import Titles, Users_and_Titles, Users
-from django.utils import timezone
-from datetime import timedelta
+
 from rest_framework import generics
 # from .serializers import Users_mainSerializer
 from rest_framework.response import Response
+from .def_help import get_active_users
 
-def get_active_users():
-    # Определяем временной порог для активности пользователей
-    time_threshold = timezone.now() - timedelta(minutes=5)
-    # Возвращаем количество пользователей, активных в последние 5 минут
-    return Users.objects.filter(last_activity__gte=time_threshold).count()
+
 
 class Users_mainAPI(generics.ListAPIView):
     queryset = Users.objects.all()
@@ -76,11 +72,6 @@ def user_login(request):
             })  # Передаем ошибку обратно на страницу
     return render(request, "registration/login.html")
 
-
-def user_register(request):
-    return render(request, "registration/registr.html")
-
-
 def menu(request):
     # Извлечение всех титулов
     titles = Titles.objects.all()
@@ -101,3 +92,37 @@ def custom_logout(request):
     next_url = request.META.get('HTTP_REFERER', '/')
     logout(request)
     return redirect(next_url)
+
+
+
+
+
+
+
+def user_register(request):
+    if request.method == 'POST':
+        # Получение данных из формы
+        mail = request.POST.get('e-mail')
+        username = request.POST.get('nick_name')
+        password = request.POST.get('password')
+        password_repeat = request.POST.get('password_repeat')
+        image = request.FILES.get('image_user')
+    
+        print(mail)
+        print(username)
+        print(password)
+        print(password_repeat)
+        print(image)
+    
+    
+    #     user = Users.objects.create_user(
+    #         login=username,
+    #         password=password,
+    #         role=fraction_id,
+    #         picture=image
+    #     )
+    #
+    #     login(request, user)
+    # return redirect('Menu')
+    return render(request, "registration/registr.html")
+

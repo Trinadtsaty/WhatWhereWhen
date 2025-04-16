@@ -8,20 +8,45 @@
     <link rel="stylesheet" href="{% static 'registration/css/reg_log.css' %}">
 </head>
 <body>
-    <h1>Данная страница пока является заглушкой</h1>
     <div class="container">
-        <form id="reg" method="post">
+        <form id="reg" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div id="image"><img id="IMG" alt="Фото профиля" src="{% static 'registration/img/choose_avatar.png' %}"></div>
             <input class="input_line" placeholder="Ник" type="text" id="nick_name" name="nick_name">
             <input class="input_line" placeholder="E-mail" type="text" id="e-mail" name="e-mail">
             <input class="input_line" placeholder="Пароль" type="password" id="Password" name="password">
             <input class="input_line" placeholder="Повторить пароль" type="password" id="Password_Repeat" name="password_repeat">
+            <input style="display: none;" type="file"  id="Image_User" name="image_user"/>
             <input class="form_button" type="submit" value="Регистрация" class="register_button" id="register_button">
+
         </form>
     </div>
     <div id="main_page" class="reg_log_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <div id="log_page" class="reg_log_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Login' %}">Вход</a></div>
     <div id="hint"><a href="https://translate.yandex.ru/"><img id="question_mark"  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
+
+    <script>
+        function previewImage() {
+            const file = document.getElementById('Image_User').files[0];
+            const img = document.getElementById('IMG');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result; // Устанавливаем источник изображения
+                }
+                reader.readAsDataURL(file); // Читаем файл как URL
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('Image_User').addEventListener('change', previewImage);
+        });
+
+        image = document.querySelector("#image");
+        image.addEventListener('click', function() {
+            document.getElementById('Image_User').click();
+        });
+    </script>
 </body>
 </html>
