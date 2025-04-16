@@ -15,7 +15,7 @@
             {% else %}
                 <div id="image"><img class="change" id="IMG" alt="Фото профиля" src="{% static 'registration/img/Avatar.png' %}"></div>
             {% endif %}
-            <div id="nick_name" class="change">{{user.login}}</div>
+            <div id="nick_name" class="change dynamic-text">{{user.login}}</div>
             <div id="exit" class="profile_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Log_Out' %}">Выйти</a></div>
             <div id="Rank_scroll" >
                 <ul class="achievements_list" style="list-style: none; padding-left:0;">
@@ -26,10 +26,10 @@
                         {% endif %}
                     {% endfor %}
 
-                    <li class="line_scroll">Сыгранно игр: {{user.played_games}}</li>
-                    <li class="line_scroll">Проведенно игр: {{user.leader_games}}</li>
-                    <li class="line_scroll">Выигранно игр: {{user.win_games}}</li>
-                    <li class="line_scroll">Созданно вопросов: pass</li>
+                    <li class="line_scroll" id="played_games">Сыгранно игр: {{user.played_games}}</li>
+                    <li class="line_scroll" id="leader_games">Проведенно игр: {{user.leader_games}}</li>
+                    <li class="line_scroll" id="win_games">Выигранно игр: {{user.win_games}}</li>
+                    <li class="line_scroll" id="questions_create">Созданно вопросов: pass</li>
                 </ul>
             </div>
             <div id="author" class="profile_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="#">Автор</a></div>
@@ -40,11 +40,11 @@
             <div id="register" class="profile_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Register' %}">Регистрация</a></div>
             <div id="login" class="profile_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Login' %}">Вход</a></div>
             <div id="Rank_scroll" >
-                <ul class="achievements_list" style="list-style: none;">
-                    <li class="line_scroll">Зарегестрированных игроков: pass </li>
-                    <li class="line_scroll">Игроков онлайн: pass</li>
-                    <li class="line_scroll">Имеется вопросов: pass </li>
-                    <li class="line_scroll">Игровых комнат: pass </li>
+                <ul class="achievements_list" style="list-style: none; padding-left:0;">
+                    <li class="line_scroll" id="total_users"></li>
+                    <li class="line_scroll" id="online_users"></li>
+                    <li class="line_scroll" id="questions_count"></li>
+                    <li class="line_scroll" id="room_online"></li>
                 </ul>
             </div>
             <div id="author" class="profile_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="#">Автор</a></div>
@@ -63,5 +63,7 @@
     </div>
     <div id="hint"><a href="https://translate.yandex.ru/"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
     <script src="{% static 'registration/js/main.js' %}"></script>
+    <script src="{% static 'registration/js/dynamicText.js' %}"></script>
+    <script src="{% static 'registration/js/dynamic_information.js' %}"></script>
 </body>
 </html>
