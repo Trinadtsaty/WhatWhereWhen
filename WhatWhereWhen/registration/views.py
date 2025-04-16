@@ -5,8 +5,7 @@ from .models import Titles, Users_and_Titles, Users
 from rest_framework import generics
 # from .serializers import Users_mainSerializer
 from rest_framework.response import Response
-from .def_help import get_active_users
-
+from .def_help import *
 
 
 class Users_mainAPI(generics.ListAPIView):
@@ -93,36 +92,76 @@ def custom_logout(request):
     logout(request)
     return redirect(next_url)
 
-
-
-
-
-
-
 def user_register(request):
     if request.method == 'POST':
-        # Получение данных из формы
         mail = request.POST.get('e-mail')
         username = request.POST.get('nick_name')
         password = request.POST.get('password')
         password_repeat = request.POST.get('password_repeat')
         image = request.FILES.get('image_user')
-    
-        print(mail)
-        print(username)
-        print(password)
-        print(password_repeat)
-        print(image)
-    
-    
-    #     user = Users.objects.create_user(
-    #         login=username,
-    #         password=password,
-    #         role=fraction_id,
-    #         picture=image
-    #     )
-    #
-    #     login(request, user)
-    # return redirect('Menu')
+
+        if mail:
+            try:
+                validate_email(mail)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "registration/registr.html", {
+                    'error': error,
+                })
+
+        if username:
+            try:
+                validate_name(username)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "registration/registr.html", {
+                    'email': mail,
+                    'error': error,
+                })
+
+        if password:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "registration/registr.html", {
+                    'username': username,
+                    'email': mail,
+                    'error': error,
+                })
+
+        if password != password_repeat:
+            return render(request, "registration/registr.html", {
+                'error': 'Пароли не совпадают',
+                'username': username,
+                'email': mail,
+            })
+
+        if not username or not password or not password_repeat or not mail:
+            return render(request, "registration/registr.html", {
+                'error': 'Пожалуйста заполните все поля',
+                'username': username,
+                'email': mail,
+            })
+
+        if image:
+            try:
+                validate_image(image)
+            except ValidationError as e:
+                error = str(e) [2:-2]
+                return render(request, "registration/registr.html", {
+                    'error': error,
+                    'username': username,
+                    'email': mail,
+                })
+
+        user = Users.objects.create_user(
+            login=username,
+            email=mail,
+            password=password,
+            picture=image
+        )
+        login(request, user)
+        return redirect('Menu')
     return render(request, "registration/registr.html")
 

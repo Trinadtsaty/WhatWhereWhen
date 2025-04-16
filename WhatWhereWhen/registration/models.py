@@ -28,7 +28,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
     # id игрока
     ID = models.BigAutoField(primary_key=True)
     # Логин игрока
-    login = models.CharField(max_length=50)
+    login = models.CharField(max_length=20)
     # мыло игрока
     email = models.EmailField(max_length=150, unique=True)
     # Картинка профиля
@@ -72,7 +72,7 @@ class Titles(models.Model):
     #id звания
     id = models.BigAutoField( primary_key=True)
     #Звание
-    titles_name = models.CharField( max_length=50, unique=True)
+    titles_name = models.CharField( max_length=20, unique=True)
     #Описание
     titles_description = models.TextField()
 
