@@ -17,7 +17,8 @@
             <input class="input_line" placeholder="Пароль" type="password" id="Password" name="password">
             <input class="input_line" placeholder="Повторить пароль" type="password" id="Password_Repeat" name="password_repeat">
             <input style="display: none;" type="file"  id="Image_User" name="image_user"/>
-            <input class="form_button" type="submit" value="Регистрация" class="register_button" id="register_button">
+            <div class="form_button" type="submit" class="register_button" id="register_button_lie">Регистрация</div>
+            <input style="display: none;" type="submit" class="register_button" id="register_button">
             {% if error %}
                 <p id="error">{{ error }}</p>
             {% endif %}
@@ -26,7 +27,11 @@
     <div id="main_page" class="reg_log_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <div id="log_page" class="reg_log_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Login' %}">Вход</a></div>
     <div id="hint"><a href="https://translate.yandex.ru/"><img id="question_mark"  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
-
+    <dialog id="warning">
+        <div>Внимание, вы не поставили изоброжение профиля, вы хотите продолжить?</div>
+        <div id="Continue" class="reg_log_button">Продолжить</div>
+        <div id="Back" class="reg_log_button">Назад</div>
+    </dialog>
     <script>
         function previewImage() {
             const file = document.getElementById('Image_User').files[0];
@@ -49,6 +54,34 @@
         image.addEventListener('click', function() {
             document.getElementById('Image_User').click();
         });
+
+        button_reg = document.querySelector("#register_button_lie");
+        button_reg.addEventListener('click', function() {
+             const photo = document.getElementById('Image_User').files[0];
+            if (!photo) {
+                dialog_page = document.querySelector("#warning");
+                dialog_page.showModal();
+                close = document.querySelector("#Back");
+                Continue = document.querySelector("#Continue");
+                Continue.onclick = function () {
+                    dialog_page.close();
+                    document.getElementById('register_button').click();
+                };
+
+
+
+                close.onclick = function () {
+                    dialog_page.close();
+                };
+
+
+            } else {
+                document.getElementById('register_button').click();
+            };
+
+        });
+
+
     </script>
 </body>
 </html>

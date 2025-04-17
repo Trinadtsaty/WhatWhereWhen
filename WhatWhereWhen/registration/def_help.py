@@ -22,6 +22,12 @@ def validate_email(email):
     if Users.objects.filter(email=email).exists():
         raise ValidationError('Данная почта уже зарегистрирована, пожалуйста воспользуйтесь функцией "Восстановление пароля"')
 
+def validate_email_login(email):
+    dangerous_characters = ['<', '>', '&', '/', '\\', "'", '"', ';', ' ', '\n', '\r', '?', '#', '%']
+    for i in range(len(dangerous_characters)):
+        if dangerous_characters[i] in email:
+            raise ValidationError("Недопустимые символы в электронной почте, пожалуйста введите корректную почту")
+
 def validate_name(name):
     dangerous_characters = ['<', '>', '&', '/', '\\', "'", '"', ';', ' ', '\n', '\r', '?', '#', '%']
     for i in range(len(dangerous_characters)):
@@ -45,6 +51,11 @@ def validate_password(password):
     if len(password) > 30:
         raise ValidationError('Пароль слишком длинный, пожалуйста придумайте пароль длинной от 8 до 30 символов')
 
+def validate_password_login(password):
+    dangerous_characters = ['<', '>', '&', '/', '\\', "'", '"', ';', ' ', '\n', '\r', '?', '#', '%']
+    for i in range(len(dangerous_characters)):
+        if dangerous_characters[i] in password:
+            raise ValidationError("Недопустимые символы в пароле, пожалуйста придумайте пароль без специальных символов")
 
 def validate_image(image):
     # Проверка типа файла

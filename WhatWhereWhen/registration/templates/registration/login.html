@@ -13,7 +13,7 @@
         <form id="Log_In" action="{% url 'Login' %}" method="post">
             {% csrf_token %}
             <p>admin@example.com</p>
-            <input class="input_line" placeholder="E-mail" type="text" id="Mail" name="mail" value="{{ username|default:'' }}">
+            <input class="input_line" placeholder="E-mail" type="text" id="Mail" name="mail" value="{{ usermail|default:'' }}">
             <input class="input_line" placeholder="Пароль" type="password" id="Password" name="password" value="{{ password|default:'' }}">
             <input class="form_button" type="submit" value="Вход" class="register_button" id="register_button">
             <div id="forgot_my_password"><a style="text-decoration: none; color: inherit; color: inherit;" href="#">Напомнить пароль</a></div>

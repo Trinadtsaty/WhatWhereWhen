@@ -7,7 +7,8 @@ urlpatterns = [
     path("login", views.user_login, name="Login"),
     path("register", views.user_register, name="Register"),
     path('logout/', custom_logout, name="Log_Out"),
-    path('UsersMain/', Users_mainAPI.as_view(), name="Users_mainAPI")
+    path('UsersMain/', Users_mainAPI.as_view(), name="Users_mainAPI"),
+    path('gameRoom/', views.Game_Room, name="Game_Room")
 ]
 
 

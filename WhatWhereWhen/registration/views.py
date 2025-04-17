@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import Titles, Users_and_Titles, Users
+from django.contrib.auth.decorators import login_required
 
 from rest_framework import generics
 # from .serializers import Users_mainSerializer
@@ -60,14 +61,38 @@ def user_login(request):
     if request.method == 'POST':
         usermail = request.POST.get('mail')
         password = request.POST.get('password')
-        user = authenticate(request, email=usermail, password=password)
+
+        if usermail:
+            try:
+                validate_email_login(usermail)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "registration/login.html", {
+                    'error': error,
+                })
+        if password:
+            try:
+                validate_password_login(password)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "registration/login.html", {
+                    'usermail': usermail,
+                    'error': error,
+                })
+        if not usermail or not password:
+            return render(request, "registration/login.html", {
+                'error': 'Пожалуйста заполните все поля',
+                'usermail': usermail,
+            })
+
+        user = authenticate(request, email=usermail.lower(), password=password)
         if user is not None:
             login(request, user)
             return redirect('Menu')  # Перенаправление на домашнюю страницу после успешного входа
         else:
             return render(request, "registration/login.html", {
                 'error': 'Неверная почта или пароль',
-                'username': usermail,  # Сохраняем введенное имя пользователя
+                'usermail': usermail,  # Сохраняем введенное имя пользователя
             })  # Передаем ошибку обратно на страницу
     return render(request, "registration/login.html")
 
@@ -157,7 +182,7 @@ def user_register(request):
 
         user = Users.objects.create_user(
             login=username,
-            email=mail,
+            email=mail.lower(),
             password=password,
             picture=image
         )
@@ -165,3 +190,11 @@ def user_register(request):
         return redirect('Menu')
     return render(request, "registration/registr.html")
 
+
+@login_required()
+def Game_Room(request):
+    button_click, created = Users.objects.get_or_create(email=request.user.email)
+    if not created:
+        button_click.played_games += 1  # Увеличиваем счетчик
+        button_click.save()  # Сохраняем изменения
+    return render(request, "registration/plug.html")
