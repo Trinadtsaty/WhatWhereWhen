@@ -33,10 +33,10 @@ def validate_name(name):
     for i in range(len(dangerous_characters)):
         if dangerous_characters[i] in name:
             raise ValidationError("Недопустимые символы в логине, пожалуйста придумайте логин без специальных символов")
-    if len(name) <= 5:
-        raise ValidationError('Ник слишком короткий, пожалуйста придумайте ник длинной от 5 до 20 символов')
+    if len(name) < 3:
+        raise ValidationError('Ник слишком короткий, пожалуйста придумайте ник длинной от 3 до 20 символов')
     if len(name) > 20:
-        raise ValidationError('Ник слишком длинный, пожалуйста придумайте ник длинной от 5 до 20 символов')
+        raise ValidationError('Ник слишком длинный, пожалуйста придумайте ник длинной от 3 до 20 символов')
 
 
 def validate_password(password):

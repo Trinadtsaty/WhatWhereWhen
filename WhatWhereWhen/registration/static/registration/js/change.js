@@ -34,6 +34,8 @@ Change_buttons.forEach(Change_button => {
 
         Continue.onclick = function () {
             document.getElementById('register_button').click();
+            Change_dialog.close();
+            Change_dialog_form.reset();
         };
 
         close.onclick = function () {

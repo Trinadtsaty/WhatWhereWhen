@@ -1,3 +1,6 @@
+from tabnanny import check
+from venv import create
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import Titles, Users_and_Titles, Users
@@ -109,7 +112,6 @@ def menu(request):
         'user_active': get_active_users(),
         'user_count': Users.objects.count(),
     }
-
     if request.method == 'POST':
         username = request.POST.get('nick_name')
         image = request.FILES.get('image_user')
@@ -133,7 +135,13 @@ def menu(request):
                     'username': username,
                 })
 
-        print(image, username)
+        Users_bd, created = Users.objects.get_or_create(email=request.user.email)
+        if not created:
+            Users_bd.login = username
+            Users_bd.picture = image
+            Users_bd.save()
+
+            return render(request, "registration/main_page.html")
 
     return render(request, "registration/main_page.html", context)
 
@@ -211,6 +219,16 @@ def user_register(request):
             password=password,
             picture=image
         )
+        titles_start, created = Titles.objects.get_or_create(id=1)
+        if created:
+            titles_start.titles_name = "Добо пожаловать"
+            titles_start.titles_description = "Вы участник 0ого сезона тестирования сайта, спасибо вам"
+            titles_start.save()
+
+        titles_give, created_give = Users_and_Titles.objects.get_or_create(users=user, titles_units=titles_start)
+        if created_give:
+            titles_give.save()
+
         login(request, user)
         return redirect('Menu')
     return render(request, "registration/registr.html")
@@ -222,4 +240,15 @@ def Game_Room(request):
     if not created:
         button_click.played_games += 1  # Увеличиваем счетчик
         button_click.save()  # Сохраняем изменения
+
+        # titles_start, created = Titles.objects.get_or_create(id=1)
+        # if created:
+        #     titles_start.titles_name = "Добо пожаловать"
+        #     titles_start.titles_description = "Вы участник 0ого сезона тестирования сайта, спасибо вам"
+        #     titles_start.save()
+        #
+        # titles_give, created_give = Users_and_Titles.objects.get_or_create(users=request.user, titles_units=titles_start)
+        # if created_give:
+        #     titles_give.save()
+
     return render(request, "registration/plug.html")
