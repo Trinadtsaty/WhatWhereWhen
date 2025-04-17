@@ -86,7 +86,8 @@ body {
     overflow: hidden; /* Скрыть все, что выходит за пределы */
 }
 
-#image {
+
+.profile_photo_box {
     margin-top: 2vh;
 
     width: 90%; /* Занять всю ширину родителя */
@@ -96,7 +97,7 @@ body {
     align-items: center; /* Центрирование по вертикали */
 }
 
-#IMG {
+.profile_photo {
     width: 14vw; /* Ширина изображения */
     height: 14vw; /* Высота изображения */
     object-fit: cover; /* Обрезка изображения, чтобы оно заполнило контейнер */

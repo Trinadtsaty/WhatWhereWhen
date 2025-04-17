@@ -110,6 +110,31 @@ def menu(request):
         'user_count': Users.objects.count(),
     }
 
+    if request.method == 'POST':
+        username = request.POST.get('nick_name')
+        image = request.FILES.get('image_user')
+
+        if username:
+            try:
+                validate_name(username)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "registration/main_page.html", {
+                    'error': error,
+                })
+
+        if image:
+            try:
+                validate_image(image)
+            except ValidationError as e:
+                error = str(e) [2:-2]
+                return render(request, "registration/main_page.html", {
+                    'error': error,
+                    'username': username,
+                })
+
+        print(image, username)
+
     return render(request, "registration/main_page.html", context)
 
 def custom_logout(request):
