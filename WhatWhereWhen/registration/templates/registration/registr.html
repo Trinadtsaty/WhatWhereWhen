@@ -9,15 +9,15 @@
 </head>
 <body>
     <div class="container">
-        <form id="reg" method="post" enctype="multipart/form-data">
+        <form class="forms" id="reg" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div id="image"><img id="IMG" alt="Фото профиля" src="{% static 'registration/img/choose_avatar.png' %}"></div>
+            <div class="profile_photo_box" id="image"><img class="profile_photo change" id="IMG" alt="Фото профиля" src="{% static 'registration/img/choose_avatar.png' %}"></div>
             <input class="input_line" placeholder="Ник" type="text" id="nick_name" name="nick_name" value="{{ username|default:'' }}">
             <input class="input_line" placeholder="E-mail" type="text" id="e-mail" name="e-mail" value="{{ email|default:'' }}">
             <input class="input_line" placeholder="Пароль" type="password" id="Password" name="password">
             <input class="input_line" placeholder="Повторить пароль" type="password" id="Password_Repeat" name="password_repeat">
             <input style="display: none;" type="file"  id="Image_User" name="image_user">
-            <div class="form_button" type="submit" class="register_button" id="register_button_lie">Регистрация</div>
+            <div class="form_button" type="submit"  id="register_button_lie">Регистрация</div>
             <input style="display: none;" type="submit" class="register_button" id="register_button">
             {% if error %}
                 <p id="error">{{ error }}</p>

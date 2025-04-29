@@ -23,14 +23,14 @@ body {
 
 #log_page, #reg_page {
     position: fixed;
-    bottom: 20px;
+    bottom: 120px;
     left: 20px;
     z-index: 1000;
 }
 
 #main_page {
     position: fixed;
-    bottom: 120px;
+    bottom: 20px;
     left: 20px;
     z-index: 1000;
 }
@@ -66,26 +66,18 @@ body {
     border: 0.6vh solid #C0A610;
 }
 
-#reg {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: column;
-}
-
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
 }
-
-#Log_In {
+.forms {
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
-/*    padding: 20px;*/
+    justify-content: center;
+
 }
 
 
@@ -136,7 +128,7 @@ body {
     border: 0.6vh solid #C0A610;
 }
 
-#image {
+.profile_photo_box {
     margin-top: -10vh;
     width: 250px;
     height: auto;
@@ -144,16 +136,24 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
-
+    cursor: pointer;
 }
 
-#IMG {
+.profile_photo {
     background-color: #D9D9D9;
-    width: 100%;
-    height: auto;
+    width: 14vw;
+    height: 14vw;
     border-radius: 50%;
-    cursor: pointer;
     pointer-events: none;
+}
+
+.change {
+    border: 2px solid gray;
+    cursor: pointer;
+}
+
+.change:hover {
+    border: 2px solid black;
 }
 
 #error {

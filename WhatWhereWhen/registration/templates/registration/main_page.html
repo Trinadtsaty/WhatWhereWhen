@@ -11,11 +11,11 @@
     <div id="profile">
         {% if request.user.is_authenticated %}
             {% if user.picture %}
-                <div class="profile_photo_box" id="image"><img class="profile_photo change" id="IMG" alt="Фото профиля" src="{{ user.picture.url }}"></div>
+                <div class="profile_photo_box" id="image"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Change' %}"><img class="profile_photo change" id="IMG" alt="Фото профиля" src="{{ user.picture.url }}"></a></div>
             {% else %}
-                <div class="profile_photo_box" id="image"><img class="profile_photo change" id="IMG" alt="Фото профиля" src="{% static 'registration/img/Avatar.png' %}"></div>
+                <div class="profile_photo_box" id="image"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Change' %}"><img class="profile_photo change" id="IMG" alt="Фото профиля" src="{% static 'registration/img/Avatar.png' %}"></a></div>
             {% endif %}
-            <div id="nick_name" class="change dynamic-text">{{user.login}}</div>
+               <div id="nick_name" class="change dynamic-text"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Change' %}">{{user.login}}</a></div>
             <div id="exit" class="profile_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Log_Out' %}">Выйти</a></div>
             <div id="Rank_scroll" >
                 <ul class="achievements_list" style="list-style: none; padding-left:0;">
@@ -63,33 +63,6 @@
     </div>
     <div id="hint"><a href="https://translate.yandex.ru/"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
 
-    {% if user.is_authenticated %}
-
-    <dialog id="change_nick_photo">
-        {% if user.picture %}
-            <div class="profile_photo_box" id="image_change"><img class="profile_photo change" id="IMG_change" alt="Фото профиля" src="{{ user.picture.url }}"></div>
-        {% else %}
-            <div class="profile_photo_box" id="image_change"><img class="profile_photo change" id="IMG_change" alt="Фото профиля" src="{% static 'registration/img/Avatar.png' %}"></div>
-        {% endif %}
-        <form id="change_photo_nick" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input class="input_line" placeholder="Ник" type="text" id="nick_name_change" name="nick_name" value="{{ username|default:user.login }}">
-            <input style="display: none;" type="file"  id="Image_User" name="image_user">
-            <input style="display: none;" type="submit" id="register_button">
-            {% if error %}
-                <p id="error" style="color: red;">{{ error }}</p>
-            {% endif %}
-        </form>
-        <div id="Continue" class="profile_button">Продолжить</div>
-        <div id="Back" class="profile_button">Назад</div>
-    </dialog>
-    {% endif %}
-<!--    {% if error %}-->
-<!--    <dialog id="error_window" open>-->
-<!--        <p id="error" style="color: red;">{{ error }}</p>-->
-<!--    </dialog>-->
-<!--    {% endif %}-->
-    <script src="{% static 'registration/js/change.js' %}"></script>
     <script src="{% static 'registration/js/main.js' %}"></script>
     <script src="{% static 'registration/js/dynamicText.js' %}"></script>
     <script src="{% static 'registration/js/dynamic_information.js' %}"></script>
