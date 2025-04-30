@@ -220,21 +220,5 @@ def change_profile(request):
             return redirect('Menu')
     return render(request, "registration/change.html")
 
-@login_required()
-def Game_Room(request):
-    button_click, created = Users.objects.get_or_create(email=request.user.email)
-    if not created:
-        button_click.played_games += 1  # Увеличиваем счетчик
-        button_click.save()  # Сохраняем изменения
-
-        # titles_start, created = Titles.objects.get_or_create(id=1)
-        # if created:
-        #     titles_start.titles_name = "Добо пожаловать"
-        #     titles_start.titles_description = "Вы участник 0ого сезона тестирования сайта, спасибо вам"
-        #     titles_start.save()
-        #
-        # titles_give, created_give = Users_and_Titles.objects.get_or_create(users=request.user, titles_units=titles_start)
-        # if created_give:
-        #     titles_give.save()
-
+def hint(request):
     return render(request, "registration/plug.html")

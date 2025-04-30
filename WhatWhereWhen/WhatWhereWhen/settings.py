@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'main',
     'questions',
     'registration',
+    'moder_page',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',

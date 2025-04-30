@@ -58,10 +58,10 @@
         <h2 id="name"><b class="W">W</b>hat<b class="W">W</b>here<b class="W">W</b>hen</h2>
         <div id="button">
             <div id="game" class="main_button" ><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Game_Room' %}">Игра</a></div>
-            <div id="questions" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="#">Вопросы</a></div>
+            <div id="questions" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Question_Room' %}">Вопросы</a></div>
         </div>
     </div>
-    <div id="hint"><a href="https://translate.yandex.ru/"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
+    <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
 
     <script src="{% static 'registration/js/main.js' %}"></script>
     <script src="{% static 'registration/js/dynamicText.js' %}"></script>
