@@ -1,5 +1,4 @@
-from tabnanny import check
-from venv import create
+from django.core.files.storage import default_storage
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -7,7 +6,6 @@ from .models import Titles, Users_and_Titles, Users
 from django.contrib.auth.decorators import login_required
 
 from rest_framework import generics
-# from .serializers import Users_mainSerializer
 from rest_framework.response import Response
 from .def_help import *
 import datetime
@@ -178,6 +176,14 @@ def user_register(request):
             titles_give.save()
 
         login(request, user)
+        if image:
+            Users_bd, created = Users.objects.get_or_create(email=request.user.email)
+            new_file_name = f"IMG/Users/{request.user.ID}_{datetime.datetime.now().strftime('%d_%m_%Y_%H_%M_%S')}.{image.name.split('.')[-1]}"
+            path = default_storage.save(new_file_name, image)
+            Users_bd.login = username
+            Users_bd.picture = path
+            Users_bd.save()
+
         return redirect('Menu')
     return render(request, "registration/registr.html")
 
@@ -210,8 +216,14 @@ def change_profile(request):
         Users_bd, created = Users.objects.get_or_create(email=request.user.email)
         if not created:
             if image:
+                new_file_name = f"IMG/Users/{request.user.ID}_{datetime.datetime.now().strftime('%d_%m_%Y_%H_%M_%S')}.{image.name.split('.')[-1]}"  # Используем расширение оригинального файла
+
+                # Сохраняем файл с новым именем
+                path = default_storage.save(new_file_name, image)  # Используем image напрямую
+
+                # Обновляем поле picture новым путем
                 Users_bd.login = username
-                Users_bd.picture = image
+                Users_bd.picture = path  # Сохраняем путь к новому файлу
                 Users_bd.save()
             else:
                 Users_bd.login = username
