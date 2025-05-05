@@ -20,6 +20,7 @@ def question(request,question_number):
     question_text = "Текст вопроса"
     question_name = f"Вопрос номер {question_number}"
     note ="примичание"
+    answer_not = "Описание овтета"
     answer = "ответ"
     license_name = "MIT License/X11 License"
     license_text = """
@@ -42,4 +43,5 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
         "answer" : answer,
         "license_name" : license_name,
         "license_text" : license_text,
+        "answer_not":answer_not,
     })

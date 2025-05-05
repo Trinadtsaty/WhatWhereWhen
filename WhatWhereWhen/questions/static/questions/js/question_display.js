@@ -1,5 +1,4 @@
 
-
 function showQuestion(questionNumber) {
     // Скрываем все вопросы
     const questions = document.querySelectorAll('.appears_text');
@@ -11,7 +10,7 @@ function showQuestion(questionNumber) {
     const buttons = document.querySelectorAll('.question_button'); // Предполагается, что у кнопок есть класс 'question_button'
     buttons.forEach(button => {
         button.style.backgroundColor = "";
-        button.style.borderBottom = "2px solid #000";
+        button.style.borderBottom = "2px solid rgba(82, 79, 82, 1)";
     });
 
     // Показываем только выбранный вопрос
