@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'questions/css/pattern.css' %}">
+</head>
+<body>
+    <div id="question_box">
+        <div id="question_button_box">
+            <ul id="question_button_list">
+                <li id="question_button" class="question_button"  onclick="showQuestion(1)">Вопрос</li>
+                <li id="note_button" class="question_button"  onclick="showQuestion(2)">Описание</li>
+                <li id="answer_button" class="question_button"  onclick="showQuestion(3)">Ответ</li>
+                <li id="license_button" class="question_button"  onclick="showQuestion(4)">Лицензия</li>
+            </ul>
+        </div>
+        <div id="question_text_box">
+            {% block question %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <div id="tools_box">
+        <div id="tegs_box_name">Теги:</div>
+        <div id="tegs_box">
+            {% block tegs %}
+            {% endblock %}
+        </div>
+        <div>Автор вопроса</div>
+    </div>
+
+
+     <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
+
+    <script src="{% static 'questions/js/dynamicText.js' %}"></script>
+    <script src="{% static 'questions/js/question_display.js' %}"></script>
+</body>
+</html>

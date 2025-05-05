@@ -232,5 +232,10 @@ def change_profile(request):
             return redirect('Menu')
     return render(request, "registration/change.html")
 
+
+
 def hint(request):
+    return render(request, "registration/plug.html")
+
+def author(request):
     return render(request, "registration/plug.html")

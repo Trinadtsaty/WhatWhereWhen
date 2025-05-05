@@ -1,0 +1,202 @@
+@font-face {
+    font-family: 'Oswald'; /* Название шрифта */
+    src: url('../fonts/Oswald-VariableFont_wght.ttf') format('truetype'); /* Можно указать несколько форматов */
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Oswald', sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+
+
+    background-image: url('../img/background.png'); /* Укажите путь к вашему изображению */
+    background-size: cover; /* Это свойство позволяет изображению покрывать весь элемент */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Отключает повторение изображения */
+}
+h1,li {
+    color: white;
+}
+
+#main_page {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.main_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #C0A610;
+    border: 2px solid #524F52;
+    border-radius: 20px;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    -webkit-text-stroke: 0.2vh black;
+    text-align: center;
+
+    font-size: 45px;
+    height: 75px;
+    width: 300px;
+
+    cursor: pointer;
+    transition: .5s;
+    box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.main_button:hover {
+    background-color: #524F52;
+    border: 0.6vh solid #C0A610;
+}
+
+#question_box {
+    margin-top: 5vh;
+    float: left;
+    margin-left: 2.5vw;
+    height: 80vh;
+    width: 60vw;
+    background-color: grey;
+}
+
+#tools_box {
+    margin-top: 5vh;
+    float: left;
+    margin-left: 5vw;
+    height: 80vh;
+    width: 30vw;
+    background-color: grey;
+}
+
+#tegs_box{
+    background-color: #5e5454;
+    width: 95%;
+    margin-left: 2%;
+    margin-top: 1%;
+    margin-right: 2%;
+    padding: 1%;
+    border-radius: 10px;
+}
+
+#tegs_box_name {
+    margin-left: 5px;
+    color: white;
+    font-size: 40px;
+    -webkit-text-stroke: 0.5px black;
+
+}
+
+.tegs {
+    /* Убираем точку и делаем запись в строку с возможностью переноса на новую строчку*/
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0;
+	margin: 0;
+
+}
+
+.teg {
+    margin-left: 0.5vw;
+    border-radius: 15px;
+    background-color: #918c8c;
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+
+    cursor:pointer;
+/*    font-size: 25px;*/
+}
+
+.teg:hover {
+    background-color: #504b4b;
+}
+
+#add_teg {
+    color: white;
+    margin-left: 0.5vw;
+
+    font-size: 25px;
+    border-radius: 50%;
+    height: 26px;
+    width: 26px;
+    background-color: #918c8c;
+    cursor:pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#add_teg:hover {
+    background-color: #504b4b;
+}
+
+#question_button_box {
+    margin-left: 2%;
+    margin-top: 2%;
+    width: 90%;
+}
+
+#question_button_list {
+    list-style-type: none;
+    display: flex;
+    font-size: 30px;
+    padding:0;
+    margin:0;
+}
+
+
+
+.question_button:first-child {
+    margin-left:0;
+}
+
+.question_button:hover{
+    background-color: #504b4b;
+}
+
+
+.question_button {
+    margin-left: 1%;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-top: 2px solid #000; /* Обводка сверху */
+    border-left: 2px solid #000; /* Обводка слева */
+    border-right: 2px solid #000; /* Обводка справа */
+    border-bottom: none;
+    border-top-left-radius: 10px; /* Закругление верхнего левого угла */
+    border-top-right-radius: 10px; /* Закругление верхнего правого угла */
+    background-color: #918c8c;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+#question_text_box {
+    background-color: rgba(136, 128, 136, 1);
+    margin: 0;
+    margin-left: 2%;
+    width: 90%;
+    height: 85%;
+    overflow-y: auto;
+    overflow-x: hidden;
+     margin-top: -2px;
+
+
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    border-bottom-left-radius: 10px; /* Закругление верхнего левого угла */
+    border-bottom-right-radius: 10px; /* Закругление верхнего правого угла */
+}
+
+.appears_text {
+    font-size: 40px;
+}

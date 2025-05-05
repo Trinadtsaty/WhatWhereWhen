@@ -1,0 +1,38 @@
+{% extends 'questions/pattern.html' %}
+
+
+{% block question %}
+<div id="question" class="appears_text">
+    <div>{{ question_name }}</div>
+    <div>{{ question_text }}</div>
+</div>
+
+<div id="note" class="appears_text">
+    <div>{{ note }}</div>
+</div>
+
+<div id="answer" class="appears_text">
+    <div>{{ answer }}</div>
+</div>
+
+<div id="license" class="appears_text">
+    <div>{{ license_name }}</div>
+    <div>{{ license_text }}</div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<h1>Вопрос №{{ number }}</h1>
+{% endblock %}
+
+
+{% block tegs %}
+    <ul class="tegs">
+    {% for teg in tegs %}
+        <li class="teg dynamic_size">{{ teg }}</li>
+    {% endfor %}
+        <li id="add_teg">+</li>
+    </ul>
+{% endblock %}
+
