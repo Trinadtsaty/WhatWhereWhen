@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import Titles, Users_and_Titles, Users
 from django.contrib.auth.decorators import login_required
-from decorators import not_authenticated
+from .decorators import not_authenticated
 
 from rest_framework import generics
 from rest_framework.response import Response
