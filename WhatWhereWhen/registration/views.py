@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import Titles, Users_and_Titles, Users
 from django.contrib.auth.decorators import login_required
+from decorators import not_authenticated
 
 from rest_framework import generics
 from rest_framework.response import Response
@@ -34,6 +35,7 @@ class Users_mainAPI(generics.ListAPIView):
 
         return Response(response_data)
 
+@not_authenticated
 def user_login(request):
     if request.method == 'POST':
         usermail = request.POST.get('mail')
@@ -95,6 +97,8 @@ def custom_logout(request):
     logout(request)
     return redirect(next_url)
 
+
+@not_authenticated
 def user_register(request):
     if request.method == 'POST':
         mail = request.POST.get('e-mail')
