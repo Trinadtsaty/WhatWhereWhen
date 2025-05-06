@@ -3,7 +3,7 @@
 
 {% block question %}
 <div id="question" class="appears_text">
-    <div id="question_name">{{ question_name }}</div>
+    <div id="question_name" class="name_appears_text">{{ question_name }}</div>
     <div class="many_text" id="question_text">{{ question_text }}</div>
 </div>
 
@@ -17,7 +17,7 @@
 </div>
 
 <div id="license" class="appears_text">
-    <div>{{ license_name }}</div>
+    <div class="name_appears_text">{{ license_name }}</div>
     <div>{{ license_text }}</div>
 </div>
 {% endblock %}

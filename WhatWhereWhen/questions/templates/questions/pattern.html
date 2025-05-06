@@ -28,17 +28,49 @@
             {% block tegs %}
             {% endblock %}
         </div>
-        <div class="exemple">Добавить вопрос в коллекцию (пак)</div>
-        <div class="exemple">Оценить</div>
-        <div class="exemple">Изменить (если автор вопроса)</div>
-        <div class="exemple">Пожаловаться</div>
+
+        {% if estimation_ball_bol %}
+            <div id="stars_name" class="exemple">Оценка:</div>
+        {% else %}
+            <div id="stars_name" class="exemple">Оцените:</div>
+        {% endif %}
+
+        <div id="star_box">
+            <img data-value="1"     id="star_1_full"     class="star full"    alt="звезда 1"  src="{% static 'questions/img/stars/star_lefr_full.png' %}">
+            <img data-value="1"     id="star_1_unfull"   class="star unfull"  alt="звезда 1"  src="{% static 'questions/img/stars/star_lefr_unfull.png' %}">
+            <img data-value="2"     id="star_2_full"     class="star full"    alt="звезда 2"  src="{% static 'questions/img/stars/star_right_full.png' %}">
+            <img data-value="2"     id="star_2_unfull"   class="star unfull"  alt="звезда 2"  src="{% static 'questions/img/stars/star_right_unfull.png' %}">
+            <img data-value="3"     id="star_3_full"     class="star full"    alt="звезда 3"  src="{% static 'questions/img/stars/star_lefr_full.png' %}">
+            <img data-value="3"     id="star_3_unfull"   class="star unfull"  alt="звезда 3"  src="{% static 'questions/img/stars/star_lefr_unfull.png' %}">
+            <img data-value="4"     id="star_4_full"     class="star full"    alt="звезда 4"  src="{% static 'questions/img/stars/star_right_full.png' %}">
+            <img data-value="4"     id="star_4_unfull"   class="star unfull"  alt="звезда 4"  src="{% static 'questions/img/stars/star_right_unfull.png' %}">
+            <img data-value="5"     id="star_5_full"     class="star full"    alt="звезда 5"  src="{% static 'questions/img/stars/star_lefr_full.png' %}">
+            <img data-value="5"     id="star_5_unfull"   class="star unfull"  alt="звезда 5"  src="{% static 'questions/img/stars/star_lefr_unfull.png' %}">
+            <img data-value="6"     id="star_6_full"     class="star full"    alt="звезда 6"  src="{% static 'questions/img/stars/star_right_full.png' %}">
+            <img data-value="6"     id="star_6_unfull"   class="star unfull"  alt="звезда 6"  src="{% static 'questions/img/stars/star_right_unfull.png' %}">
+            <img data-value="7"     id="star_7_full"     class="star full"    alt="звезда 7"  src="{% static 'questions/img/stars/star_lefr_full.png' %}">
+            <img data-value="7"     id="star_7_unfull"   class="star unfull"  alt="звезда 7"  src="{% static 'questions/img/stars/star_lefr_unfull.png' %}">
+            <img data-value="8"     id="star_8_full"     class="star full"    alt="звезда 8"  src="{% static 'questions/img/stars/star_right_full.png' %}">
+            <img data-value="8"     id="star_8_unfull"   class="star unfull"  alt="звезда 8"  src="{% static 'questions/img/stars/star_right_unfull.png' %}">
+            <img data-value="9"     id="star_9_full"     class="star full"    alt="звезда 9"  src="{% static 'questions/img/stars/star_lefr_full.png' %}">
+            <img data-value="9"     id="star_9_unfull"   class="star unfull"  alt="звезда 9"  src="{% static 'questions/img/stars/star_lefr_unfull.png' %}">
+            <img data-value="10"    id="star_10_full"    class="star full"    alt="звезда 10" src="{% static 'questions/img/stars/star_right_full.png' %}">
+            <img data-value="10"    id="star_10_unfull"  class="star unfull"  alt="звезда 10" src="{% static 'questions/img/stars/star_right_unfull.png' %}">
+        </div>
+        <div class="exemple">Средний балл: {{ estimation_ball }}</div>
+
         <div class="exemple">Дата добавления</div>
         <div class="exemple">Автор вопроса</div>
+
     </div>
 
 
      <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
-
+    <script>
+        const estimation_ball_bol = {{ estimation_ball_bol|yesno:"true,false" }}
+        const my_estimation = {{ my_estimation }}
+    </script>
+    <script src="{% static 'questions/js/stars.js' %}"></script>
     <script src="{% static 'questions/js/dynamicText.js' %}"></script>
     <script src="{% static 'questions/js/question_display.js' %}"></script>
 </body>

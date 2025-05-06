@@ -207,3 +207,33 @@ h1,li {
     color: white;
     margin-bottom: 5px;
 }
+
+.name_appears_text {
+    text-align: center;
+    font-size: 50px;
+    color: rgba(192, 166, 16, 1);
+}
+
+#star_box {
+    background-color: rgba(82, 79, 82, 1);
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap to the next line */
+    flex-direction: column;      /* Устанавливаем вертикальное направление */
+    justify-content: center;     /* Центрируем по вертикали */
+
+    width: 95%;
+    height: 15%;
+    border-radius: 10px;
+    margin-left: 2%;
+    margin-top: 1%;
+    margin-right: 2%;
+    padding: 1%;
+}
+
+.star {
+    background-color: #ffffff2c;
+    height: 90%;
+    width: auto;
+    cursor: pointer;
+}
+
