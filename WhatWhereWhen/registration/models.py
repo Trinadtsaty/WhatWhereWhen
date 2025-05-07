@@ -78,6 +78,7 @@ class Titles(models.Model):
     #Описание
     titles_description = models.TextField()
 
+
     def __str__(self):
         return self.titles_name
 
@@ -92,7 +93,9 @@ class Users_and_Titles(models.Model):
     # Пользователь
     users = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='Users')
     # Звание
-    titles_units = models.ForeignKey(Titles, on_delete=models.CASCADE, related_name='Titles')
+    titles = models.ForeignKey(Titles, on_delete=models.CASCADE, related_name='Titles')
+    # Время получения
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.id)

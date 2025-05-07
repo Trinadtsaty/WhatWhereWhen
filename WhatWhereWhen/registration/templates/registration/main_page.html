@@ -22,7 +22,7 @@
                     <div id="achievement_name"><b>Звания:</b></div>
                     {% for user_title in users_and_titles %}
                         {% if user.login == user_title.users.login %}
-                        <li class="achievement" data-title="{{ user_title.titles_units.titles_description }}">{{ user_title.titles_units.titles_name }}</li>
+                        <li class="achievement" data-titleTime="{{ user_title.created_at }}" data-title="{{ user_title.titles.titles_description }}">{{ user_title.titles.titles_name }}</li>
                         {% endif %}
                     {% endfor %}
 
@@ -53,6 +53,7 @@
     <dialog id="achievement_description">
         <div id="close">закрыть</div>
         <div id="description_box"></div>
+        <div id="time_box"></div>
     </dialog>
     <div class="container">
         <h2 id="name"><b class="W">W</b>hat<b class="W">W</b>here<b class="W">W</b>hen</h2>

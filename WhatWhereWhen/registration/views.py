@@ -78,8 +78,8 @@ def user_login(request):
 def menu(request):
     # Извлечение всех титулов
     titles = Titles.objects.all()
-    # Извлечение всех связей пользователей и титулов
-    users_and_titles = Users_and_Titles.objects.select_related('users', 'titles_units').all()
+    # Извлечение всех связей пользователей и титулов ТОЛЬКО СВЯЗНЫХ
+    users_and_titles = Users_and_Titles.objects.select_related('users', 'titles').all()
 
     # Передача данных в контекст
     context = {
@@ -88,8 +88,6 @@ def menu(request):
         'user_active': get_active_users(),
         'user_count': Users.objects.count(),
     }
-
-
     return render(request, "registration/main_page.html", context)
 
 def custom_logout(request):
