@@ -53,3 +53,16 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
     })
 
 
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+class QuestionAPIView(APIView):
+    def get(self, request):
+        return Response({'get':5})
+
+    def post(self,request):
+        post_new = {
+            'title' : request.data['title'],
+            'description': request.data['description'],
+        }
+        return Response(post_new)
