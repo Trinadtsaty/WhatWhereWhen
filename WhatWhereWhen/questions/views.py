@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+
+
+
 # Create your views here.
 
 
@@ -55,10 +58,13 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from registration.models import Titles
+from .serializers import TitleSerializer
 
 class QuestionAPIView(APIView):
     def get(self, request):
-        return Response({'get':5})
+        Title = Titles.objects.all()
+        return Response({'get': TitleSerializer(Title, many=True).data})
 
     def post(self,request):
         post_new = {

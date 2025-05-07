@@ -18,11 +18,12 @@ class Users_mainAPI(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         # Подсчитываем общее количество пользователей
         total_users = self.queryset.count()
-
         # Подсчитываем количество активных пользователей
         online_users = get_active_users()
 
+        #Кол-во созданных вопросов
         questions_count = "pass"
+        # Кол-во комнат
         room_online = "pass"
 
         # Формируем ответ с только необходимыми данными
@@ -173,7 +174,7 @@ def user_register(request):
             titles_start.titles_description = f"Вы участник {datetime.datetime.now().year-2025}-го сезона тестирования сайта, спасибо вам"
             titles_start.save()
 
-        titles_give, created_give = Users_and_Titles.objects.get_or_create(users=user, titles_units=titles_start)
+        titles_give, created_give = Users_and_Titles.objects.get_or_create(users=user, titles=titles_start)
         if created_give:
             titles_give.save()
 

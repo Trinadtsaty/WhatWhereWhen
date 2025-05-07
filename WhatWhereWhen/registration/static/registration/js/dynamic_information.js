@@ -3,7 +3,7 @@ const URL_server = 'http://127.0.0.1:8000'
 function updateUser() {
 
 
-    fetch(URL_server + '/UsersMain/')
+    fetch(URL_server + '/usersmain')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Данные не получены');

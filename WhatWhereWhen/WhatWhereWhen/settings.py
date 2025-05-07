@@ -111,7 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'  # или другая ваша временная зона
+USE_TZ = True  # Включение поддержки временных зон
 
 USE_I18N = True
 
