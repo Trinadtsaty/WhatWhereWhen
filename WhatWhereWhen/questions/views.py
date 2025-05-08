@@ -1,3 +1,5 @@
+from idlelib.rpc import request_queue
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
@@ -58,17 +60,40 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from registration.models import Titles
-from .serializers import TitleSerializer
+from .models import Estimation_Quest_User
+from .serializers import EstimationQuestUserSerializer
 
-class QuestionAPIView(APIView):
+
+class Question_Evaluation_APIView(APIView):
     def get(self, request):
-        Title = Titles.objects.all()
-        return Response({'get': TitleSerializer(Title, many=True).data})
+        Estimation = Estimation_Quest_User.objects.all()
+        return Response({'get': EstimationQuestUserSerializer(Estimation, many=True).data})
 
     def post(self,request):
-        post_new = {
-            'title' : request.data['title'],
-            'description': request.data['description'],
-        }
-        return Response(post_new)
+        # Проверка на корректность отправленных данных
+        serializer = EstimationQuestUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({"POST": serializer.data})
+
+    def put(self, request, *args, **kwargs):
+        # user_id = kwargs.get("user", None)
+        # question_id = kwargs.get("question", None)
+        user_id = request.data.get("user")
+        question_id =request.data.get("question")
+        if not user_id:
+            return Response({"error":"PUT is not user"})
+
+        if not question_id:
+            return Response({"error":"PUT is not question"})
+
+        try:
+            instance = Estimation_Quest_User.objects.get(user=user_id, question=question_id)
+        except:
+            return Response({"error": "Объекта нет"})
+
+        serializer = EstimationQuestUserSerializer(data=request.data, instance=instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"PUT": serializer.data})

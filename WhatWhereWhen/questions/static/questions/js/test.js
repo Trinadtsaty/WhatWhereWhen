@@ -22,8 +22,8 @@ fetch(URL_server + '/questions/api/v1', {
 
 
 const data = {
-    'title' : "Оценка",
-    'description': 3,
+    'titles_name' : "Оценка",
+    'titles_description': 3,
 }
 
 fetch(URL_server + '/questions/api/v1', {
