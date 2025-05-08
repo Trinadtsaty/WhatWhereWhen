@@ -5,9 +5,9 @@ from rest_framework import generics
 from rest_framework import status
 
 
-class Question_Evaluation_APIView(generics.ListCreateAPIView):
-    queryset = Estimation_Quest_User.objects.all()
-    serializer_class = EstimationQuestUserSerializer
+# class Question_Evaluation_APIView(generics.ListCreateAPIView):
+#     queryset = Estimation_Quest_User.objects.all()
+#     serializer_class = EstimationQuestUserSerializer
 
 class Question_Evaluation_APICreate(generics.CreateAPIView):
     queryset = Estimation_Quest_User.objects.all()

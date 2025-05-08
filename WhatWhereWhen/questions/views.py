@@ -53,6 +53,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 
 from .class_help import *
+from rest_framework.permissions import IsAuthenticated
 
-class Question_Evaluation_API(Question_Evaluation_APIView, Question_Evaluation_APIUpdate, Question_Evaluation_APICreate):
-    pass
+class Question_Evaluation_API(Question_Evaluation_APIUpdate, Question_Evaluation_APICreate):
+    permission_classes = (IsAuthenticated, )
+    # pass

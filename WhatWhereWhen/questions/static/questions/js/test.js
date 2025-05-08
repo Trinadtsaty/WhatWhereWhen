@@ -24,8 +24,7 @@ const URL_server1 = 'http://127.0.0.1:8000'
 const URL_adress = '/questions/api/v1'
 
 const data = {
-    "question": 2,
-    "user": 1,
+    "question": 3,
     "estimation": 6
 }
 
