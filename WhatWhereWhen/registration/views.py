@@ -3,6 +3,7 @@ from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import Titles, Users_and_Titles, Users
+from questions.models import Question
 from django.contrib.auth.decorators import login_required
 from .decorators import not_authenticated
 
@@ -22,7 +23,7 @@ class Users_mainAPI(generics.ListAPIView):
         online_users = get_active_users()
 
         #Кол-во созданных вопросов
-        questions_count = "pass"
+        questions_count = Question.objects.all().count()
         # Кол-во комнат
         room_online = "pass"
 
