@@ -3,12 +3,6 @@ from idlelib.rpc import request_queue
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-
-
-# Create your views here.
-
-
-
 def question_main(request):
     # return render(request, "questions/question_main.html")
     title = 'Вопросы'
@@ -58,42 +52,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
     })
 
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .models import Estimation_Quest_User
-from .serializers import EstimationQuestUserSerializer
+from .class_help import *
 
-
-class Question_Evaluation_APIView(APIView):
-    def get(self, request):
-        Estimation = Estimation_Quest_User.objects.all()
-        return Response({'get': EstimationQuestUserSerializer(Estimation, many=True).data})
-
-    def post(self,request):
-        # Проверка на корректность отправленных данных
-        serializer = EstimationQuestUserSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response({"POST": serializer.data})
-
-    def put(self, request, *args, **kwargs):
-        # user_id = kwargs.get("user", None)
-        # question_id = kwargs.get("question", None)
-        user_id = request.data.get("user")
-        question_id =request.data.get("question")
-        if not user_id:
-            return Response({"error":"PUT is not user"})
-
-        if not question_id:
-            return Response({"error":"PUT is not question"})
-
-        try:
-            instance = Estimation_Quest_User.objects.get(user=user_id, question=question_id)
-        except:
-            return Response({"error": "Объекта нет"})
-
-        serializer = EstimationQuestUserSerializer(data=request.data, instance=instance)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({"PUT": serializer.data})
+class Question_Evaluation_API(Question_Evaluation_APIView, Question_Evaluation_APIUpdate, Question_Evaluation_APICreate):
+    pass

@@ -141,3 +141,15 @@ AUTH_USER_MODEL = 'registration.Users'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+	'DEFAULT_RENDERER_CLASSES': [
+		'rest_framework.renderers.JSONRenderer',
+        # Строчку ниже нужно закомитить перед отправлением проекта
+		'rest_framework.renderers.BrowsableAPIRenderer', # Добавлено для отображения HTML
+	],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # Пример разрешения
+    ],
+}
