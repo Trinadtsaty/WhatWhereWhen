@@ -30,9 +30,9 @@
         </div>
 
         {% if estimation_ball_bol %}
-            <div id="stars_name" class="exemple">Оценка:</div>
+            <div id="stars_name" class="exemple">Оценка: {{ my_estimation }}</div>
         {% else %}
-            <div id="stars_name" class="exemple">Оцените:</div>
+            <div id="stars_name" class="exemple">Оцените: {{ my_estimation }}</div>
         {% endif %}
 
         <div id="star_box">
@@ -67,11 +67,15 @@
 
      <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <script>
-        const estimation_ball_bol = {{ estimation_ball_bol|yesno:"true,false" }}
-        const my_estimation = {{ my_estimation }}
+        const estimation_ball_bol = {{ estimation_ball_bol|yesno:"true,false" }};
+        {% if estimation_ball_bol %}
+            const my_estimation = {{ my_estimation }};
+        {% endif %}
+        const question_number = {{ number }};
+        console.log(question_number);
     </script>
     <script src="{% static 'questions/js/stars.js' %}"></script>
-    <script src="{% static 'questions/js/test.js' %}"></script>
+<!--    <script src="{% static 'questions/js/test.js' %}"></script>-->
     <script src="{% static 'questions/js/dynamicText.js' %}"></script>
     <script src="{% static 'questions/js/question_display.js' %}"></script>
 </body>

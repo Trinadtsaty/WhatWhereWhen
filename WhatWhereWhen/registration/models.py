@@ -72,7 +72,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
 
 class Titles(models.Model):
     #id звания
-    id = models.BigAutoField( primary_key=True)
+    ID = models.BigAutoField( primary_key=True)
     #Звание
     titles_name = models.CharField( max_length=20, unique=True)
     #Описание
@@ -89,7 +89,7 @@ class Titles(models.Model):
 
 class Users_and_Titles(models.Model):
     # id юнита
-    id = models.BigAutoField(primary_key=True)
+    ID = models.BigAutoField(primary_key=True)
     # Пользователь
     users = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='Users')
     # Звание
@@ -98,8 +98,26 @@ class Users_and_Titles(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.id)
+        # return str(self.ID)
+        return str(self.users.email[:7] + "..." + " " + self.titles.titles_name[:5] + "...")
 
     class Meta:
         verbose_name = 'Связь'
         verbose_name_plural = 'Связи'
+
+class Message(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    users_id = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='Users_Recipient')
+    letter_name = models.CharField(max_length=50)
+    letter_text = models.TextField()
+
+    publication = models.BooleanField(default=True)
+    sender = models.ForeignKey(Users, on_delete=models.PROTECT, related_name='Sender_Letter', null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return  self.letter_name
+
+    class Meta:
+        verbose_name = 'Послание'
+        verbose_name_plural = 'Послания'

@@ -77,6 +77,8 @@ def user_login(request):
             })  # Передаем ошибку обратно на страницу
     return render(request, "registration/login.html")
 
+
+
 def menu(request):
     # Извлечение всех титулов
     titles = Titles.objects.all()
@@ -235,7 +237,6 @@ def change_profile(request):
 
             return redirect('Menu')
     return render(request, "registration/change.html")
-
 
 
 def hint(request):

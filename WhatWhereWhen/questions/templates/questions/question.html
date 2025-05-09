@@ -3,22 +3,22 @@
 
 {% block question %}
 <div id="question" class="appears_text">
-    <div id="question_name" class="name_appears_text">{{ question_name }}</div>
-    <div class="many_text" id="question_text">{{ question_text }}</div>
+    <div id="question_name" class="name_appears_text">{{ Question.question_name }}</div>
+    <div class="many_text" id="question_text">{{Question.text_question }}</div>
 </div>
 
 <div id="note" class="appears_text">
-    <div class="many_text">{{ note }}</div>
+    <div class="many_text">{{ Question.note }}</div>
 </div>
 
 <div id="answer" class="appears_text">
-    <div class="many_text">{{ answer_not }}</div>
-    <div >{{ answer }}</div>
+    <div class="many_text">{{ Question.answer }}</div>
+    <div >{{ Question.answer_description }}</div>
 </div>
 
 <div id="license" class="appears_text">
-    <div class="name_appears_text">{{ license_name }}</div>
-    <div>{{ license_text }}</div>
+    <div class="name_appears_text">{{ Question.license_id.license_name }}</div>
+    <div>{{ Question.license_id.license_description }}</div>
 </div>
 {% endblock %}
 

@@ -1,7 +1,8 @@
 from idlelib.rpc import request_queue
-
+from .models import *
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
 
 def question_main(request):
     # return render(request, "questions/question_main.html")
@@ -15,37 +16,31 @@ def question_add(request):
 
 
 def question(request,question_number):
-    tegs=['тег 1', 'тег 2', 'тег 3', 'тееееееееееег 4' ]
-    question_text = "Текст вопроса"
-    question_name = f"Вопрос номер {question_number}"
-    note ="примичание"
-    answer_not = "Описание овтета"
-    answer = "ответ"
-    estimation_ball=6.3
-    estimation_ball_bol=False
-    my_estimation=3
-    license_name = "MIT License/X11 License"
-    license_text = """
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    question = get_object_or_404(Question, ID=question_number)
+    tegs=[]
+    tags_questions = Tags_Questions.objects.filter(question_id = question)
+    for tag in tags_questions:
+        tegs.append(tag.tags_id.tag_name)
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-
-
+    estimations = Estimation_Quest_User.objects.filter(question = question)
+    estimation_ball=0
+    my_estimation = None
+    estimation_ball_bol = False
+    estimations_len=estimations.count()
+    if estimations_len>0:
+        for est in estimations:
+            estimation_ball+=est.estimation
+            if est.user == request.user:
+                my_estimation = est.estimation
+                estimation_ball_bol = True
+        estimation_ball=estimation_ball / estimations_len
 
     return render(request, "questions/question.html", {
         "number" : question_number,
         "title" : 'Страница вопроса',
         "tegs" : tegs,
-        "question_name": question_name,
-        "question_text": question_text,
-        "note" : note,
-        "answer" : answer,
-        "license_name" : license_name,
-        "license_text" : license_text,
-        "answer_not":answer_not,
+        "Question":question,
         "estimation_ball": estimation_ball,
         "estimation_ball_bol": estimation_ball_bol,
         "my_estimation": my_estimation,
