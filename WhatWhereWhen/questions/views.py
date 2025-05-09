@@ -17,13 +17,20 @@ def question_add(request):
 
 def question(request,question_number):
 
-    question = get_object_or_404(Question, ID=question_number)
-    tegs=[]
+    question = get_object_or_404(Question, ID=question_number, publication=True)
+    tags_queation=[]
     tags_questions = Tags_Questions.objects.filter(question_id = question)
     for tag in tags_questions:
-        tegs.append(tag.tags_id.tag_name)
+        if tag.tags_id.publication:
+            tags_queation.append(tag.tags_id.tag_name)
 
     estimations = Estimation_Quest_User.objects.filter(question = question)
+    tags = Tags.objects.filter(publication = True)
+    tags_all=[]
+    for tag in tags:
+        if tag.tag_name not in tags_queation:
+            tags_all.append(tag)
+
     estimation_ball=0
     my_estimation = None
     estimation_ball_bol = False
@@ -39,7 +46,8 @@ def question(request,question_number):
     return render(request, "questions/question.html", {
         "number" : question_number,
         "title" : 'Страница вопроса',
-        "tegs" : tegs,
+        "tags_all":tags_all,
+        "tags_queation" : tags_queation,
         "Question":question,
         "estimation_ball": estimation_ball,
         "estimation_ball_bol": estimation_ball_bol,

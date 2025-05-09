@@ -81,7 +81,6 @@ class Tags(models.Model):
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
-
 class Tags_Questions(models.Model):
     ID = models.BigAutoField(primary_key=True)
     tags_id = models.ForeignKey(Tags, on_delete=models.CASCADE, related_name='Tag')

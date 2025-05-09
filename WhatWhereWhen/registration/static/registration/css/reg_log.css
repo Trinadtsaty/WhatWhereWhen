@@ -58,9 +58,6 @@ body {
     box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-
-
-
 .reg_log_button:hover {
     background-color: #524F52;
     border: 0.6vh solid #C0A610;
@@ -145,6 +142,7 @@ body {
     object-fit: cover; /* Обрезка изображения, чтобы оно заполнило контейнер */
     border-radius: 50%;
 /*    border-radius: 50%;*/
+    background-color: rgba(217, 217, 217, 0.7);
 }
 
 .change {

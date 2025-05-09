@@ -7,9 +7,11 @@
     <div class="many_text" id="question_text">{{Question.text_question }}</div>
 </div>
 
+
 <div id="note" class="appears_text">
     <div class="many_text">{{ Question.note }}</div>
 </div>
+
 
 <div id="answer" class="appears_text">
     <div class="many_text">{{ Question.answer }}</div>
@@ -23,17 +25,29 @@
 {% endblock %}
 
 
-{% block content %}
-<h1>Вопрос №{{ number }}</h1>
+{% block tags_add %}
+<input type="text" placeholder="Введите название...">
+<div id="add_tegs_box">
+    <ul>
+    {% for tag in tags_all %}
+        <li>{{ tag.tag_name }}</li>
+    {% empty %}
+        <li>Нет тегов для отображения.</li>
+    {% endfor %}
+    </ul>
+</div>
 {% endblock %}
 
 
-{% block tegs %}
+{% block tags %}
     <ul class="tegs">
-    {% for teg in tegs %}
-        <li class="teg dynamic_size">{{ teg }}</li>
+    {% for tag in tags_queation %}
+        <li class="teg dynamic_size">{{ tag }}</li>
     {% endfor %}
+        {% if request.user.is_authenticated %}
         <li id="add_teg">+</li>
+        {% endif %}
     </ul>
 {% endblock %}
+
 

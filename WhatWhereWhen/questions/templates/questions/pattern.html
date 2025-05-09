@@ -11,7 +11,9 @@
         <div id="question_button_box">
             <ul id="question_button_list">
                 <li id="question_button" class="question_button"  onclick="showQuestion(1)">Вопрос</li>
+                {% if Question.note %}
                 <li id="note_button" class="question_button"  onclick="showQuestion(2)">Описание</li>
+                {% endif %}
                 <li id="answer_button" class="question_button"  onclick="showQuestion(3)">Ответ</li>
                 <li id="license_button" class="question_button"  onclick="showQuestion(4)">Лицензия</li>
             </ul>
@@ -21,21 +23,30 @@
             {% endblock %}
         </div>
     </div>
-
+    <dialog id="dialog_tegs_all" class="">
+        <div id="close_dialog">Закрыть</div>
+            {% block tags_add %}
+            {% endblock %}
+    </dialog>
     <div id="tools_box">
         <div id="tegs_box_name">Теги:</div>
         <div id="tegs_box">
-            {% block tegs %}
+            {% block tags %}
             {% endblock %}
         </div>
 
         {% if estimation_ball_bol %}
-            <div id="stars_name" class="exemple">Оценка: {{ my_estimation }}</div>
+            <div id="stars_name" class="exemple">Оценка:</div>
         {% else %}
-            <div id="stars_name" class="exemple">Оцените: {{ my_estimation }}</div>
+            <div id="stars_name" class="exemple">Оцените:</div>
         {% endif %}
 
+        {% if not request.user.is_authenticated %}
+        <div id="star_box" style="pointer-events: none;">
+            <div id="overlay">Пожалуйста авторизируйтесь</div>
+        {% else %}
         <div id="star_box">
+        {% endif %}
             <img data-value="1"     id="star_1_full"     class="star full"    alt="звезда 1"  src="{% static 'questions/img/stars/star_lefr_full.png' %}">
             <img data-value="1"     id="star_1_unfull"   class="star unfull"  alt="звезда 1"  src="{% static 'questions/img/stars/star_lefr_unfull.png' %}">
             <img data-value="2"     id="star_2_full"     class="star full"    alt="звезда 2"  src="{% static 'questions/img/stars/star_right_full.png' %}">
@@ -75,6 +86,7 @@
         console.log(question_number);
     </script>
     <script src="{% static 'questions/js/stars.js' %}"></script>
+    <script src="{% static 'questions/js/tags.js' %}"></script>
 <!--    <script src="{% static 'questions/js/test.js' %}"></script>-->
     <script src="{% static 'questions/js/dynamicText.js' %}"></script>
     <script src="{% static 'questions/js/question_display.js' %}"></script>
