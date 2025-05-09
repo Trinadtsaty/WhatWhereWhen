@@ -36,16 +36,14 @@ class Question_Evaluation_APIUpdate(generics.UpdateAPIView):
     def _raise_error(self, message):
         return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
 
+
 #Связь тегов и вопросов
+class Tag_Question_APICreate(generics.CreateAPIView):
+    queryset = Tags_Questions.objects.all()
+    serializer_class = TagsQuestionSerializer
 
-
-# class Tag_Question_APICreate(generics.CreateAPIView):
-#     queryset = Tags_Questions.objects.all()
-#     serializer_class = TagsQuestionSerializer
 
 #Связь Подборок и вопросов
-
-
 # class Selection_Questions_APICreate(generics.CreateAPIView):
 #     queryset = Selection_Questions.objects.all()
 #     serializer_class = SelectionQuestionsSerializer

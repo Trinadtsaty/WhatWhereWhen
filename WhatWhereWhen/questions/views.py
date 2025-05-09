@@ -61,3 +61,7 @@ from rest_framework.permissions import IsAuthenticated
 class Question_Evaluation_API(Question_Evaluation_APIUpdate, Question_Evaluation_APICreate):
     permission_classes = (IsAuthenticated, )
     # pass
+
+class Tag_Question_API(Tag_Question_APICreate):
+    permission_classes = (IsAuthenticated, )
+    # pass

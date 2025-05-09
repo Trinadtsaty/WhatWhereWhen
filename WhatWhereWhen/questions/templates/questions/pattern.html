@@ -25,8 +25,10 @@
     </div>
     <dialog id="dialog_tegs_all" class="">
         <div id="close_dialog">Закрыть</div>
+        <input id="text_input" type="text" placeholder="Введите название..." onkeyup="filterItems()">
             {% block tags_add %}
             {% endblock %}
+        <div id="button_box"><div id="create_tag">Создать Тег</div></div>
     </dialog>
     <div id="tools_box">
         <div id="tegs_box_name">Теги:</div>
@@ -72,9 +74,7 @@
 
         <div class="exemple">Дата добавления</div>
         <div class="exemple">Автор вопроса</div>
-
     </div>
-
 
      <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <script>
@@ -83,7 +83,6 @@
             const my_estimation = {{ my_estimation }};
         {% endif %}
         const question_number = {{ number }};
-        console.log(question_number);
     </script>
     <script src="{% static 'questions/js/stars.js' %}"></script>
     <script src="{% static 'questions/js/tags.js' %}"></script>

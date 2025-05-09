@@ -6,12 +6,13 @@ class EstimationQuestUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estimation_Quest_User
         fields = ("question", "user", "estimation")
-#
-# class TagsQuestionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Tags_Questions
-#         fields = ("tags_id", "question_id", "tag_adder")
-#
+
+class TagsQuestionSerializer(serializers.ModelSerializer):
+    tag_adder = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = Tags_Questions
+        fields = ("tags_id", "question_id", "tag_adder")
+
 # class SelectionQuestionsSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Selection_Questions

@@ -26,13 +26,12 @@
 
 
 {% block tags_add %}
-<input type="text" placeholder="Введите название...">
-<div id="add_tegs_box">
-    <ul>
+<div id="tags_scroll">
+    <ul id="all_tags">
     {% for tag in tags_all %}
-        <li>{{ tag.tag_name }}</li>
+        <li class="all_tag" data-value="{{ tag.ID }}">{{ tag.tag_name }}</li>
     {% empty %}
-        <li>Нет тегов для отображения.</li>
+        <li id="message">Нет тегов для отображения</li>
     {% endfor %}
     </ul>
 </div>
