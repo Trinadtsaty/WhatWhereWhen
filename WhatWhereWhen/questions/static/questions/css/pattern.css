@@ -267,17 +267,7 @@ h1,li {
     float: right;
     font-size: 20px;
 }
-#text_input {
-    width: 90%;
-    font-size: 32px;
-    border: none; /* Убирает рамку */
-    outline: none; /* Убирает контур при фокусировке */
-    box-shadow: none; /* Убирает тень */
-    background: transparent; /* Убирает фон */
-    color: white; /* Устанавливает цвет текста как у родителя */
-    font: inherit; /* Устанавливает шрифт как у родителя */
-    border-bottom: 3px solid rgba(82, 79, 82, 1);
-}
+
 
 #tags_scroll{
     width: 100%;
@@ -337,4 +327,20 @@ h1,li {
     display: flex;               /* Включаем Flexbox */
     justify-content: center;     /* Центрируем по горизонтали */
     align-items: center;         /* Центрируем по вертикали */
+}
+
+#text_input {
+    width: 90%;
+    font-size: 50px;
+    border: none; /* Убирает рамку */
+    outline: none; /* Убирает контур при фокусировке */
+    box-shadow: none; /* Убирает тень */
+    background: transparent; /* Убирает фон */
+    color: white; /* Устанавливает цвет текста как у родителя */
+    font: inherit; /* Устанавливает шрифт как у родителя */
+    border-bottom: 3px solid rgba(82, 79, 82, 1);
+}
+
+#text_input::placeholder {
+    font-size: 32px;
 }
