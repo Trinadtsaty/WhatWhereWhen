@@ -44,11 +44,15 @@
         {% endif %}
 
         {% if not request.user.is_authenticated %}
-        <div id="star_box" style="pointer-events: none;">
-            <div id="overlay">Пожалуйста авторизируйтесь</div>
+        <div id="star_box">
+            <img class="star login_stars"    alt="пустая звезда"  src="{% static 'questions/img/stars/star_unfull.png' %}">
+            <img class="star login_stars"    alt="пустая звезда"  src="{% static 'questions/img/stars/star_unfull.png' %}">
+            <img class="star login_stars"    alt="пустая звезда"  src="{% static 'questions/img/stars/star_unfull.png' %}">
+            <img class="star login_stars"    alt="пустая звезда"  src="{% static 'questions/img/stars/star_unfull.png' %}">
+            <img class="star login_stars"    alt="пустая звезда"  src="{% static 'questions/img/stars/star_unfull.png' %}">
+        </div>
         {% else %}
         <div id="star_box">
-        {% endif %}
             <img data-value="1"     id="star_1_full"     class="star full"    alt="звезда 1"  src="{% static 'questions/img/stars/star_lefr_full.png' %}">
             <img data-value="1"     id="star_1_unfull"   class="star unfull"  alt="звезда 1"  src="{% static 'questions/img/stars/star_lefr_unfull.png' %}">
             <img data-value="2"     id="star_2_full"     class="star full"    alt="звезда 2"  src="{% static 'questions/img/stars/star_right_full.png' %}">
@@ -70,6 +74,7 @@
             <img data-value="10"    id="star_10_full"    class="star full"    alt="звезда 10" src="{% static 'questions/img/stars/star_right_full.png' %}">
             <img data-value="10"    id="star_10_unfull"  class="star unfull"  alt="звезда 10" src="{% static 'questions/img/stars/star_right_unfull.png' %}">
         </div>
+        {% endif %}
         <div class="exemple">Средний балл: {{ estimation_ball }}</div>
 
         <div class="exemple">Дата добавления</div>

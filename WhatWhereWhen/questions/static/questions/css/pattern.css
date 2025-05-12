@@ -236,18 +236,6 @@ h1,li {
     cursor: pointer;
 }
 
-#overlay {
-    color: white;
-    font-size: 2.5vw;
-    position: absolute; /* Устанавливаем абсолютное позиционирование для наложенного элемента */
-    text-align: center;
-    width: 28.5%; /* Ширина наложенного элемента */
-    height: 100px; /* Высота наложенного элемента */
-    z-index: 10; /* Устанавливаем z-index, чтобы элемент был поверх других */
-    background-color: rgba(217, 217, 217, 0.7);
-}
-
-
 #dialog_tegs_all {
     background-color: rgba(136, 128, 136, 1);
     border: 3px solid rgba(33, 32, 32, 1);
@@ -344,3 +332,4 @@ h1,li {
 #text_input::placeholder {
     font-size: 32px;
 }
+
