@@ -3,9 +3,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Создать вопрос</title>
+    <link rel="stylesheet" href="{% static 'questions/css/add.css' %}">
 </head>
 <body>
-    <h1>Добавить вопрос</h1>
+    <div class="container">
+        <div id="screen">
+            <form method="post" class="forms" id="form_tags_add">
+                {% csrf_token %}
+                <div id="question_box" class="appears_text">
+                    <input name="question_name" id="question_name" type="text" placeholder="Введите Название Вопроса" class="input_line">
+                    <textarea name="text_question" id="text_question" rows="20" cols="30" placeholder="Введите текст вопроса" class="input_text"></textarea>
+                </div>
+                <div id="note_box" class="appears_text">
+                    <textarea name="note" id="note" rows="20" cols="30" placeholder="Введите текст Заметки" class="input_text"></textarea>
+                </div>
+                <div id="answer_box" class="appears_text">
+                    <input name="answer" id="answer" type="text" placeholder="Введите отве" class="input_line">
+                    <textarea name="answer_description" id="answer_description" rows="20" cols="30" placeholder="Введите примечание к ответу" class="input_text"></textarea>
+                </div>
+                <input id="submit" type="submit" style="display:block">
+                {% if error %}
+                    <p id="error">{{ error }}</p>
+                {% endif %}
+            </form>
+        </div>
+        <div id="button_box">
+            <div id="question_button_box">
+                <ul id="question_button_list">
+                    <li id="question_button" class="question_button"  onclick="showScreen(1)" class=".question_button">Вопрос</li>
+                    <li id="note_button" class="question_button"  onclick="showScreen(2)" class=".question_button">Описание</li>
+                    <li id="answer_button" class="question_button"  onclick="showScreen(3)" class=".question_button">Ответ</li>
+                    <li id="submit_button" class="question_button" class=".question_button">Отправить</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'questions/js/show_box.js' %}"></script>
 </body>
 </html>
