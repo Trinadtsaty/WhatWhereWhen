@@ -1,5 +1,5 @@
 {% extends 'questions/pattern.html' %}
-
+{% load static %}
 
 {% block question %}
 <div id="question" class="appears_text">
@@ -51,5 +51,18 @@
 
 
 {% block DataTime %}
+<div class="exemple">Вопрос создан: {{ Question.created_at|date:"d.m.Y" }}</div>
+{% endblock %}
 
+{% block Author %}
+<div class="exemple">Автор вопроса:
+    <div id="author_box">
+        <div id="author_login" class="author" title="{{ Question.question_author.login }}">{{ Question.question_author.login }}</div>
+        {% if Question.question_author.picture %}
+        <div id="author_img_box" class="author"><img id="author_img" src="{{ Question.question_author.picture.url }}" alt="Author Picture"></div>
+        {% else %}
+        <div id="author_img_box" class="author"><img id="author_img" src="{% static 'registration/img/Avatar.png' %}" alt="Default Avatar"></div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

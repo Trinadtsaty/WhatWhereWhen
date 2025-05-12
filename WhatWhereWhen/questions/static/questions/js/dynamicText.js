@@ -41,6 +41,7 @@ const correction_text_size = document.querySelectorAll(".dynamic_size");
 const appears_text = document.querySelectorAll(".appears_text");
 
 
+
 if (correction_text_length.length > 0) {
     correction_text_length.forEach(text => {
         size_on_length(text);
@@ -60,3 +61,27 @@ if (appears_text.length > 0) {
     // Добавляем обработчик события 'resize'
     window.addEventListener('resize', () => size_on_appears_text(appears_text));
 };
+
+
+const author_question_size = document.querySelector("#author_login");
+const authorTextLength = author_question_size.textContent.length; // Получаем длину текста
+
+console.log(authorTextLength);
+
+if (authorTextLength <= 5) {
+    author_question_size.style.fontSize = '50px';
+} else if (authorTextLength <= 10) {
+    author_question_size.style.fontSize = '25px';
+} else if (authorTextLength <= 15) {
+    author_question_size.style.fontSize = '16px';
+} else if (authorTextLength <= 20) {
+    author_question_size.style.fontSize = '12px';
+}
+
+const authorBox = document.querySelector("#author_box");
+
+// Получение размеров контейнера
+const width = authorBox.clientWidth; // Ширина
+const height = authorBox.clientHeight; // Высота
+
+console.log(`Ширина: ${width}px, Высота: ${height}px`);

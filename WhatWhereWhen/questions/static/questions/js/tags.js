@@ -35,29 +35,32 @@ function POST(data, URL) {
     })
 
 };
+if (Button_tegs) {
+    Button_tegs.addEventListener('click', () => {
+        Dialog.showModal();
 
-Button_tegs.addEventListener('click', () => {
-    Dialog.showModal();
+        const Tags = document.querySelectorAll('.all_tag');
+        Tags.forEach(Tag => {
+            Tag.addEventListener('click', () => {
+                const data = {
+                    "tags_id": Tag.getAttribute('data-value'),
+                    "question_id": question_number
+                };
+                POST(data, URL_server + URL_adress2)
 
-    const Tags = document.querySelectorAll('.all_tag');
-    Tags.forEach(Tag => {
-        Tag.addEventListener('click', () => {
-            const data = {
-                "tags_id": Tag.getAttribute('data-value'),
-                "question_id": question_number
-            };
-            POST(data, URL_server + URL_adress2)
-
-            setTimeout(function() {
-                location.reload(); // Перезагружает страницу через 1 секунду (1000 миллисекунд)
-            }, 500); // 1000 миллисекунд = 1 секунда
+                setTimeout(function() {
+                    location.reload(); // Перезагружает страницу через 1 секунду (1000 миллисекунд)
+                }, 500); // 1000 миллисекунд = 1 секунда
+            });
         });
-    });
 
-    Close_Dialog.onclick = function () {
-        Dialog.close();
-    };
-});
+        Close_Dialog.onclick = function () {
+            Dialog.close();
+        };
+    });
+}
+
+
 
 
 function filterItems() {

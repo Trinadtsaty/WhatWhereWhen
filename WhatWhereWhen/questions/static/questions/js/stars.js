@@ -2,7 +2,6 @@ const stars = document.querySelectorAll('.star');
 
 const stars_full = document.querySelectorAll('.full');
 let che = false
-console.log(question_number)
 
 if (!estimation_ball_bol) {
     stars_full.forEach(star_full => {

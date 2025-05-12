@@ -14,9 +14,14 @@ def question_main(request):
 def question_add(request):
     return render(request, "questions/question_add.html")
 
+@login_required()
+def tag_add(request):
+    ref = request.GET.get('ref')
+    print(ref)
+    return render(request, "questions/tag_add.html")
+
 
 def question(request,question_number):
-
     question = get_object_or_404(Question, ID=question_number, publication=True)
     tags_queation=[]
     tags_questions = Tags_Questions.objects.filter(question_id = question)
@@ -65,3 +70,4 @@ class Question_Evaluation_API(Question_Evaluation_APIUpdate, Question_Evaluation
 class Tag_Question_API(Tag_Question_APICreate):
     permission_classes = (IsAuthenticated, )
     # pass
+

@@ -85,9 +85,14 @@ h1,li {
 
 #tegs_box_name {
     margin-left: 5px;
-    color: white;
     font-size: 40px;
-    -webkit-text-stroke: 0.5px black;
+    color: white;
+    margin-bottom: 5px;
+
+/*    margin-left: 5px;*/
+/*    color: white;*/
+/*    font-size: 40px;*/
+/*    -webkit-text-stroke: 0.5px black;*/
 
 }
 
@@ -203,6 +208,7 @@ h1,li {
 }
 
 .exemple {
+    margin-left: 5px;
     font-size: 40px;
     color: white;
     margin-bottom: 5px;
@@ -334,34 +340,6 @@ h1,li {
     font-size: 32px;
 }
 
-
-
-
-/*#login {*/
-/*    display: none; *//* Скрываем текст по умолчанию */
-/*    color: white; *//* Цвет текста */
-/*    background-color: rgba(0, 0, 0, 0.7); *//* Фон текста */
-/*    padding: 10px; *//* Отступы */
-/*    border-radius: 5px; *//* Закругление углов */
-/*    position: fixed; *//* Фиксированное позиционирование */
-/*    top: 50%; *//* Центрируем по вертикали */
-/*    left: 50%; *//* Центрируем по горизонтали */
-/*    transform: translate(-50%, -50%); *//* Центрируем элемент */
-/*    z-index: 9999; *//* Устанавливаем высокий z-index, чтобы элемент был поверх остальных */
-/*}*/
-
-/*#login {*/
-/*    position: absolute; *//* Устанавливаем абсолютное позиционирование для текста */
-/*    top: 50%; *//* Центрируем по вертикали */
-/*    left: 50%; *//* Центрируем по горизонтали */
-/*    transform: translate(-50%, -50%); *//* Сдвигаем на половину ширины и высоты элемента */
-/*    z-index: 10; *//* Устанавливаем высокий z-index, чтобы текст был поверх других элементов */
-/*    color: white; *//* Цвет текста (можно изменить) */
-/*    background: rgba(0, 0, 0, 0.5); *//* Фон для лучшей читаемости (опционально) */
-/*    padding: 10px; *//* Отступы (опционально) */
-/*    border-radius: 5px; *//* Скругление углов (опционально) */
-/*}*/
-
 #login {
     display: none;
     color: white;
@@ -378,4 +356,42 @@ h1,li {
 
 #star_box:hover #login {
     display: block; /* Показываем текст при наведении на контейнер */
+}
+
+
+#author_box {
+    border: 5px solid black;
+    border-radius: 25px;
+/*    height: 8vh;*/
+/*    width: 22vh;*/
+    height: 76px;
+    width: 210px;
+    display: flex; /* Используем flexbox для расположения элементов */
+}
+
+#author_login {
+/*    font-size: 12px;*/
+    border-right: 5px solid black;
+    height: 100%; /* Занимает всю высоту контейнера */
+    width: 60%; /* Устанавливаем ширину для логина */
+    display: flex; /* Используем flexbox для центрирования текста */
+    align-items: center; /* Центрируем по вертикали */
+    justify-content: center; /* Центрируем по горизонтали */
+}
+
+#author_img_box {
+    height: 100%; /* Занимает всю высоту контейнера */
+    width: 40%; /* Устанавливаем ширину для изображения */
+    display: flex; /* Используем flexbox для центрирования изображения */
+    align-items: center; /* Центрируем по вертикали */
+    justify-content: center; /* Центрируем по горизонтали */
+    overflow: hidden; /* Скрываем лишнюю часть изображения */
+}
+
+#author_img {
+    height: 100%; /* Занимает всю высоту блока для изображения */
+    width: 100%; /* Занимает всю ширину блока для изображения */
+    object-fit: cover; /* Обеспечивает, что изображение сохраняет пропорции и заполняет блок */
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
 }
