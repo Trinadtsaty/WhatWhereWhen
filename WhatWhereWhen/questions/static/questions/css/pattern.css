@@ -236,6 +236,7 @@ h1,li {
     cursor: pointer;
 }
 
+
 #dialog_tegs_all {
     background-color: rgba(136, 128, 136, 1);
     border: 3px solid rgba(33, 32, 32, 1);
@@ -333,3 +334,48 @@ h1,li {
     font-size: 32px;
 }
 
+
+
+
+/*#login {*/
+/*    display: none; *//* Скрываем текст по умолчанию */
+/*    color: white; *//* Цвет текста */
+/*    background-color: rgba(0, 0, 0, 0.7); *//* Фон текста */
+/*    padding: 10px; *//* Отступы */
+/*    border-radius: 5px; *//* Закругление углов */
+/*    position: fixed; *//* Фиксированное позиционирование */
+/*    top: 50%; *//* Центрируем по вертикали */
+/*    left: 50%; *//* Центрируем по горизонтали */
+/*    transform: translate(-50%, -50%); *//* Центрируем элемент */
+/*    z-index: 9999; *//* Устанавливаем высокий z-index, чтобы элемент был поверх остальных */
+/*}*/
+
+/*#login {*/
+/*    position: absolute; *//* Устанавливаем абсолютное позиционирование для текста */
+/*    top: 50%; *//* Центрируем по вертикали */
+/*    left: 50%; *//* Центрируем по горизонтали */
+/*    transform: translate(-50%, -50%); *//* Сдвигаем на половину ширины и высоты элемента */
+/*    z-index: 10; *//* Устанавливаем высокий z-index, чтобы текст был поверх других элементов */
+/*    color: white; *//* Цвет текста (можно изменить) */
+/*    background: rgba(0, 0, 0, 0.5); *//* Фон для лучшей читаемости (опционально) */
+/*    padding: 10px; *//* Отступы (опционально) */
+/*    border-radius: 5px; *//* Скругление углов (опционально) */
+/*}*/
+
+#login {
+    display: none;
+    color: white;
+    position: absolute;
+    width: 27.5%;
+    height: 100px;
+    font-size: 2.5vw;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#star_box:hover #login {
+    display: block; /* Показываем текст при наведении на контейнер */
+}

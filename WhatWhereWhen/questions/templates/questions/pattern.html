@@ -45,6 +45,7 @@
 
         {% if not request.user.is_authenticated %}
         <div id="star_box">
+            <div id="login"><a href="{% url 'Login' %}" style="text-decoration: none; color: inherit; color: inherit;">Пожалуйста авторизуйтесь</a></div>
             <img class="star login_stars"    alt="пустая звезда"  src="{% static 'questions/img/stars/star_unfull.png' %}">
             <img class="star login_stars"    alt="пустая звезда"  src="{% static 'questions/img/stars/star_unfull.png' %}">
             <img class="star login_stars"    alt="пустая звезда"  src="{% static 'questions/img/stars/star_unfull.png' %}">
@@ -91,7 +92,6 @@
     </script>
     <script src="{% static 'questions/js/stars.js' %}"></script>
     <script src="{% static 'questions/js/tags.js' %}"></script>
-<!--    <script src="{% static 'questions/js/test.js' %}"></script>-->
     <script src="{% static 'questions/js/dynamicText.js' %}"></script>
     <script src="{% static 'questions/js/question_display.js' %}"></script>
 </body>

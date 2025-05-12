@@ -21,9 +21,8 @@ class Users_mainAPI(generics.ListAPIView):
         total_users = self.queryset.count()
         # Подсчитываем количество активных пользователей
         online_users = get_active_users()
-
         #Кол-во созданных вопросов
-        questions_count = Question.objects.all().count()
+        questions_count = Question.objects.filter(publication=True).count()
         # Кол-во комнат
         room_online = "pass"
 

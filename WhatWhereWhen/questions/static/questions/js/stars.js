@@ -84,6 +84,8 @@ function stars_unligt(number) {
         const element_unfull = document.querySelector(`#star_${i}_unfull`);
         element_full.style.display = 'none';
         element_unfull.style.display = 'block';
+
+
     };
 };
 
@@ -108,6 +110,9 @@ stars.forEach(star => {
             POST(data, URL_server + URL_adress)
         };
         che = true;
+        setTimeout(function() {
+            location.reload();
+        }, 500);
 
     });
     star.addEventListener('mouseout', function() {
