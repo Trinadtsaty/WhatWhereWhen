@@ -17,7 +17,7 @@ def question_main(request):
     return render(request, "questions/pattern.html", {"title" : title})
 
 
-@login_required()
+# @login_required()
 def question_add(request):
     return render(request, "questions/question_add.html")
 

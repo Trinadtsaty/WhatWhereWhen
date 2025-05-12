@@ -22,7 +22,7 @@
                     <input name="answer" id="answer" type="text" placeholder="Введите отве" class="input_line">
                     <textarea name="answer_description" id="answer_description" rows="20" cols="30" placeholder="Введите примечание к ответу" class="input_text"></textarea>
                 </div>
-                <input id="submit" type="submit" style="display:block">
+                <input id="submit" type="submit" style="display:none">
                 {% if error %}
                     <p id="error">{{ error }}</p>
                 {% endif %}
@@ -31,10 +31,10 @@
         <div id="button_box">
             <div id="question_button_box">
                 <ul id="question_button_list">
-                    <li id="question_button" class="question_button"  onclick="showScreen(1)" class=".question_button">Вопрос</li>
-                    <li id="note_button" class="question_button"  onclick="showScreen(2)" class=".question_button">Описание</li>
-                    <li id="answer_button" class="question_button"  onclick="showScreen(3)" class=".question_button">Ответ</li>
-                    <li id="submit_button" class="question_button" class=".question_button">Отправить</li>
+                    <li id="question_button" class="question_button" onclick="showScreen(1)">Вопрос</li>
+                    <li id="note_button" class="question_button" onclick="showScreen(2)">Описание</li>
+                    <li id="answer_button" class="question_button" onclick="showScreen(3)">Ответ</li>
+                    <li id="submit_button">Отправить</li>
                 </ul>
             </div>
         </div>

@@ -90,9 +90,9 @@ body {
     float: left;
     background-color: rgba(136, 128, 136, 1);
 
-    height: 70vh;
-    width: 50vw;
-    border: 3px solid white;
+    height: 670px;
+    width: 960px;
+    border: 3px solid #524F52;
     border-radius: 25px;
 
 
@@ -128,4 +128,41 @@ body {
 
 #box_for_button{
     margin-top: auto;
+}
+
+.question_button {
+    background-color: rgba(136, 128, 136, 1);
+    border-bottom-right-radius: 25px;
+    border-top-right-radius: 25px;
+    border: 3px solid #524F52;
+    height: 100px;
+    width: 300px;
+    font-size: 64px;
+    text-align: center;
+    margin-bottom: 5px;
+    margin-left: -3px;
+
+    cursor: pointer;
+}
+
+.question_button:hover {
+    background-color: rgba(71, 68, 71, 1);
+}
+
+#submit_button {
+    border-bottom-right-radius: 25px;
+    border-top-right-radius: 25px;
+    height: 100px;
+    width: 300px;
+    font-size: 64px;
+    text-align: center;
+    margin-bottom: 5px;
+    margin-left: -3px;
+
+    cursor: pointer;
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+    pointer-events: none;
+
+    cursor: pointer;
 }
