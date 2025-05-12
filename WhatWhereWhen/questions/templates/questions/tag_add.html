@@ -10,7 +10,7 @@
     <div class="container">
         <form method="post" class="forms" id="form_tags_add">
             {% csrf_token %}
-            <input id="field_tag" type="text" placeholder="Введите Название тега" class="input_line">
+            <input name="tag_name" id="field_tag" type="text" placeholder="Введите Название тега" class="input_line">
             <input id="submit" type="submit" class="form_button" value="Отправить">
             {% if error %}
                 <p id="error">{{ error }}</p>

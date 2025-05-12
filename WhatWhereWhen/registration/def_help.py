@@ -80,3 +80,12 @@ def validate_image(image):
             raise ValidationError('Длинна или ширина изображения превышает 4000 пикселей, пожалуйста выберите другое изображение')
         print(ValidationError)
 
+def validate_tag(name):
+    dangerous_characters = ['<', '>', '&', '/', '\\', "'", '"', ';', ' ', '\n', '\r', '?', '#', '%']
+    for i in range(len(dangerous_characters)):
+        if dangerous_characters[i] in name:
+            raise ValidationError("Недопустимые символы в логине, пожалуйста придумайте логин без специальных символов")
+    if len(name) < 3:
+        raise ValidationError('Тег слишком короткий, пожалуйста придумайте ник длинной от 3 до 20 символов')
+    if len(name) > 20:
+        raise ValidationError('Тег слишком длинный, пожалуйста придумайте ник длинной от 3 до 20 символов')

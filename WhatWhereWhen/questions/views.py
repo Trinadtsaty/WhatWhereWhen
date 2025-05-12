@@ -1,8 +1,15 @@
 from idlelib.rpc import request_queue
+
+from django.core.exceptions import ValidationError
+
 from .models import *
 from django.shortcuts import render
+
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from registration.def_help import validate_tag
+from registration.models import Users
+
 
 def question_main(request):
     # return render(request, "questions/question_main.html")
@@ -17,7 +24,39 @@ def question_add(request):
 @login_required()
 def tag_add(request):
     ref = request.GET.get('ref')
-    print(ref)
+    try:
+        ref=int(ref)
+    except:
+        pass
+    if request.method == 'POST':
+        tag = request.POST.get('tag_name')
+
+        if tag:
+            try:
+                validate_tag(tag)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "questions/tag_add.html", {
+                    'error': error,
+                })
+
+            exists = Tags.objects.filter(tag_name=tag)
+
+            if exists:
+                error = "Такой тег уже существует"
+                return render(request, "questions/tag_add.html", {
+                    'error': error,
+                })
+            else:
+                Tags_bd, created = Tags.objects.get_or_create(tag_name=tag, tag_author=request.user)
+                Tags_bd.save()
+
+
+                if isinstance(ref, int):
+                    return redirect('Question', question_number=ref)
+                else:
+                    return redirect('Question_add')
+
     return render(request, "questions/tag_add.html")
 
 

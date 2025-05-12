@@ -29,7 +29,7 @@
         <input id="text_input" type="text" placeholder="Введите название..." onkeyup="filterItems()" class="input_dialog">
             {% block tags_add %}
             {% endblock %}
-        <div id="button_box" class="dialog_button_box"><div class="dialog_button" id="create_tag"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Tag_add' %}?ref=2">Предложить свой</a></div></div>
+        <div id="button_box" class="dialog_button_box"><div class="dialog_button" id="create_tag"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Tag_add' %}?ref={{ number }}">Предложить свой</a></div></div>
     </dialog>
 
     <div id="tools_box">
