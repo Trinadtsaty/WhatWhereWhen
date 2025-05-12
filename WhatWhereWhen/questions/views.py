@@ -14,11 +14,11 @@ def question_main(request):
 def question_add(request):
     return render(request, "questions/question_add.html")
 
-# @login_required()
-# def tag_add(request):
-#     ref = request.GET.get('ref')
-#     print(ref)
-#     return render(request, "questions/tag_add.html")
+@login_required()
+def tag_add(request):
+    ref = request.GET.get('ref')
+    print(ref)
+    return render(request, "questions/tag_add.html")
 
 
 def question(request,question_number):

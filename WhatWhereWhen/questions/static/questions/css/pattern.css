@@ -332,13 +332,19 @@ h1,li {
     box-shadow: none; /* Убирает тень */
     background: transparent; /* Убирает фон */
     color: white; /* Устанавливает цвет текста как у родителя */
-    font: inherit; /* Устанавливает шрифт как у родителя */
+/*    font: inherit; *//* Устанавливает шрифт как у родителя */
     border-bottom: 3px solid rgba(82, 79, 82, 1);
+    font-size: 32px;
 }
 
 .input_dialog::placeholder {
     font-size: 32px;
 }
+
+.input_line::placeholder {
+    font-size: 32px;
+}
+
 
 
 

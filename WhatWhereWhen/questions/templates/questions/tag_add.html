@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Предложение Тега</title>
+    <link rel="stylesheet" href="{% static 'questions/css/add.css' %}">
+</head>
+<body>
+    <div class="container">
+        <form method="post" class="forms" id="form_tags_add">
+            {% csrf_token %}
+            <input id="field_tag" type="text" placeholder="Введите Название тега" class="input_line">
+            <input id="submit" type="submit" class="form_button" value="Отправить">
+            {% if error %}
+                <p id="error">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
