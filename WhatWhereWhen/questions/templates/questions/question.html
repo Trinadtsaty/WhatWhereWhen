@@ -26,7 +26,7 @@
 
 
 {% block tags_add %}
-<div id="tags_scroll">
+<div id="tags_scroll" class="dialog_box_scroll">
     <ul id="all_tags">
     {% for tag in tags_all %}
         <li class="all_tag" data-value="{{ tag.ID }}">{{ tag.tag_name }}</li>
