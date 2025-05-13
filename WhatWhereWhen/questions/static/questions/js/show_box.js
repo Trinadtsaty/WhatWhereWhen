@@ -10,7 +10,7 @@ function showScreen(questionNumber) {
     const buttons = document.querySelectorAll('.question_button'); // Предполагается, что у кнопок есть класс 'question_button'
     buttons.forEach(button => {
         button.style.backgroundColor = "";
-        button.style.borderBottom = "2px solid rgba(136, 128, 136, 1)";
+//        button.style.borderBottom = "2px solid rgba(136, 128, 136, 1)";
     });
 
     // Показываем только выбранный вопрос
@@ -18,15 +18,15 @@ function showScreen(questionNumber) {
     if (questionNumber === 1) {
         selectedQuestion = document.getElementById("question_box");
         document.getElementById("question_button").style.backgroundColor = "rgba(71, 68, 71, 1)";
-        document.getElementById("question_button").style.borderBottom = "none";
+//        document.getElementById("question_button").style.borderBottom = "none";
     } else if (questionNumber === 2) {
         selectedQuestion = document.getElementById("note_box");
         document.getElementById("note_button").style.backgroundColor = "rgba(71, 68, 71, 1)";
-        document.getElementById("note_button").style.borderBottom = "none";
+//        document.getElementById("note_button").style.borderBottom = "none";
     } else if (questionNumber === 3) {
         selectedQuestion = document.getElementById("answer_box");
         document.getElementById("answer_button").style.backgroundColor = "rgba(71, 68, 71, 1)";
-        document.getElementById("answer_button").style.borderBottom = "none";
+//        document.getElementById("answer_button").style.borderBottom = "none";
     };
 
     if (selectedQuestion) {
@@ -40,8 +40,54 @@ window.onload = function() {
 };
 
 
+//const submit = document.querySelector('#submit_button');
+//
+//submit.addEventListener('click', function() {
+//    let condition1 = document.querySelector('#question_name').value;
+//    let condition2 = document.querySelector('#text_question').value;
+//    let condition3 = document.querySelector('#answer').value;
+//
+//    if (condition1 && condition2 && condition3) {
+//        console.log(condition1);
+//        console.log(condition2);
+//        console.log(condition3);
+//    } else {
+//
+//    };
+//
+//});
+
 const submit = document.querySelector('#submit_button');
+const questionName = document.querySelector('#question_name');
+const textQuestion = document.querySelector('#text_question');
+const answer = document.querySelector('#answer');
+
+// Функция для проверки заполненности полей
+function checkInputs() {
+    if (questionName.value && textQuestion.value && answer.value) {
+        submit.style.pointerEvents = "";
+        submit.style.backgroundColor = "#C0A610";
+    } else {
+        submit.style.pointerEvents = "none";
+        submit.style.backgroundColor = "#393730";
+    }
+}
+
+// Добавляем обработчик событий для каждого поля ввода
+questionName.addEventListener('input', checkInputs);
+textQuestion.addEventListener('input', checkInputs);
+answer.addEventListener('input', checkInputs);
+
+// Изначально отключаем кнопку
+submit.style.pointerEvents = "none";
+submit.style.backgroundColor = "#393730";
+
 
 submit.addEventListener('click', function() {
     console.log(123)
+});
+
+submit.addEventListener('mouseover', function() {
+    console.log(456)
+    submit.style.backgroundColor = "#524F52";
 });
