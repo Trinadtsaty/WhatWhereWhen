@@ -71,10 +71,12 @@ body {
     background-color: red;
 }
 #question_box{
+/*    display: flex;*/
+/*    align-items: center;*/
     float: left;
     width: 50%;
     height: 100%;
-    background-color: yellow;
+    background-color: grey;
 }
 #random_question_box{
     float: left;
@@ -83,13 +85,10 @@ body {
     background-color: green;
 }
 
-#search{
-    width:100%;
-}
 
 #search {
     width: 90%;
-    font-size: 50px;
+    margin-left: 5%;
     border: none; /* Убирает рамку */
     outline: none; /* Убирает контур при фокусировке */
     box-shadow: none; /* Убирает тень */
