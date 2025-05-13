@@ -1,4 +1,7 @@
 
+
+
+
 function showScreen(questionNumber) {
     // Скрываем все вопросы
     const questions = document.querySelectorAll('.appears_text');
@@ -35,9 +38,6 @@ function showScreen(questionNumber) {
 };
 
 // Показываем первый вопрос при загрузке страницы
-window.onload = function() {
-    showScreen(1);
-};
 
 
 
@@ -48,6 +48,10 @@ const answer = document.querySelector('#answer');
 
 // Функция для проверки заполненности полей
 function checkInputs() {
+    const questionName = document.querySelector('#question_name');
+    const textQuestion = document.querySelector('#text_question');
+    const answer = document.querySelector('#answer');
+
     if (questionName.value && textQuestion.value && answer.value) {
         submit.style.pointerEvents = "";
         submit.style.backgroundColor = "#C0A610";
@@ -64,8 +68,8 @@ textQuestion.addEventListener('input', checkInputs);
 answer.addEventListener('input', checkInputs);
 
 // Изначально отключаем кнопку
-submit.style.pointerEvents = "none";
-submit.style.backgroundColor = "#393730";
+//submit.style.pointerEvents = "none";
+//submit.style.backgroundColor = "#393730";
 
 
 submit.addEventListener('click', function() {
@@ -76,6 +80,24 @@ submit.addEventListener('mouseover', function() {
     submit.style.backgroundColor = "#524F52";
 });
 
-window.onload = function() {
+//document.addEventListener("DOMContentLoaded", function() {
+//    window.onload = function() {
+//    showScreen(1);
+//    if (questionName.value && textQuestion.value && answer.value) {
+//        submit.style.pointerEvents = "";
+//        submit.style.backgroundColor = "#C0A610";
+//    }
+//    };
+//});
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Показываем первый вопрос при загрузке страницы
+    showScreen(1);
+
+    // Изначально отключаем кнопку
+    submit.style.pointerEvents = "";
+    submit.style.backgroundColor = "#C0A610";
+
+    // Проверяем заполненность полей сразу после загрузки
     checkInputs();
-};
+});
