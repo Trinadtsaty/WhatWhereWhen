@@ -1,7 +1,3 @@
-
-
-
-
 function showScreen(questionNumber) {
     // Скрываем все вопросы
     const questions = document.querySelectorAll('.appears_text');
@@ -67,10 +63,6 @@ questionName.addEventListener('input', checkInputs);
 textQuestion.addEventListener('input', checkInputs);
 answer.addEventListener('input', checkInputs);
 
-// Изначально отключаем кнопку
-//submit.style.pointerEvents = "none";
-//submit.style.backgroundColor = "#393730";
-
 
 submit.addEventListener('click', function() {
     document.getElementById('submit').click();
@@ -80,15 +72,6 @@ submit.addEventListener('mouseover', function() {
     submit.style.backgroundColor = "#524F52";
 });
 
-//document.addEventListener("DOMContentLoaded", function() {
-//    window.onload = function() {
-//    showScreen(1);
-//    if (questionName.value && textQuestion.value && answer.value) {
-//        submit.style.pointerEvents = "";
-//        submit.style.backgroundColor = "#C0A610";
-//    }
-//    };
-//});
 
 document.addEventListener("DOMContentLoaded", function() {
     // Показываем первый вопрос при загрузке страницы
