@@ -87,6 +87,7 @@ body {
 
 
 #search {
+    margin-top: 5px;
     width: 90%;
     margin-left: 5%;
     border: none; /* Убирает рамку */
