@@ -15,9 +15,9 @@ from .models import Question
 
 
 def question_main(request):
-    # return render(request, "questions/question_main.html")
+
     title = 'Вопросы'
-    return render(request, "questions/pattern.html", {"title" : title})
+    return render(request, "questions/question_main.html")
 
 
 @login_required()

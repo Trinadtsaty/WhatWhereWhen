@@ -1,0 +1,109 @@
+@font-face {
+    font-family: 'Oswald'; /* Название шрифта */
+    src: url('../fonts/Oswald-VariableFont_wght.ttf') format('truetype'); /* Можно указать несколько форматов */
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Oswald', sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+
+
+    background-image: url('../img/background.png'); /* Укажите путь к вашему изображению */
+    background-size: cover; /* Это свойство позволяет изображению покрывать весь элемент */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Отключает повторение изображения */
+}
+
+#main_page {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #C0A610;
+    border: 2px solid #524F52;
+    border-radius: 20px;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    -webkit-text-stroke: 0.2vh black;
+    text-align: center;
+
+    font-size: 45px;
+    height: 75px;
+    width: 300px;
+
+    cursor: pointer;
+    transition: .5s;
+    box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+#main_page:hover {
+    background-color: #524F52;
+    border: 0.6vh solid #C0A610;
+}
+
+#hint {
+    position: fixed; /* Фиксированное позиционирование относительно окна браузера */
+    bottom: 20px; /* Отступ от нижнего края */
+    right: 20px; /* Отступ от правого края */
+    z-index: 1000; /* Уровень наложения, чтобы элемент был поверх других */
+    cursor: pointer;
+}
+
+#page {
+    margin-botton:5vh;
+    width: 100vw;
+    height: 85vh;
+}
+
+#tools_box{
+    float: left;
+    width: 25%;
+    height: 100%;
+    background-color: red;
+}
+#question_box{
+    float: left;
+    width: 50%;
+    height: 100%;
+    background-color: yellow;
+}
+#random_question_box{
+    float: left;
+    width: 25%;
+    height: 100%;
+    background-color: green;
+}
+
+#search{
+    width:100%;
+}
+
+#search {
+    width: 90%;
+    font-size: 50px;
+    border: none; /* Убирает рамку */
+    outline: none; /* Убирает контур при фокусировке */
+    box-shadow: none; /* Убирает тень */
+    background: transparent; /* Убирает фон */
+    color: white; /* Устанавливает цвет текста как у родителя */
+/*    font: inherit; *//* Устанавливает шрифт как у родителя */
+    border-bottom: 3px solid rgba(82, 79, 82, 1);
+    font-size: 32px;
+}
+
+#search::placeholder {
+    font-size: 32px;
+}
+
+#search:focus{
+    font-size: 32px;
+}

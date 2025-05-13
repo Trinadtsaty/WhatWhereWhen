@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="{% static 'questions/css/main.css' %}">
 </head>
 <body>
+    <div id="page">
+        <div id="tools_box">
 
+        </div>
+        <div id="question_box">
+            <input id="search">
+        </div>
+        <div id="random_question_box">
+
+        </div>
+    </div>
+    <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
+    <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
+    <script src="{% static 'questions/js/question_search.js' %}"></script>
 </body>
 </html>
