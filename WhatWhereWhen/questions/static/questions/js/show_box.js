@@ -40,22 +40,6 @@ window.onload = function() {
 };
 
 
-//const submit = document.querySelector('#submit_button');
-//
-//submit.addEventListener('click', function() {
-//    let condition1 = document.querySelector('#question_name').value;
-//    let condition2 = document.querySelector('#text_question').value;
-//    let condition3 = document.querySelector('#answer').value;
-//
-//    if (condition1 && condition2 && condition3) {
-//        console.log(condition1);
-//        console.log(condition2);
-//        console.log(condition3);
-//    } else {
-//
-//    };
-//
-//});
 
 const submit = document.querySelector('#submit_button');
 const questionName = document.querySelector('#question_name');
@@ -73,6 +57,7 @@ function checkInputs() {
     }
 }
 
+
 // Добавляем обработчик событий для каждого поля ввода
 questionName.addEventListener('input', checkInputs);
 textQuestion.addEventListener('input', checkInputs);
@@ -84,10 +69,13 @@ submit.style.backgroundColor = "#393730";
 
 
 submit.addEventListener('click', function() {
-    console.log(123)
+    document.getElementById('submit').click();
 });
 
 submit.addEventListener('mouseover', function() {
-    console.log(456)
     submit.style.backgroundColor = "#524F52";
 });
+
+window.onload = function() {
+    checkInputs();
+};

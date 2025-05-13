@@ -4,7 +4,6 @@
     font-weight: normal;
     font-style: normal;
 }
-
 body {
     font-family: 'Oswald', sans-serif;
     padding: 0;
@@ -16,14 +15,12 @@ body {
     background-position: center; /* Центрирует изображение */
     background-repeat: no-repeat; /* Отключает повторение изображения */
 }
-
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
 }
-
 .forms {
     display: flex;
     align-items: center;
@@ -31,7 +28,6 @@ body {
     justify-content: center;
 
 }
-
 .input_line {
     width: 400px;
     height: 50px;
@@ -41,19 +37,16 @@ body {
     margin-bottom: 10px;
     font-size: 40px;
 }
-
 .input_line:focus {
     font-size: 40px;
     color: rgba(255, 255, 255, 0.5);
     outline: none; /* Убирает стандартный контур при фокусе */
 }
-
 .input_line::placeholder {
     color: rgba(255, 255, 255, 0.5);
     font-family: "Oswald", sans-serif;
     font-size: 40px;
 }
-
 .form_button {
     background-color: #C0A610;
     border: 4px solid #524F52;
@@ -72,20 +65,17 @@ body {
     transition: .5s;
     box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
 }
-
 .form_button:hover {
     background-color: #524F52;
     font-size: 65px;
     border: 0.6vh solid #C0A610;
 }
-
-#error {
+.error {
     color: red;
     font-size: 32px;
     font-family: "Oswald", sans-serif;
     -webkit-text-stroke: 1px black;
 }
-
 #screen {
     float: left;
     background-color: rgba(136, 128, 136, 1);
@@ -95,22 +85,18 @@ body {
     border: 3px solid #524F52;
     border-radius: 25px;
 }
-
 #button_box{
     float: left;
     color: white;
 }
-
 #question_button_list {
     list-style-type: none;
     padding: 0;
 	margin: 0;
 }
-
 #box_for_button{
     margin-top: auto;
 }
-
 .question_button {
     background-color: rgba(136, 128, 136, 1);
     border-bottom-right-radius: 25px;
@@ -125,11 +111,9 @@ body {
 
     cursor: pointer;
 }
-
 .question_button:hover {
     background-color: rgba(71, 68, 71, 1);
 }
-
 #submit_button {
     border-bottom-right-radius: 25px;
     border-top-right-radius: 25px;
@@ -147,12 +131,10 @@ body {
 
     cursor: pointer;
 }
-
 #submit_button:hover {
     background-color: #524F52;
     border: 3px solid #C0A610;
 }
-
 .appears_text {
     width: 100%;
     display: flex;
@@ -160,18 +142,20 @@ body {
     align-items: center;
     text-align: center;
 }
-
 .input_line {
     margin-top: 10px;
     width: 80%;
     font-size: 32px;
 }
-
 .input_text {
     margin-top: 10px;
     font-size: 32px;
     width: 80%;
-    height: 65%;
+    height: 50%;
+}
+
+#note{
+     height: 62%;
 }
 
 .input_text::placeholder {

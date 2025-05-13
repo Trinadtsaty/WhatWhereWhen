@@ -1,14 +1,17 @@
 from idlelib.rpc import request_queue
 
-from django.core.exceptions import ValidationError
 
 from .models import *
 from django.shortcuts import render
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from registration.def_help import validate_tag
+from registration.def_help import *
 from registration.models import Users
+from django.utils.html import escape
+from .decorators import edit_question
+from django.core.exceptions import ValidationError
+from .models import Question
 
 
 def question_main(request):
@@ -19,7 +22,185 @@ def question_main(request):
 
 @login_required()
 def question_add(request):
-    return render(request, "questions/question_add.html")
+    if request.method == 'POST':
+        question_name = escape(request.POST.get('question_name').strip())
+        text_question = escape(request.POST.get('text_question').strip())
+        note = escape(request.POST.get('note').strip())
+        answer = escape(request.POST.get('answer').strip())
+        answer_description = escape(request.POST.get('answer_description').strip())
+
+        if question_name:
+            try:
+                question_name_line(question_name)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "questions/question_add.html", {
+                    'error': error,
+                    'submit': "Отправить",
+                    "question_name": question_name,
+                    "text_question": text_question,
+                    "note": note,
+                    "answer": answer,
+                    "answer_description": answer_description
+                })
+
+        if text_question:
+            try:
+                question_name_text(text_question)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "questions/question_add.html", {
+                    'error': error,
+                    'submit': "Отправить",
+                    "question_name": question_name,
+                    "text_question": text_question,
+                    "note": note,
+                    "answer": answer,
+                    "answer_description": answer_description
+                })
+
+        if answer:
+            try:
+                question_answer_name(answer)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "questions/question_add.html", {
+                    'error': error,
+                    'submit': "Отправить",
+                    "question_name": question_name,
+                    "text_question": text_question,
+                    "note": note,
+                    "answer": answer,
+                    "answer_description": answer_description
+                })
+
+        if note:
+            try:
+                question_note(note)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "questions/question_add.html", {
+                    'error': error,
+                    'submit': "Отправить",
+                    "question_name": question_name,
+                    "text_question": text_question,
+                    "note": note,
+                    "answer": answer,
+                    "answer_description": answer_description
+                })
+
+        if answer_description:
+            try:
+                question_answer_text(answer_description)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "questions/question_add.html", {
+                    'error': error,
+                    'submit': "Отправить",
+                    "question_name": question_name,
+                    "text_question": text_question,
+                    "note": note,
+                    "answer": answer,
+                    "answer_description": answer_description
+                })
+
+        question = Question(question_name=question_name, text_question=text_question, note=note, answer=answer, answer_description=answer_description, license_id=Licenses.objects.get(ID=1), question_author=request.user)
+        question.save()
+        return redirect('Question', question_number=question.ID)
+
+
+    return render(request, "questions/question_add.html", {'submit': "Отправить",})
+
+
+
+
+@edit_question
+def question_edit(request, question_number):
+    # Получаем объект question по его ID
+    question = get_object_or_404(Question, ID=question_number)
+
+
+    # Инициализация полей
+    question_name = question.question_name
+    text_question = question.text_question
+    note = question.note
+    answer = question.answer
+    answer_description = question.answer_description
+
+    if request.method == 'POST':
+        question_name = escape(request.POST.get('question_name', '').strip())
+        text_question = escape(request.POST.get('text_question', '').strip())
+        note = escape(request.POST.get('note', '').strip())
+        answer = escape(request.POST.get('answer', '').strip())
+        answer_description = escape(request.POST.get('answer_description', '').strip())
+
+        errors = []  # Список для хранения ошибок
+
+        # Проверка и валидация каждого поля
+        if question_name:
+            try:
+                question_name_line_edit(question_name)
+            except ValidationError as e:
+                errors.append(str(e)[2:-2])
+
+        if text_question:
+            try:
+                question_name_text_edit(text_question)
+            except ValidationError as e:
+                errors.append(str(e)[2:-2])
+
+        if answer:
+            try:
+                question_answer_name(answer)
+            except ValidationError as e:
+                errors.append(str(e)[2:-2])
+
+        if note:
+            try:
+                question_note(note)
+            except ValidationError as e:
+                errors.append(str(e)[2:-2])
+
+        if answer_description:
+            try:
+                question_answer_text(answer_description)
+            except ValidationError as e:
+                errors.append(str(e)[2:-2])
+
+        if errors:
+            return render(request, "questions/question_add.html", {
+                'error': errors[0],
+                'submit': "Сохранить",
+                "question_name": question_name,
+                "text_question": text_question,
+                "note": note,
+                "answer": answer,
+                "answer_description": answer_description
+            })
+
+        # Сохраняем изменения в объекте question
+        question.question_name = question_name
+        question.text_question = text_question
+        question.note = note
+        question.answer = answer
+        question.answer_description = answer_description
+
+        question.save()
+
+        # Перенаправление на страницу вопроса
+        return redirect('Question', question_number=question.ID)  # Используем ID вопроса
+
+    # Если метод GET, отображаем форму с текущими данными
+    return render(request, "questions/question_add.html", {
+        'submit': "Сохранить",
+        "question_name": question_name,
+        "text_question": text_question,
+        "note": note,
+        "answer": answer,
+        "answer_description": answer_description
+    })
+
+
 
 @login_required()
 def tag_add(request):
@@ -60,7 +241,7 @@ def tag_add(request):
     return render(request, "questions/tag_add.html")
 
 
-def question(request,question_number):
+def question(request, question_number):
     question = get_object_or_404(Question, ID=question_number, publication=True)
     tags_queation=[]
     tags_questions = Tags_Questions.objects.filter(question_id = question)
@@ -110,3 +291,6 @@ class Tag_Question_API(Tag_Question_APICreate):
     permission_classes = (IsAuthenticated, )
     # pass
 
+
+def custom_404_view(request, exception):
+    return render(request, '404.html', status=404)
