@@ -84,7 +84,10 @@ def menu(request):
     # Извлечение всех связей пользователей и титулов ТОЛЬКО СВЯЗНЫХ
     users_and_titles = Users_and_Titles.objects.select_related('users', 'titles').all()
 
-    questions = Question.objects.filter(publication=True, question_author=request.user).count()
+    if request.user.is_authenticated:
+        questions = Question.objects.filter(publication=True, question_author=request.user).count()
+    else:
+        questions = None
 
     # Передача данных в контекст
     context = {

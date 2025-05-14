@@ -44,16 +44,19 @@ def question_main(request):
         return JsonResponse(response_data)
         # return render(request, "questions/question_main.html", response_data)
 
+    authors =  Question.objects.filter(publication=True).values_list('question_author', flat=True)
+    authors = list(set(authors))
+    users = Users.objects.filter(ID__in=authors)
+
+
+    print(authors)
     questions = Question.objects.filter(publication=True).order_by('ID')[0+(question_page*count_question):count_question+(question_page*count_question)]
-
-
-
-
-
-
+    tags = Tags.objects.filter(publication=True)
 
     return render(request, "questions/question_main.html", {
         "questions":questions,
+        "tags":tags,
+        "authors":users,
     })
 
 

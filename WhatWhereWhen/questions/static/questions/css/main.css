@@ -64,11 +64,13 @@ body {
     height: 85vh;
 }
 
-#tools_box{
+#search_box{
     float: left;
     width: 25%;
     height: 100%;
     background-color: red;
+    display: flex;
+    flex-direction: column;
 }
 #question_box{
 /*    display: flex;*/
@@ -85,8 +87,7 @@ body {
     background-color: green;
 }
 
-
-#search {
+.input_select {
     margin-top: 5px;
     width: 90%;
     margin-left: 5%;
@@ -100,10 +101,44 @@ body {
     font-size: 32px;
 }
 
-#search::placeholder {
+.input_select::placeholder {
     font-size: 32px;
 }
 
-#search:focus{
+.input_select:focus{
     font-size: 32px;
+}
+
+.select_box {
+    background-color: white;
+    margin-left: 5%;
+    height: 50%;
+    width: 90%;
+}
+
+.spis_select {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 90%;
+/*    margin-left: 5%;*/
+}
+
+.select_item {
+    background-color: grey;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 5px;
+}
+
+.check_mark_img {
+    width: 5%;
+    margin-left: 1%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.scroll_box {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 70%;
 }
