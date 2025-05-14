@@ -84,12 +84,15 @@ def menu(request):
     # Извлечение всех связей пользователей и титулов ТОЛЬКО СВЯЗНЫХ
     users_and_titles = Users_and_Titles.objects.select_related('users', 'titles').all()
 
+    questions = Question.objects.filter(publication=True, question_author=request.user).count()
+
     # Передача данных в контекст
     context = {
         'titles': titles,
         'users_and_titles': users_and_titles,
         'user_active': get_active_users(),
         'user_count': Users.objects.count(),
+        "questions_count":questions
     }
     return render(request, "registration/main_page.html", context)
 

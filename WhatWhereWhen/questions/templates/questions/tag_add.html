@@ -7,15 +7,15 @@
     <link rel="stylesheet" href="{% static 'questions/css/add.css' %}">
 </head>
 <body>
-    <div class="container">
+    <div id="tag_container" class="container">
         <form method="post" class="forms" id="form_tags_add">
             {% csrf_token %}
             <input name="tag_name" id="field_tag" type="text" placeholder="Введите Название тега" class="input_line">
             <input id="submit" type="submit" class="form_button" value="Отправить">
-            {% if error %}
-                <p id="error">{{ error }}</p>
-            {% endif %}
         </form>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
     </div>
     <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
 </body>

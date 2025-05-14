@@ -21,6 +21,9 @@ body {
     align-items: center;
     height: 100%;
 }
+#tag_container {
+    flex-direction: column;
+}
 .forms {
     display: flex;
     align-items: center;

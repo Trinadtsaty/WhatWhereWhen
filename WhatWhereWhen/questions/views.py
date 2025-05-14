@@ -2,7 +2,6 @@ from idlelib.rpc import request_queue
 
 
 from .models import *
-from django.shortcuts import render
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
@@ -12,12 +11,50 @@ from django.utils.html import escape
 from .decorators import edit_question
 from django.core.exceptions import ValidationError
 from .models import Question
+from django.http import JsonResponse
 
+
+# def question_main(request):
+#
+#     title = 'Вопросы'
+#     return render(request, "questions/question_main.html")
+
+
+
+import json
 
 def question_main(request):
+    question_page=0
+    count_question=5
+    search = ""
+    search_name = ""
+    search_text = ""
+    search_answer = ""
+    search_tags_and = []
+    search_tags_or = []
+    author_question = []
 
-    title = 'Вопросы'
-    return render(request, "questions/question_main.html")
+    if request.method == 'POST':
+        # Получение данных из POST-запроса
+        data = json.loads(request.body)  # Читаем тело запроса
+        test_data = data.get('test')  # Получаем значение 'test'
+        print(data)
+        # Обработка данных
+        response_data = {'message': 'Данные получены', 'data': test_data}
+        return JsonResponse(response_data)
+        # return render(request, "questions/question_main.html", response_data)
+
+    questions = Question.objects.filter(publication=True).order_by('ID')[0+(question_page*count_question):count_question+(question_page*count_question)]
+
+
+
+
+
+
+
+    return render(request, "questions/question_main.html", {
+        "questions":questions,
+    })
 
 
 @login_required()
@@ -266,7 +303,7 @@ def question(request, question_number):
             if est.user == request.user:
                 my_estimation = est.estimation
                 estimation_ball_bol = True
-        estimation_ball=estimation_ball / estimations_len
+        estimation_ball = round(estimation_ball / estimations_len, 1)
 
     return render(request, "questions/question.html", {
         "number" : question_number,
