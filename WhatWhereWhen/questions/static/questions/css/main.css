@@ -71,6 +71,8 @@ body {
     background-color: red;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 #question_box{
 /*    display: flex;*/
@@ -109,11 +111,14 @@ body {
     font-size: 32px;
 }
 
+
 .select_box {
+    margin-top: 5px;
     background-color: white;
     margin-left: 5%;
-    height: 50%;
+    height: 30%;
     width: 90%;
+    min-height: 250px;
 }
 
 .spis_select {
@@ -121,7 +126,6 @@ body {
     margin: 0;
     padding: 0;
     width: 90%;
-/*    margin-left: 5%;*/
 }
 
 .select_item {
@@ -141,4 +145,63 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     height: 70%;
+}
+
+
+
+.down_show_box {
+    margin-top: 5px;
+    margin-left: 5%;
+    border: 5px solid black;
+    border-radius: 50px;
+    min-height: 55px;
+    height: 5%;
+    width: 90%;
+    background-color: rgba(217, 217, 217, 0.7);
+
+    display: flex;
+
+}
+
+.down_text {
+    font-size: 32px;
+    height: 100%;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.down_box{
+    height: 100%;
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.down_img{
+    margin-right: -5px;
+    border: 5px solid black;
+    height: 100%; /* Занимает всю высоту блока для изображения */
+    width: 100%; /* Занимает всю ширину блока для изображения */
+    object-fit: cover; /* Обеспечивает, что изображение сохраняет пропорции и заполняет блок */
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+.checkbox {
+    margin-left: 5%;
+}
+
+.down_show_box {
+    position: relative;
+}
+
+#advanced_search_img {
+    position: relative;
+    z-index: 10;
 }

@@ -50,8 +50,6 @@ items_author.forEach(item => {
 
 
 function filterItemsAuthor() {
-    console.log(select_author)
-    console.log(unselect_author)
     const input = document.getElementById('select_author_name');
     const filter = input.value.toLowerCase();
     const ul = document.getElementById('spis_select_author');

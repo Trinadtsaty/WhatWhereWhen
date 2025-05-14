@@ -9,9 +9,23 @@
 <body>
     <div id="page">
         <div id="search_box">
-            <input id="question_name" type="text" class="input_select" placeholder="Введите имя">
+
+            <input id="question_search" type="text" class="input_select" placeholder="Поиск...">
+
+            <div id="search_name_box" class="down_show_box">
+                <div id="advanced_search" class="down_text">Расшириный Поиск</div>
+                <div id="advanced_search_img_box" class="down_box"><img id="advanced_search_img" class="down_img" alt="Вниз" src="{% static 'questions/img/cubes/down_button.png' %}"></div>
+            </div>
+
+            <div id="search_advanced_box" class="select_search_box">
+                <input id="question_search_title" type="text" class="input_select hidden" placeholder="Поиск по имени">
+                <input id="question_search_text" type="text" class="input_select hidden" placeholder="Поиск по тексту в вопросе">
+                <input id="question_search_answer" type="text" class="input_select hidden" placeholder="Поиск по ответу">
+            </div>
+
             <div id="select_tags" class="select_box">
                 <input id="select_tags_name" class="input_select" type="text" placeholder="Введите имя тега" onkeyup="filterItemsTags()">
+                <input type="checkbox" id="checkbox_tag" class="checkbox"> Строгое совпадение
                 <div id="scroll_box_tags" class="scroll_box">
                     <ul id="spis_select_tags" class="spis_select">
                         {% for tag in tags %}
@@ -30,6 +44,7 @@
 
             <div id="select_author" class="select_box">
                 <input id="select_author_name" class="input_select" type="text" placeholder="Введите имя тега" onkeyup="filterItemsAuthor()">
+                <input type="checkbox" id="checkbox_author" class="checkbox"> Строгое совпадение
                 <div id="scroll_box_author" class="scroll_box">
                     <ul id="spis_select_author" class="spis_select">
                         {% for author in authors %}
@@ -60,6 +75,7 @@
     </div>
     <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
     <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
+
     <script src="{% static 'questions/js/question_search.js' %}"></script>
     <script src="{% static 'questions/js/select_tag.js' %}"></script>
     <script src="{% static 'questions/js/select_author.js' %}"></script>

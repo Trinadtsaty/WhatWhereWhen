@@ -38,7 +38,6 @@ def question_main(request):
         # Получение данных из POST-запроса
         data = json.loads(request.body)  # Читаем тело запроса
         test_data = data.get('test')  # Получаем значение 'test'
-        print(data)
         # Обработка данных
         response_data = {'message': 'Данные получены', 'data': test_data}
         return JsonResponse(response_data)
@@ -49,7 +48,6 @@ def question_main(request):
     users = Users.objects.filter(ID__in=authors)
 
 
-    print(authors)
     questions = Question.objects.filter(publication=True).order_by('ID')[0+(question_page*count_question):count_question+(question_page*count_question)]
     tags = Tags.objects.filter(publication=True)
 

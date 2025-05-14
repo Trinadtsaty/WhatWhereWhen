@@ -50,8 +50,6 @@ items_tags.forEach(item => {
 
 
 function filterItemsTags() {
-    console.log(select_tag)
-    console.log(unselect_tag)
     const input = document.getElementById('select_tags_name');
     const filter = input.value.toLowerCase();
     const ul = document.getElementById('spis_select_tags');
