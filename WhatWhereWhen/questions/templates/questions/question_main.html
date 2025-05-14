@@ -44,7 +44,6 @@
 
             <div id="select_author" class="select_box">
                 <input id="select_author_name" class="input_select" type="text" placeholder="Введите имя тега" onkeyup="filterItemsAuthor()">
-                <input type="checkbox" id="checkbox_author" class="checkbox"> Строгое совпадение
                 <div id="scroll_box_author" class="scroll_box">
                     <ul id="spis_select_author" class="spis_select">
                         {% for author in authors %}
@@ -60,7 +59,7 @@
                     </ul>
                 </div>
             </div>
-
+            <div id="submit_search" class="button">Применить</div>
 
         </div>
         <div id="question_box">
@@ -76,9 +75,9 @@
     <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
     <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
 
-    <script src="{% static 'questions/js/question_search.js' %}"></script>
     <script src="{% static 'questions/js/select_tag.js' %}"></script>
     <script src="{% static 'questions/js/select_author.js' %}"></script>
+    <script src="{% static 'questions/js/question_search.js' %}"></script>
 <!--    <script src="{% static 'questions/js/test.js' %}"></script>-->
 </body>
 </html>

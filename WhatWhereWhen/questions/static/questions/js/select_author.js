@@ -1,9 +1,7 @@
 const items_author = document.getElementById('select_author').querySelectorAll('.select_item');
 
-
 const select_author = []
 const unselect_author = []
-
 
 // Скрываем все изображения в других элементах
 items_author.forEach(item => {

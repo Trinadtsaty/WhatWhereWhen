@@ -205,3 +205,25 @@ body {
     position: relative;
     z-index: 10;
 }
+
+.button {
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+    border-radius: 25px;
+    color: white;
+    font-size: 32px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #524F52;
+    border: 3px solid #C0A610;
+}
+
+#submit_search {
+    margin-top: 5px;
+    margin-left: 25%;
+    width: 50%;
+    height: 10%;
+}

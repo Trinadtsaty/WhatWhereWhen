@@ -3,8 +3,6 @@ const items_tags = document.getElementById('select_tags').querySelectorAll('.sel
 const select_tag = []
 const unselect_tag = []
 
-
-
 // Скрываем все изображения в других элементах
 items_tags.forEach(item => {
     const checkMarkBox = item.querySelector('.check_mark_box');

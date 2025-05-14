@@ -40,6 +40,7 @@ def question_main(request):
         test_data = data.get('test')  # Получаем значение 'test'
         # Обработка данных
         response_data = {'message': 'Данные получены', 'data': test_data}
+        print(data)
         return JsonResponse(response_data)
         # return render(request, "questions/question_main.html", response_data)
 
