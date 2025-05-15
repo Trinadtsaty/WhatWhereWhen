@@ -205,6 +205,7 @@ def chek_json_filter(data):
         unselect_tag = array[0]
 
     sorting_question = escape(data.get('sorting_question').strip())
+    print(sorting_question)
     if sorting_question=="-ID" or sorting_question=="ID":
         pass
     elif sorting_question=="average_estimation":
@@ -213,7 +214,7 @@ def chek_json_filter(data):
         pass
     else:
         sorting_question = "-ID"
-
+    print(sorting_question)
 
 
     data_get = {

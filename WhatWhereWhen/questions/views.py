@@ -14,7 +14,8 @@ from django.core.exceptions import ValidationError
 from .models import Question
 from django.http import JsonResponse
 import json
-from django.db.models import Q, Count, Avg
+from django.db.models import Q, Count, Avg, Value
+from django.db.models.functions import Coalesce, Round
 
 # def question_main(request):
 #
@@ -107,17 +108,16 @@ def question_main(request):
 
             questions = questions.exclude(exclude)
 
+        # Аннотируем QuerySet, используя Avg, Coalesce и Round
         questions = questions.annotate(
-            average_estimation=round(Avg('Question__estimation'), 1)
+            average_estimation=Round(Coalesce(Avg('Question__estimation'), Value(0.0)), 1)
         )
 
-        questions=questions.order_by(data_get.get("unselect_author"))[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
+        print(data_get.get("sorting_question"))
+        questions=questions.order_by(data_get.get("sorting_question"))[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
 
         questions_data = list(questions.values('ID', 'question_name','average_estimation'))  # Укажите поля, которые хотите вернуть
         response_data = {'message': 'Данные получены', 'questions': questions_data}
-
-        return JsonResponse(response_data)
-
 
         return JsonResponse(response_data)
 
