@@ -59,7 +59,7 @@ body {
 }
 
 #page {
-    margin-botton:5vh;
+/*    margin-botton:5vh;*/
     width: 100vw;
     height: 85vh;
 }
@@ -226,4 +226,9 @@ body {
     margin-left: 25%;
     width: 50%;
     height: 10%;
+}
+#question_scroll_box {
+    height: 80%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }

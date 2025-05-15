@@ -1,3 +1,4 @@
+from array import array
 from idlelib.rpc import request_queue
 
 
@@ -12,6 +13,8 @@ from .decorators import edit_question
 from django.core.exceptions import ValidationError
 from .models import Question
 from django.http import JsonResponse
+import json
+from django.db.models import Q
 
 
 # def question_main(request):
@@ -21,8 +24,10 @@ from django.http import JsonResponse
 
 
 
-import json
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 def question_main(request):
     question_page=0
     count_question=5
@@ -30,19 +35,38 @@ def question_main(request):
     search_name = ""
     search_text = ""
     search_answer = ""
-    search_tags_and = []
-    search_tags_or = []
-    author_question = []
+    coincidence_tag = False
+    select_author = []
+    unselect_author = []
+    select_tag = []
+    unselect_tag = []
 
     if request.method == 'POST':
         # Получение данных из POST-запроса
         data = json.loads(request.body)  # Читаем тело запроса
-        test_data = data.get('test')  # Получаем значение 'test'
+
+        data_get = chek_json_filter(data)
+
+        # print(data_get["count_question"])
         # Обработка данных
-        response_data = {'message': 'Данные получены', 'data': test_data}
-        print(data)
+
+        questions = Question.objects.filter(publication=True)
+
+
+        # estimation = Estimation_Quest_User.objects.filter()
+
+        questions = Question.objects.filter(publication=True).order_by('ID')[0 + (question_page * data_get["count_question"]):data_get["count_question"] + (question_page * data_get["count_question"])]
+        # tags = Tags.objects.filter(publication=True)
+        # print(count_question + (question_page * count_question))
+        # print(questions)
+
+        questions_data = list(questions.values('ID','question_name'))  # Укажите поля, которые хотите вернуть
+        response_data = {'message': 'Данные получены', 'questions': questions_data}
+
         return JsonResponse(response_data)
-        # return render(request, "questions/question_main.html", response_data)
+
+
+
 
     authors =  Question.objects.filter(publication=True).values_list('question_author', flat=True)
     authors = list(set(authors))
@@ -53,7 +77,6 @@ def question_main(request):
     tags = Tags.objects.filter(publication=True)
 
     return render(request, "questions/question_main.html", {
-        "questions":questions,
         "tags":tags,
         "authors":users,
     })

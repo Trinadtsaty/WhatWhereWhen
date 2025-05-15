@@ -3,70 +3,61 @@ const search_advanced_box = document.getElementById('search_advanced_box');
 const question_search = document.getElementById('question_search');
 const advanced_search_img = document.getElementById('advanced_search_img');
 
-const search = document.getElementById('question_search').value;
-const search_name = document.getElementById('question_search_title').value;
-const search_text = document.getElementById('question_search_text').value;
-const search_answer = document.getElementById('question_search_answer').value;
-
-const coincidence_tag = document.getElementById('checkbox_tag').checked
-
-const question_page = 0
-const count_question = 5
-
-const data = {
-    "search": search,
-    "search_name": search_name,
-    "search_text": search_text,
-    "search_answer": search_answer,
-    "coincidence_tag":coincidence_tag,
-    "select_author":select_author,
-    "unselect_author":unselect_author,
-    "select_tag":select_tag,
-    "unselect_tag":unselect_tag,
-    "question_page": question_page,
-    "count_question": count_question,
-};
-
-
+document.addEventListener('DOMContentLoaded', (event) => {
+    POST(URL_server + URL_adress);
+});
 
 search_advanced_box.style.display = 'none';
 
 search_box_button.addEventListener('click', () => {
     if (search_advanced_box.style.display === 'none') {
         question_search.style.display = 'none';
+        question_search.value=""
         advanced_search_img.style.transform = 'rotate(180deg)';
         search_advanced_box.style.display = '';
     } else {
         question_search.style.display = '';
         advanced_search_img.style.transform = 'rotate(0deg)';
         search_advanced_box.style.display = 'none';
+        document.getElementById('question_search_title').value = "";
+        document.getElementById('question_search_text').value = "";
+        document.getElementById('question_search_answer').value = "";
     }
 });
 
 
 
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Проверяем, начинается ли cookie с нужного имени
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
+function POST(URL) {
+        const search = document.getElementById('question_search').value;
+        const search_name = document.getElementById('question_search_title').value;
+        const search_text = document.getElementById('question_search_text').value;
+        const search_answer = document.getElementById('question_search_answer').value;
 
-function POST(data, URL) {
+        const coincidence_tag = document.getElementById('checkbox_tag').checked
+
+        const question_page = 0
+        const count_question = document.getElementById('count_question').value
+        const sorting_question = document.getElementById('sorting_question').value
+
+        const data = {
+            "search": search,
+            "search_name": search_name,
+            "search_text": search_text,
+            "search_answer": search_answer,
+            "coincidence_tag":coincidence_tag,
+            "select_author":select_author,
+            "unselect_author":unselect_author,
+            "select_tag":select_tag,
+            "unselect_tag":unselect_tag,
+            "question_page": question_page,
+            "count_question": count_question,
+            "sorting_question": sorting_question,
+        };
+
     return fetch(URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json', // Указываем тип контента
-            'X-CSRFToken': getCookie('csrftoken')
         },
         body: JSON.stringify(data),
     })
@@ -75,8 +66,37 @@ function POST(data, URL) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
         return response.json(); // Возвращаем ответ в формате JSON
+    })
+    .then(data => {
+        console.log(data); // Логируем ответ для отладки
+
+        // Вы можете также получить доступ к другим данным:
+        console.log(data.questions); // Данные, которые вы передали через JsonResponse
+//        console.log(data.questions[0].question_name)
+        const questions_box = document.getElementById('question_scroll_box');
+        while (questions_box.firstChild) {
+            questions_box.removeChild(questions_box.firstChild);
+        }
+
+        for (const question of data.questions) {
+            const newbox = document.createElement('div');
+            const newlink  = document.createElement('a');
+            newlink.style.textDecoration = 'none';
+            newlink.style.color = 'inherit';
+
+            newlink.href=`/questions/${question.ID}/`;
+            newlink.textContent = question.question_name;
+
+            newbox.appendChild(newlink)
+            questions_box.appendChild(newbox)
+        };
+
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
     });
 };
+window.POST = POST;
 
 
 
@@ -85,23 +105,61 @@ const submit_search = document.querySelector('#submit_search');
 const URL_server = 'http://127.0.0.1:8000';
 const URL_adress = '/questions/';
 
-submit_search.addEventListener('click', ()=> {
-    if (data) {
-        POST(data, URL_server + URL_adress)
-        .then(data => {
-            console.log(data); // Логируем ответ для отладки
-            alert(data.message); // Например, показываем сообщение
-            // Вы можете также получить доступ к другим данным:
-            console.log(data.data); // Данные, которые вы передали через JsonResponse
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-        });
+//submit_search.addEventListener('click', ()=> {
+//    if (data) {
+//        POST(URL_server + URL_adress)
+//        .then(data => {
+//            console.log(data); // Логируем ответ для отладки
+////            alert(data.message); // Например, показываем сообщение
+//            // Вы можете также получить доступ к другим данным:
+//            console.log(data.questions); // Данные, которые вы передали через JsonResponse
+//        })
+//        .catch(error => {
+//            console.error('Ошибка:', error);
+//        });
+//    }
+//});
+
+// Обработчики событий для полей input
+question_search.addEventListener('input', () => {
+    const search = question_search.value;
+    if (search) {
+        Timer()
     }
 });
 
-//const div = document.getElementById('search_name_box');
-//const width = div.offsetWidth;
-//const height = div.offsetHeight;
-//
-//console.log(`Ширина: ${width}px, Высота: ${height}px`);
+document.getElementById('question_search_title').addEventListener('input', () => {
+    const search_name = document.getElementById('question_search_title').value;
+    if (search_name) {
+        Timer()
+    }
+});
+
+document.getElementById('question_search_text').addEventListener('input', () => {
+    const search_text = document.getElementById('question_search_text').value;
+    if (search_text) {
+        Timer()
+    }
+});
+
+document.getElementById('question_search_answer').addEventListener('input', () => {
+    const search_answer = document.getElementById('question_search_answer').value;
+    if (search_answer) {
+        Timer()
+    }
+});
+
+// Обработчики событий для полей select
+document.getElementById('count_question').addEventListener('change', () => {
+    const count_question = document.getElementById('count_question').value;
+    if (count_question) {
+        Timer()
+    }
+});
+
+document.getElementById('sorting_question').addEventListener('change', () => {
+    const sorting_question = document.getElementById('sorting_question').value;
+    if (sorting_question) {
+        Timer()
+    }
+});

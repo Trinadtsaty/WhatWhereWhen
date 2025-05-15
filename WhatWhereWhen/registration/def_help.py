@@ -8,6 +8,8 @@ from django.core.exceptions import ValidationError
 from PIL import Image
 from questions.models import Question
 
+
+
 def get_active_users():
     # Определяем временной порог для активности пользователей
     time_threshold = timezone.now() - timedelta(minutes=5)
@@ -137,3 +139,67 @@ def question_answer_name(name):
 def question_answer_text(name):
     if len(name) > 700:
         raise ValidationError('Текст примечания к ответу слишком длинный, пожалуйста придумайте примечание до 700 символов')
+
+
+from django.utils.html import escape
+
+def chek_json_filter(data):
+    def chekArray(string_array):
+        int_array = []
+        for item in string_array:
+            try:
+                int_array.append(int(item))  # Пробуем преобразовать строку в целое число
+            except ValueError:
+                return False  # Если не удалось преобразовать, возвращаем False
+        return [int_array, True]  # Возвращаем изменённый массив и True
+
+    try:
+        question_page = int(data.get('question_page'))
+    except ValueError:
+        pass
+
+    try:
+        count_question = int(data.get('count_question'))
+    except ValueError:
+        pass
+
+    search = escape(data.get('search').strip())
+    search_name = escape(data.get('search_name').strip())
+    search_text = escape(data.get('search_text').strip())
+    search_answer = escape(data.get('search_answer').strip())
+    sorting_question = escape(data.get('sorting_question').strip())
+
+    if data.get('coincidence_tag') == True or data.get('coincidence_tag') == False:
+        coincidence_tag = data.get('coincidence_tag')
+
+    array = chekArray(data.get('select_author'))
+    if array:
+        select_author = array[0]
+
+    array = chekArray(data.get('unselect_author'))
+    if array:
+        unselect_author = array[0]
+
+    array = chekArray(data.get('select_tag'))
+    if array:
+        select_tag = array[0]
+
+    array = chekArray(data.get('unselect_tag'))
+    if array:
+        unselect_tag = array[0]
+
+    data_get = {
+        "search": search,
+        "search_name": search_name,
+        "search_text": search_text,
+        "search_answer": search_answer,
+        "coincidence_tag": coincidence_tag,
+        "select_author": select_author,
+        "unselect_author": unselect_author,
+        "select_tag": select_tag,
+        "unselect_tag": unselect_tag,
+        "question_page": question_page,
+        "count_question": count_question,
+        "sorting_question":sorting_question,
+    };
+    return data_get
