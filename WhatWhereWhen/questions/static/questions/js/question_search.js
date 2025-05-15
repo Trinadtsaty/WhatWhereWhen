@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 search_advanced_box.style.display = 'none';
+document.getElementById('question_search_title').value = "";
+document.getElementById('question_search_text').value = "";
+document.getElementById('question_search_answer').value = "";
+document.getElementById('checkbox_search').checked = "";
 
 search_box_button.addEventListener('click', () => {
     if (search_advanced_box.style.display === 'none') {
@@ -22,6 +26,7 @@ search_box_button.addEventListener('click', () => {
         document.getElementById('question_search_title').value = "";
         document.getElementById('question_search_text').value = "";
         document.getElementById('question_search_answer').value = "";
+        document.getElementById('checkbox_search').checked = "";
     }
 });
 
@@ -39,11 +44,14 @@ function POST(URL) {
         const count_question = document.getElementById('count_question').value
         const sorting_question = document.getElementById('sorting_question').value
 
+        const checkbox_search = document.getElementById('checkbox_search').checked
+
         const data = {
             "search": search,
             "search_name": search_name,
             "search_text": search_text,
             "search_answer": search_answer,
+            "checkbox_search":checkbox_search,
             "coincidence_tag":coincidence_tag,
             "select_author":select_author,
             "unselect_author":unselect_author,
@@ -87,8 +95,10 @@ function POST(URL) {
             newlink.href=`/questions/${question.ID}/`;
             newlink.textContent = question.question_name;
 
+            newbox.textContent = question.average_estimation
             newbox.appendChild(newlink)
             questions_box.appendChild(newbox)
+
         };
 
     })
@@ -163,3 +173,18 @@ document.getElementById('sorting_question').addEventListener('change', () => {
         Timer()
     }
 });
+
+document.getElementById('checkbox_search').addEventListener('change', () => {
+    const checkbox_search = document.getElementById('checkbox_search').checked;
+    if (checkbox_search) {
+        Timer()
+    }
+});
+
+document.getElementById('checkbox_tag').addEventListener('change', () => {
+    const checkbox_tag = document.getElementById('checkbox_tag').checked;
+    if (checkbox_tag) {
+        Timer()
+    }
+});
+

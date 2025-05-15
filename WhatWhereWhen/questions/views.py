@@ -14,8 +14,7 @@ from django.core.exceptions import ValidationError
 from .models import Question
 from django.http import JsonResponse
 import json
-from django.db.models import Q
-
+from django.db.models import Q, Count, Avg
 
 # def question_main(request):
 #
@@ -29,51 +28,102 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def question_main(request):
-    question_page=0
-    count_question=5
-    search = ""
-    search_name = ""
-    search_text = ""
-    search_answer = ""
-    coincidence_tag = False
-    select_author = []
-    unselect_author = []
-    select_tag = []
-    unselect_tag = []
-
     if request.method == 'POST':
         # Получение данных из POST-запроса
         data = json.loads(request.body)  # Читаем тело запроса
 
         data_get = chek_json_filter(data)
 
-        # print(data_get["count_question"])
-        # Обработка данных
-
+        # Получаем вопросы, которые опубликованы
         questions = Question.objects.filter(publication=True)
 
+        # Фильтрация по поисковым запросам
+        if data_get.get("search"):
+            questions = questions.filter(
+                Q(question_name__icontains=data_get["search"]) |
+                Q(text_question__icontains=data_get["search"]) |
+                Q(answer__icontains=data_get["search"])
+            )
+        elif data_get.get("search_name"):
+            query = Q()
+            if data_get.get("checkbox_search"):
+                query &= Q(question_name__icontains=data_get["checkbox_search"])
 
-        # estimation = Estimation_Quest_User.objects.filter()
+            if data_get.get("search_text"):
+                query &= Q(text_question__icontains=data_get["search_text"])
 
-        questions = Question.objects.filter(publication=True).order_by('ID')[0 + (question_page * data_get["count_question"]):data_get["count_question"] + (question_page * data_get["count_question"])]
-        # tags = Tags.objects.filter(publication=True)
-        # print(count_question + (question_page * count_question))
-        # print(questions)
+            if data_get.get("search_answer"):
+                query &= Q(answer__icontains=data_get["search_answer"])
 
-        questions_data = list(questions.values('ID','question_name'))  # Укажите поля, которые хотите вернуть
+            questions = questions.filter(query)
+
+        else:
+            query = Q()
+            if data_get.get("checkbox_search"):
+                query |= Q(question_name__icontains=data_get["checkbox_search"])
+
+            if data_get.get("search_text"):
+                query |= Q(text_question__icontains=data_get["search_text"])
+
+            if data_get.get("search_answer"):
+                query |= Q(answer__icontains=data_get["search_answer"])
+
+            questions = questions.filter(query)
+
+        # Фильтрация по тегам
+        if data_get.get("select_tag"):
+            query = Q()
+            for item in data_get["select_tag"]:
+                query |= Q(Question_Tag__tags_id=item)
+
+            if data_get.get("coincidence_tag"):
+                questions = questions.filter(query).annotate(
+                    tag_count=Count('Question_Tag')
+                ).filter(
+                    tag_count=len(data_get["select_tag"])
+                )
+            else:
+                questions = questions.filter(query)
+
+        # Исключение тегов
+        if data_get.get("unselect_tag"):
+            exclude = Q()
+            for item in data_get["unselect_tag"]:
+                exclude |= Q(Question_Tag__tags_id=item)
+            questions = questions.exclude(exclude)
+
+        # Фильтрация по авторам
+        if data_get.get("select_author"):
+            query = Q()
+            for item in data_get["select_author"]:
+                query |= Q(question_author=item)
+
+            questions = questions.filter(query)
+
+        if data_get.get("unselect_author"):
+            exclude = Q()
+            for item in data_get["unselect_author"]:
+                exclude |= Q(question_author=item)  # Исправлено на правильное поле
+
+            questions = questions.exclude(exclude)
+
+        questions = questions.annotate(
+            average_estimation=round(Avg('Question__estimation'), 1)
+        )
+
+        questions=questions.order_by(data_get.get("unselect_author"))[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
+
+        questions_data = list(questions.values('ID', 'question_name','average_estimation'))  # Укажите поля, которые хотите вернуть
         response_data = {'message': 'Данные получены', 'questions': questions_data}
 
         return JsonResponse(response_data)
 
 
-
+        return JsonResponse(response_data)
 
     authors =  Question.objects.filter(publication=True).values_list('question_author', flat=True)
     authors = list(set(authors))
     users = Users.objects.filter(ID__in=authors)
-
-
-    questions = Question.objects.filter(publication=True).order_by('ID')[0+(question_page*count_question):count_question+(question_page*count_question)]
     tags = Tags.objects.filter(publication=True)
 
     return render(request, "questions/question_main.html", {

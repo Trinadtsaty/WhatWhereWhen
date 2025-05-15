@@ -12,7 +12,7 @@ function Timer() {
     };
     Time = setTimeout(() => {
         POST(URL_server + URL_adress);
-    }, 5000);
+    }, 1000);
 }
 
 

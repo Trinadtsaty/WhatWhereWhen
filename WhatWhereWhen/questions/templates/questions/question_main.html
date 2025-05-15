@@ -18,6 +18,7 @@
             </div>
 
             <div id="search_advanced_box" class="select_search_box">
+                <input type="checkbox" id="checkbox_search" class="checkbox"> Строгое совпадение
                 <input id="question_search_title" type="text" class="input_select hidden" placeholder="Поиск по имени">
                 <input id="question_search_text" type="text" class="input_select hidden" placeholder="Поиск по тексту в вопросе">
                 <input id="question_search_answer" type="text" class="input_select hidden" placeholder="Поиск по ответу">
@@ -72,8 +73,8 @@
             <select id="sorting_question" class="count">
                 <option value="ID">Сначала старые</option>
                 <option value="-ID">Сначала новые</option>
-                <option value="estimation">Высокооценённые</option>
-                <option value="-estimation">Низкооценённые</option>
+                <option value="average_estimation">Высокооценённые</option>
+                <option value="-average_estimation">Низкооценённые</option>
             </select>
             <div id="question_scroll_box">
 

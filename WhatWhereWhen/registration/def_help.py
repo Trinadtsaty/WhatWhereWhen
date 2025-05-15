@@ -144,6 +144,19 @@ def question_answer_text(name):
 from django.utils.html import escape
 
 def chek_json_filter(data):
+    search = None
+    search_name = None
+    search_text  = None
+    search_answer = None
+    checkbox_search = False
+    coincidence_tag = False
+    select_author = None
+    unselect_author = None
+    select_tag = None
+    unselect_tag = None
+    question_page = 0
+    count_question = 5
+    sorting_question = "ID"
     def chekArray(string_array):
         int_array = []
         for item in string_array:
@@ -167,10 +180,13 @@ def chek_json_filter(data):
     search_name = escape(data.get('search_name').strip())
     search_text = escape(data.get('search_text').strip())
     search_answer = escape(data.get('search_answer').strip())
-    sorting_question = escape(data.get('sorting_question').strip())
+
 
     if data.get('coincidence_tag') == True or data.get('coincidence_tag') == False:
         coincidence_tag = data.get('coincidence_tag')
+
+    if data.get('checkbox_search') == True or data.get('checkbox_search') == False:
+        checkbox_search = data.get('checkbox_search')
 
     array = chekArray(data.get('select_author'))
     if array:
@@ -188,11 +204,24 @@ def chek_json_filter(data):
     if array:
         unselect_tag = array[0]
 
+    sorting_question = escape(data.get('sorting_question').strip())
+    if sorting_question=="-ID" or sorting_question=="ID":
+        pass
+    elif sorting_question=="average_estimation":
+        pass
+    elif sorting_question=="-average_estimation":
+        pass
+    else:
+        sorting_question = "-ID"
+
+
+
     data_get = {
         "search": search,
         "search_name": search_name,
         "search_text": search_text,
         "search_answer": search_answer,
+        "checkbox_search":checkbox_search,
         "coincidence_tag": coincidence_tag,
         "select_author": select_author,
         "unselect_author": unselect_author,
