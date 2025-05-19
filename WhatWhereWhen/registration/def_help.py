@@ -1,12 +1,11 @@
 from django.utils import timezone
 from datetime import timedelta
-from .models import Users
 
 from django.core.files.images import get_image_dimensions
-from .models import Users
+from .models import *
 from django.core.exceptions import ValidationError
 from PIL import Image
-from questions.models import Question
+from questions.models import *
 
 
 
@@ -75,13 +74,13 @@ def validate_image(image):
         raise ValidationError('Изображение весит более 5Мбайт, пожалуйста загрузите иное изображение')
     try:
         width, height = get_image_dimensions(image)
-        print(width, height)
+        # print(width, height)
     except:
         raise ValidationError('Некорректный файл')
     if width and height:
         if width > 4000 or height > 4000:  # Ограничение на размеры изображения
             raise ValidationError('Длинна или ширина изображения превышает 4000 пикселей, пожалуйста выберите другое изображение')
-        print(ValidationError)
+        # print(ValidationError)
 
 def validate_tag(name):
     dangerous_characters = ['<', '>', '&', '/', '\\', "'", '"', ';', ' ', '\n', '\r', '?', '#', '%']
@@ -102,7 +101,7 @@ def question_name_line_edit(name):
 
 def question_name_text_edit(name):
     if len(name) < 20:
-        print(name)
+        # print(name)
         raise ValidationError('Текст вопроса слишком короткий, пожалуйста придумайте вопрос от 20 до 1000 символов')
     if len(name) > 1000:
         raise ValidationError('Текст вопроса слишком длинный, пожалуйста придумайте вопрос от 20 до 1000 символов')
@@ -121,7 +120,7 @@ def question_name_text(name):
     if estimations:
         raise ValidationError('Такой вопрос уже существует')
     if len(name) < 20:
-        print(name)
+        # print(name)
         raise ValidationError('Текст вопроса слишком короткий, пожалуйста придумайте вопрос от 20 до 1000 символов')
     if len(name) > 1000:
         raise ValidationError('Текст вопроса слишком длинный, пожалуйста придумайте вопрос от 20 до 1000 символов')
@@ -156,7 +155,6 @@ def chek_json_filter(data):
     unselect_tag = None
     question_page = 0
     count_question = 5
-    sorting_question = "ID"
     def chekArray(string_array):
         int_array = []
         for item in string_array:
@@ -204,19 +202,6 @@ def chek_json_filter(data):
     if array:
         unselect_tag = array[0]
 
-    sorting_question = escape(data.get('sorting_question').strip())
-    print(sorting_question)
-    if sorting_question=="-ID" or sorting_question=="ID":
-        pass
-    elif sorting_question=="average_estimation":
-        pass
-    elif sorting_question=="-average_estimation":
-        pass
-    else:
-        sorting_question = "-ID"
-    print(sorting_question)
-
-
     data_get = {
         "search": search,
         "search_name": search_name,
@@ -230,6 +215,17 @@ def chek_json_filter(data):
         "unselect_tag": unselect_tag,
         "question_page": question_page,
         "count_question": count_question,
-        "sorting_question":sorting_question,
     };
     return data_get
+
+def average_score(question):
+    Estimation = Estimation_Quest_User.objects.filter(question=question)
+    score=0
+    for Est in Estimation:
+        score+=Est.estimation
+    if score !=0:
+        question_score=round(score/len(Estimation), 1)
+    else:
+        question_score = 0.0
+
+    return question_score

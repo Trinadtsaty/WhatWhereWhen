@@ -42,7 +42,7 @@ function POST(URL) {
 
         const question_page = 0
         const count_question = document.getElementById('count_question').value
-        const sorting_question = document.getElementById('sorting_question').value
+//        const sorting_question = document.getElementById('sorting_question').value
 
         const checkbox_search = document.getElementById('checkbox_search').checked
 
@@ -59,7 +59,6 @@ function POST(URL) {
             "unselect_tag":unselect_tag,
             "question_page": question_page,
             "count_question": count_question,
-            "sorting_question": sorting_question,
         };
 
     return fetch(URL, {
@@ -86,6 +85,28 @@ function POST(URL) {
             questions_box.removeChild(questions_box.firstChild);
         }
 
+        const sorting_question = document.getElementById('sorting_question').value
+        if (sorting_question==="1") {
+            for (const question of data.questions) {
+
+            };
+        } else if (sorting_question==="2") {
+            for (const question of data.questions) {
+
+            };
+        } else if (sorting_question==="3") {
+            for (const question of data.questions) {
+
+            };
+        } else if (sorting_question==="4") {
+            for (const question of data.questions) {
+
+            };
+        }
+
+
+
+
         for (const question of data.questions) {
             const newbox = document.createElement('div');
             const newlink  = document.createElement('a');
@@ -110,25 +131,11 @@ window.POST = POST;
 
 
 
-const submit_search = document.querySelector('#submit_search');
 
 const URL_server = 'http://127.0.0.1:8000';
 const URL_adress = '/questions/';
 
-//submit_search.addEventListener('click', ()=> {
-//    if (data) {
-//        POST(URL_server + URL_adress)
-//        .then(data => {
-//            console.log(data); // Логируем ответ для отладки
-////            alert(data.message); // Например, показываем сообщение
-//            // Вы можете также получить доступ к другим данным:
-//            console.log(data.questions); // Данные, которые вы передали через JsonResponse
-//        })
-//        .catch(error => {
-//            console.error('Ошибка:', error);
-//        });
-//    }
-//});
+
 
 // Обработчики событий для полей input
 question_search.addEventListener('input', () => {
@@ -167,12 +174,12 @@ document.getElementById('count_question').addEventListener('change', () => {
     }
 });
 
-document.getElementById('sorting_question').addEventListener('change', () => {
-    const sorting_question = document.getElementById('sorting_question').value;
-    if (sorting_question) {
-        Timer()
-    }
-});
+//document.getElementById('sorting_question').addEventListener('change', () => {
+//    const sorting_question = document.getElementById('sorting_question').value;
+//    if (sorting_question) {
+//        Timer()
+//    }
+//});
 
 document.getElementById('checkbox_search').addEventListener('change', () => {
     const checkbox_search = document.getElementById('checkbox_search').checked;

@@ -60,21 +60,21 @@
                     </ul>
                 </div>
             </div>
-            <div id="submit_search" class="button">Применить</div>
+            <div id="clean_button" class="button">Очистить</div>
 
         </div>
         <div id="question_box">
-            <input id="search" placeholder="Введите имя вопроса" class="input_select">
+            <input id="search" placeholder="Введите имя вопроса (Это поле пока не работает)" class="input_select">
             <select id="count_question" class="count">
                 <option value="5">5</option>
                 <option value="20">20</option>
                 <option value="100">100</option>
             </select>
             <select id="sorting_question" class="count">
-                <option value="ID">Сначала старые</option>
-                <option value="-ID">Сначала новые</option>
-                <option value="average_estimation">Высокооценённые</option>
-                <option value="-average_estimation">Низкооценённые</option>
+                <option value="1">Сначала старые</option>
+                <option value="2">Сначала новые</option>
+                <option value="3">По возрастанию оценки</option>
+                <option value="4">По убыванию оценки</option>
             </select>
             <div id="question_scroll_box">
 
@@ -93,6 +93,7 @@
     <script src="{% static 'questions/js/select_tag.js' %}"></script>
     <script src="{% static 'questions/js/select_author.js' %}"></script>
     <script src="{% static 'questions/js/question_search.js' %}"></script>
+    <script src="{% static 'questions/js/clean.js' %}"></script>
 <!--    <script src="{% static 'questions/js/test.js' %}"></script>-->
 </body>
 </html>

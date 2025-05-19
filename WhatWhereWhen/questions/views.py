@@ -26,6 +26,7 @@ from django.db.models.functions import Coalesce, Round
 
 
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models.functions import Lower
 
 @csrf_exempt
 def question_main(request):
@@ -45,46 +46,53 @@ def question_main(request):
                 Q(text_question__icontains=data_get["search"]) |
                 Q(answer__icontains=data_get["search"])
             )
-        elif data_get.get("search_name"):
+        elif data_get.get("search_name") or data_get.get("search_text") or data_get.get("search_answer"):
             query = Q()
             if data_get.get("checkbox_search"):
-                query &= Q(question_name__icontains=data_get["checkbox_search"])
+                if data_get.get("search_name"):
+                    query &= Q(question_name__icontains=data_get["search_name"])
 
-            if data_get.get("search_text"):
-                query &= Q(text_question__icontains=data_get["search_text"])
+                if data_get.get("search_text"):
+                    query &= Q(text_question__icontains=data_get["search_text"])
 
-            if data_get.get("search_answer"):
-                query &= Q(answer__icontains=data_get["search_answer"])
+                if data_get.get("search_answer"):
+                    query &= Q(answer__icontains=data_get["search_answer"])
 
-            questions = questions.filter(query)
+                questions = questions.filter(query)
 
-        else:
-            query = Q()
-            if data_get.get("checkbox_search"):
-                query |= Q(question_name__icontains=data_get["checkbox_search"])
+            else:
+                if data_get.get("search_name"):
+                    query |= Q(question_name__icontains=data_get["search_name"])
 
-            if data_get.get("search_text"):
-                query |= Q(text_question__icontains=data_get["search_text"])
+                if data_get.get("search_text"):
+                    query |= Q(text_question__icontains=data_get["search_text"])
 
-            if data_get.get("search_answer"):
-                query |= Q(answer__icontains=data_get["search_answer"])
+                if data_get.get("search_answer"):
+                    query |= Q(answer__icontains=data_get["search_answer"])
 
-            questions = questions.filter(query)
+                questions = questions.filter(query)
+        print("Фильтрация по поисковым запросам", questions)
 
         # Фильтрация по тегам
         if data_get.get("select_tag"):
+            # print(data_get.get("select_tag"))
+            # print(data_get.get("coincidence_tag"))
+
             query = Q()
-            for item in data_get["select_tag"]:
-                query |= Q(Question_Tag__tags_id=item)
+            for id in data_get["select_tag"]:
+                query |= Q(Question_Tag__tags_id=id)
+            # print(query)
+            questions = questions.filter(query)
+            # print(questions)
 
             if data_get.get("coincidence_tag"):
-                questions = questions.filter(query).annotate(
-                    tag_count=Count('Question_Tag')
+                questions = questions.annotate(
+                    matched_tags=Count('Question_Tag', filter=Q(Question_Tag__tags_id__in=data_get["select_tag"]))
                 ).filter(
-                    tag_count=len(data_get["select_tag"])
+                    matched_tags=len(data_get["select_tag"])
                 )
-            else:
-                questions = questions.filter(query)
+
+        print("Фильтрация по тегам",questions)
 
         # Исключение тегов
         if data_get.get("unselect_tag"):
@@ -92,6 +100,7 @@ def question_main(request):
             for item in data_get["unselect_tag"]:
                 exclude |= Q(Question_Tag__tags_id=item)
             questions = questions.exclude(exclude)
+        print("Исключение тегов", questions)
 
         # Фильтрация по авторам
         if data_get.get("select_author"):
@@ -100,7 +109,9 @@ def question_main(request):
                 query |= Q(question_author=item)
 
             questions = questions.filter(query)
+        print("Фильтрация по авторам", questions)
 
+        # Исключение по авторам
         if data_get.get("unselect_author"):
             exclude = Q()
             for item in data_get["unselect_author"]:
@@ -108,15 +119,22 @@ def question_main(request):
 
             questions = questions.exclude(exclude)
 
-        # Аннотируем QuerySet, используя Avg, Coalesce и Round
-        questions = questions.annotate(
-            average_estimation=Round(Coalesce(Avg('Question__estimation'), Value(0.0)), 1)
-        )
+        print("Исключение по авторам", questions)
 
-        print(data_get.get("sorting_question"))
-        questions=questions.order_by(data_get.get("sorting_question"))[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
+        questions=questions[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
+        print("Отбираем нужное кол-во фильтруем порядок", questions)
 
-        questions_data = list(questions.values('ID', 'question_name','average_estimation'))  # Укажите поля, которые хотите вернуть
+        # questions_data = list(questions.values('ID', 'question_name','average_estimation'))  # Укажите поля, которые хотите вернуть
+        questions_data=[]
+        for question in questions:
+            questions_data.append({
+                "ID":question.ID,
+                "question_name": question.question_name,
+                "average_estimation":average_score(question),
+                "question_text":question.text_question[:10]+"...",
+            })
+
+        print(questions_data)
         response_data = {'message': 'Данные получены', 'questions': questions_data}
 
         return JsonResponse(response_data)
