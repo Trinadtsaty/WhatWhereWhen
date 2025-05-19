@@ -446,6 +446,14 @@ class Tag_Question_API(Tag_Question_APICreate):
 class Selection_Questions_API(Selection_Questions_APICreate):
     pass
 
+def questionClaim(request):
+    return render(request, "questions/plug.html")
+
+def tagClaim(request):
+    return render(request, "questions/plug.html")
+
+def selectionCreate(request):
+    return render(request, "questions/plug.html")
 
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)

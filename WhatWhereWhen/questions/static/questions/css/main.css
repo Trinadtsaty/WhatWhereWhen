@@ -242,7 +242,6 @@ body {
     height: 75px;
     width: 400px;
 
-/*    border: 3px solid black; *//* Рамка вокруг контейнера */
     margin-top: 5px;
     margin-left: 5%;
     border-radius: 25px;
@@ -308,3 +307,8 @@ body {
     font-size:16px;
     color: #555;
 }
+
+.tools_menu {
+    display: none;
+}
+
