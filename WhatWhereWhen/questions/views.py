@@ -443,6 +443,9 @@ class Tag_Question_API(Tag_Question_APICreate):
     permission_classes = (IsAuthenticated, )
     # pass
 
+class Selection_Questions_API(Selection_Questions_APICreate):
+    pass
+
 
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)

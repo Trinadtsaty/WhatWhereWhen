@@ -13,10 +13,10 @@ class TagsQuestionSerializer(serializers.ModelSerializer):
         model = Tags_Questions
         fields = ("tags_id", "question_id", "tag_adder")
 
-# class SelectionQuestionsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Selection_Questions
-#         fields = ("selection_id", "question_id")
+class SelectionQuestionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Selection_Questions
+        fields = ("selection_id", "question_id")
 
 # class SelectionsSerializer(serializers.ModelSerializer):
 #     selection_author = serializers.HiddenField(default=serializers.CurrentUserDefault())

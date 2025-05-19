@@ -233,50 +233,71 @@ body {
     overflow-x: hidden;
 }
 
-
+/*Стили для блока с вопросами*/
 .link_box_question {
-    border: 3px solid black; /* Рамка вокруг контейнера */
     display: flex;
     align-items: center;     /* Вертикальное выравнивание по центру */
     min-width: 200px;
 
     height: 75px;
-    width: 80%;
+    width: 400px;
 
+/*    border: 3px solid black; *//* Рамка вокруг контейнера */
     margin-top: 5px;
     margin-left: 5%;
     border-radius: 25px;
 }
 
 .link_question_page {
-    display: flex;
-    width: 100%;
-    height: 100%;
+    cursor: pointer;
     text-decoration: none;
     color: inherit;
-}
 
-/* Левая часть */
-.box_text {
-    padding-left:3%;
-    width: 90%;
-    border-right: 3px solid black;
-}
-
-/* Правая часть */
-.question_estimation {
-    width: 10%;
-
-/*    padding-left: 15px;      *//* Отступ слева от перегородки */
-     /* Вертикальная перегородка */
     display: flex;
-    align-items: center;     /* Вертикальное выравнивание содержимого */
-    min-width: 50px;         /* Минимальная ширина блока с оценкой */
-    justify-content: center; /* Центрирование текста внутри */
+    width: 90%;
     height: 100%;
+    border: 3px solid white;
+    background-color: rgba(217, 217, 217, 0.7);
 }
 
-/* Дополнительно стилизуем текст*/
+.box_text {
+    width: 80%;
+    height: 100%;
+    border-right: 3px solid white;
+    margin-left: 5px;
+}
+
+.question_estimation {
+    display: flex;
+    width: 20%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.estimation {
+    text-align: center;
+    font-size: 32px;
+}
+
+.button_tools {
+    cursor: pointer;
+    display: flex;
+    width: 10%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(192, 166, 16, 1);
+    border: 3px solid rgba(82, 79, 82, 1);
+    border-bottom-right-radius: 25px;
+    border-top-right-radius: 25px;
+}
+.button_tools:hover{
+    background-color: rgba(82, 79, 82, 1);
+    border: 3px solid rgba(192, 166, 16, 1);
+}
+
+
 .name_question {
     font-size: 25px;
     font-weight: bold;
@@ -286,10 +307,4 @@ body {
 .text_question {
     font-size:16px;
     color: #555;
-}
-
-.estimation {
-    text-align: center;
-    font-size: 1.2em;
-    font-weight: bold;
 }

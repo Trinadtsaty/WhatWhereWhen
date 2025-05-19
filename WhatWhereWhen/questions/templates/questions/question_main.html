@@ -79,13 +79,20 @@
 
             <div id="question_scroll_box">
 
-                <div class="link_box_question"><a class="link_question_page">
-                    <div class="box_text">
-                        <div class="name_question">Имя</div>
-                        <div class="text_question">Текст</div>
-                    </div>
-                    <div class="question_estimation"><div class="estimation">7.7</div></div>
-                </a></div>
+                <div class="link_box_question">
+                    <a class="link_question_page">
+                        <div class="box_text">
+                            <div class="name_question">Имя</div>
+                            <div class="text_question">Текст</div>
+                        </div>
+                        <div class="question_estimation"><div class="estimation">7.7</div></div>
+                    </a>
+                    <div class="button_tools">|||</div>
+                    <ul class="tools_menu">
+                        <li class="tools_element">Добавить в коллекцию</li>
+                        <li class="tools_element"><a href="{% url 'Claim' %}?ref=pass">Пожаловаться</a></li>
+                    </ul>
+                </div>
 
             </div>
 

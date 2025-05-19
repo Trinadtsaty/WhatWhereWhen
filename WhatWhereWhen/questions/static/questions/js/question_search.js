@@ -83,9 +83,9 @@ function POST(URL) {
         const questions_box = document.getElementById('question_scroll_box');
 
         //Очищаем элемент
-        while (questions_box.firstChild) {
-            questions_box.removeChild(questions_box.firstChild);
-        }
+//        while (questions_box.firstChild) {
+//            questions_box.removeChild(questions_box.firstChild);
+//        }
 
         const sorting_question = document.getElementById('sorting_question').value
         const array_element = data.questions
@@ -150,40 +150,40 @@ function POST(URL) {
 
 
         //Отоброжение отсортированного массива на странице
-        for (const question of array_element) {
-//            console.log(question.question_name, question.question_text)
-            const QuestionName = document.createElement('div');
-            QuestionName.className = 'name_question';
-            QuestionName.textContent=question.question_name;
-
-            const QuestionText = document.createElement('div');
-            QuestionText.className = 'text_question';
-            QuestionText.textContent=question.text_question;
-
-            const Estimation = document.createElement('div');
-            Estimation.className = 'estimation';
-            Estimation.textContent=question.average_estimation;
-
-            const textbox = document.createElement('div');
-            textbox.className = 'box_text';
-            textbox.appendChild(QuestionName)
-            textbox.appendChild(QuestionText)
-
-            const EstimationQuestion = document.createElement('div');
-            EstimationQuestion.className = 'question_estimation';
-            EstimationQuestion.appendChild(Estimation)
-
-            const newlink  = document.createElement('a');
-            newlink.className = 'link_question_page';
-            newlink.href=`/questions/${question.ID}/`;
-            newlink.appendChild(textbox)
-            newlink.appendChild(EstimationQuestion)
-
-            const newbox = document.createElement('div');
-            newbox.className = 'link_box_question';
-            newbox.appendChild(newlink)
-            questions_box.appendChild(newbox)
-        };
+//        for (const question of array_element) {
+////            console.log(question.question_name, question.question_text)
+//            const QuestionName = document.createElement('div');
+//            QuestionName.className = 'name_question';
+//            QuestionName.textContent=question.question_name;
+//
+//            const QuestionText = document.createElement('div');
+//            QuestionText.className = 'text_question';
+//            QuestionText.textContent=question.text_question;
+//
+//            const Estimation = document.createElement('div');
+//            Estimation.className = 'estimation';
+//            Estimation.textContent=question.average_estimation;
+//
+//            const textbox = document.createElement('div');
+//            textbox.className = 'box_text';
+//            textbox.appendChild(QuestionName)
+//            textbox.appendChild(QuestionText)
+//
+//            const EstimationQuestion = document.createElement('div');
+//            EstimationQuestion.className = 'question_estimation';
+//            EstimationQuestion.appendChild(Estimation)
+//
+//            const newlink  = document.createElement('a');
+//            newlink.className = 'link_question_page';
+//            newlink.href=`/questions/${question.ID}/`;
+//            newlink.appendChild(textbox)
+//            newlink.appendChild(EstimationQuestion)
+//
+//            const newbox = document.createElement('div');
+//            newbox.className = 'link_box_question';
+//            newbox.appendChild(newlink)
+//            questions_box.appendChild(newbox)
+//        };
 
     })
     .catch(error => {

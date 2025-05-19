@@ -44,9 +44,9 @@ class Tag_Question_APICreate(generics.CreateAPIView):
 
 
 #Связь Подборок и вопросов
-# class Selection_Questions_APICreate(generics.CreateAPIView):
-#     queryset = Selection_Questions.objects.all()
-#     serializer_class = SelectionQuestionsSerializer
+class Selection_Questions_APICreate(generics.CreateAPIView):
+    queryset = Selection_Questions.objects.all()
+    serializer_class = SelectionQuestionsSerializer
 #
 # class Selection_Questions_APIDestroy(generics.DestroyAPIView):
 #     queryset = Selection_Questions.objects.all()
