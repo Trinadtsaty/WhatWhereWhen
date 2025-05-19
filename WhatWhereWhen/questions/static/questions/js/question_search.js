@@ -86,28 +86,76 @@ function POST(URL) {
         }
 
         const sorting_question = document.getElementById('sorting_question').value
-        if (sorting_question==="1") {
-            for (const question of data.questions) {
+        const array_element = data.questions
+        let n = data.questions.length;
+        let swapped;
 
-            };
-        } else if (sorting_question==="2") {
-            for (const question of data.questions) {
+        if (sorting_question==="2") {
 
-            };
+            do {
+                swapped = false; // Флаг для отслеживания, были ли обмены
+                for (let i = 0; i < n - 1; i++) {
+                    // Сравниваем соседние элементы
+                    if (array_element[i].ID > array_element[i + 1].ID) {
+                        // Меняем их местами, если они в неправильном порядке
+                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
+                        swapped = true; // Устанавливаем флаг, что был обмен
+                    }
+                }
+                n--; // Уменьшаем n, так как последний элемент уже на своем месте
+            } while (swapped); // Продолжаем, пока есть обмены
+
+        } else if (sorting_question==="1") {
+
+            do {
+                swapped = false; // Флаг для отслеживания, были ли обмены
+                for (let i = 0; i < n - 1; i++) {
+                    // Сравниваем соседние элементы
+                    if (array_element[i].ID < array_element[i + 1].ID) {
+                        // Меняем их местами, если они в неправильном порядке
+                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
+                        swapped = true; // Устанавливаем флаг, что был обмен
+                    }
+                }
+                n--; // Уменьшаем n, так как последний элемент уже на своем месте
+            } while (swapped); // Продолжаем, пока есть обмены
+
         } else if (sorting_question==="3") {
-            for (const question of data.questions) {
 
-            };
+            do {
+                swapped = false; // Флаг для отслеживания, были ли обмены
+                for (let i = 0; i < n - 1; i++) {
+                    // Сравниваем соседние элементы
+                    if (array_element[i].average_estimation < array_element[i + 1].average_estimation) {
+                        // Меняем их местами, если они в неправильном порядке
+                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
+                        swapped = true; // Устанавливаем флаг, что был обмен
+                    }
+                }
+                n--; // Уменьшаем n, так как последний элемент уже на своем месте
+            } while (swapped); // Продолжаем, пока есть обмены
+
         } else if (sorting_question==="4") {
-            for (const question of data.questions) {
 
-            };
-        }
+            do {
+                swapped = false; // Флаг для отслеживания, были ли обмены
+                for (let i = 0; i < n - 1; i++) {
+                    // Сравниваем соседние элементы
+                    if (array_element[i].average_estimation > array_element[i + 1].average_estimation) {
+                        // Меняем их местами, если они в неправильном порядке
+                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
+                        swapped = true; // Устанавливаем флаг, что был обмен
+                    }
+                }
+                n--; // Уменьшаем n, так как последний элемент уже на своем месте
+            } while (swapped); // Продолжаем, пока есть обмены
+
+        };
 
 
 
 
-        for (const question of data.questions) {
+        for (const question of array_element) {
             const newbox = document.createElement('div');
             const newlink  = document.createElement('a');
             newlink.style.textDecoration = 'none';
@@ -119,7 +167,6 @@ function POST(URL) {
             newbox.textContent = question.average_estimation
             newbox.appendChild(newlink)
             questions_box.appendChild(newbox)
-
         };
 
     })
@@ -174,12 +221,12 @@ document.getElementById('count_question').addEventListener('change', () => {
     }
 });
 
-//document.getElementById('sorting_question').addEventListener('change', () => {
-//    const sorting_question = document.getElementById('sorting_question').value;
-//    if (sorting_question) {
-//        Timer()
-//    }
-//});
+document.getElementById('sorting_question').addEventListener('change', () => {
+    const sorting_question = document.getElementById('sorting_question').value;
+    if (sorting_question) {
+        Timer()
+    }
+});
 
 document.getElementById('checkbox_search').addEventListener('change', () => {
     const checkbox_search = document.getElementById('checkbox_search').checked;
