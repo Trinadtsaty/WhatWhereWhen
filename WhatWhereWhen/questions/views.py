@@ -71,28 +71,35 @@ def question_main(request):
                     query |= Q(answer__icontains=data_get["search_answer"])
 
                 questions = questions.filter(query)
-        print("Фильтрация по поисковым запросам", questions)
+
+        # filename="logs.txt"
+        # with open(filename, 'w', encoding='utf-8') as file:
+        #     file.write("Фильтрация по поисковым запросам" + str(questions) + '\n')
 
         # Фильтрация по тегам
         if data_get.get("select_tag"):
-            # print(data_get.get("select_tag"))
-            # print(data_get.get("coincidence_tag"))
-
             query = Q()
+
+            # with open(filename, 'a', encoding='utf-8') as file:
+            #     file.write("Список допущенных тегов" + str(data_get["select_tag"]) + '\n')
+
             for id in data_get["select_tag"]:
                 query |= Q(Question_Tag__tags_id=id)
-            # print(query)
             questions = questions.filter(query)
-            # print(questions)
+            questions_solo = questions.filter(query).distinct()
 
             if data_get.get("coincidence_tag"):
-                questions = questions.annotate(
-                    matched_tags=Count('Question_Tag', filter=Q(Question_Tag__tags_id__in=data_get["select_tag"]))
-                ).filter(
-                    matched_tags=len(data_get["select_tag"])
-                )
+                query = Q()
+                for question in questions_solo:
+                    count = questions.filter(ID=question.ID).count()
+                    with open(filename, 'a', encoding='utf-8') as file:
+                        file.write(f"Элемент {question} повторяется {count} раз\n")
+                    if count == len(data_get["select_tag"]):
+                        query |= Q(ID=question.ID)
+                questions = questions_solo.filter(query)
 
-        print("Фильтрация по тегам",questions)
+        # with open(filename, 'a', encoding='utf-8') as file:
+        #     file.write("Фильтрация по тегам" + str(questions) + '\n')
 
         # Исключение тегов
         if data_get.get("unselect_tag"):
@@ -100,7 +107,9 @@ def question_main(request):
             for item in data_get["unselect_tag"]:
                 exclude |= Q(Question_Tag__tags_id=item)
             questions = questions.exclude(exclude)
-        print("Исключение тегов", questions)
+
+        # with open(filename, 'a', encoding='utf-8') as file:
+        #     file.write("Исключение тегов" + str(questions) + '\n')
 
         # Фильтрация по авторам
         if data_get.get("select_author"):
@@ -109,7 +118,9 @@ def question_main(request):
                 query |= Q(question_author=item)
 
             questions = questions.filter(query)
-        print("Фильтрация по авторам", questions)
+
+        # with open(filename, 'a', encoding='utf-8') as file:
+        #     file.write("Фильтрация по авторам" + str(questions) + '\n')
 
         # Исключение по авторам
         if data_get.get("unselect_author"):
@@ -119,22 +130,33 @@ def question_main(request):
 
             questions = questions.exclude(exclude)
 
-        print("Исключение по авторам", questions)
+        # with open(filename, 'a', encoding='utf-8') as file:
+        #     file.write("Исключение по авторам" + str(questions) + '\n')
+
+        #Считаем среднюю оценку
+        questions=questions.annotate(average_estimation=Coalesce(Round(Avg('Question__estimation'), 1), Value(1.1)))
+
+        # with open(filename, 'a', encoding='utf-8') as file:
+        #     file.write("Считаем среднюю оценку" + str(questions) + '\n')
 
         questions=questions[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
-        print("Отбираем нужное кол-во фильтруем порядок", questions)
 
-        # questions_data = list(questions.values('ID', 'question_name','average_estimation'))  # Укажите поля, которые хотите вернуть
-        questions_data=[]
-        for question in questions:
-            questions_data.append({
-                "ID":question.ID,
-                "question_name": question.question_name,
-                "average_estimation":average_score(question),
-                "question_text":question.text_question[:10]+"...",
-            })
+        # with open(filename, 'a', encoding='utf-8') as file:
+        #     file.write("Отбираем нужное кол-во фильтруем порядок" + str(questions) + '\n')
 
-        print(questions_data)
+        questions_data = list(questions.values('ID', 'question_name','average_estimation', 'text_question'))  # Укажите поля, которые хотите вернуть
+        # questions_data=[]
+        # for question in questions:
+        #     questions_data.append({
+        #         "ID":question.ID,
+        #         "question_name": question.question_name,
+        #         "average_estimation":average_score(question),
+        #         "question_text":question.text_question[:50]+"...",
+        #     })
+
+        # with open(filename, 'a', encoding='utf-8') as file:
+        #     file.write("Передаваемый массив списков" + str(questions_data))
+
         response_data = {'message': 'Данные получены', 'questions': questions_data}
 
         return JsonResponse(response_data)

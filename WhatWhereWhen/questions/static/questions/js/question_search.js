@@ -81,6 +81,8 @@ function POST(URL) {
         console.log(data.questions); // Данные, которые вы передали через JsonResponse
 //        console.log(data.questions[0].question_name)
         const questions_box = document.getElementById('question_scroll_box');
+
+        //Очищаем элемент
         while (questions_box.firstChild) {
             questions_box.removeChild(questions_box.firstChild);
         }
@@ -90,81 +92,95 @@ function POST(URL) {
         let n = data.questions.length;
         let swapped;
 
+        // Сортировка массива
         if (sorting_question==="2") {
 
             do {
                 swapped = false; // Флаг для отслеживания, были ли обмены
                 for (let i = 0; i < n - 1; i++) {
-                    // Сравниваем соседние элементы
+                    // Сравнение соседних элементов
                     if (array_element[i].ID > array_element[i + 1].ID) {
-                        // Меняем их местами, если они в неправильном порядке
+                        // Меняем местами, если они в неправильном порядке
                         [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
                         swapped = true; // Устанавливаем флаг, что был обмен
                     }
                 }
-                n--; // Уменьшаем n, так как последний элемент уже на своем месте
-            } while (swapped); // Продолжаем, пока есть обмены
+                n--; // Уменьшение n, так как последний элемент уже на своем месте
+            } while (swapped); // Продолжаем, пока флаг True
 
         } else if (sorting_question==="1") {
 
             do {
-                swapped = false; // Флаг для отслеживания, были ли обмены
+                swapped = false;
                 for (let i = 0; i < n - 1; i++) {
-                    // Сравниваем соседние элементы
                     if (array_element[i].ID < array_element[i + 1].ID) {
-                        // Меняем их местами, если они в неправильном порядке
                         [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-                        swapped = true; // Устанавливаем флаг, что был обмен
+                        swapped = true;
                     }
                 }
-                n--; // Уменьшаем n, так как последний элемент уже на своем месте
-            } while (swapped); // Продолжаем, пока есть обмены
+                n--;
+            } while (swapped);
 
         } else if (sorting_question==="3") {
 
             do {
-                swapped = false; // Флаг для отслеживания, были ли обмены
+                swapped = false;
                 for (let i = 0; i < n - 1; i++) {
-                    // Сравниваем соседние элементы
                     if (array_element[i].average_estimation < array_element[i + 1].average_estimation) {
-                        // Меняем их местами, если они в неправильном порядке
                         [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-                        swapped = true; // Устанавливаем флаг, что был обмен
+                        swapped = true;
                     }
                 }
-                n--; // Уменьшаем n, так как последний элемент уже на своем месте
-            } while (swapped); // Продолжаем, пока есть обмены
+                n--;
+            } while (swapped);
 
         } else if (sorting_question==="4") {
 
             do {
-                swapped = false; // Флаг для отслеживания, были ли обмены
+                swapped = false;
                 for (let i = 0; i < n - 1; i++) {
-                    // Сравниваем соседние элементы
                     if (array_element[i].average_estimation > array_element[i + 1].average_estimation) {
-                        // Меняем их местами, если они в неправильном порядке
                         [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-                        swapped = true; // Устанавливаем флаг, что был обмен
+                        swapped = true;
                     }
                 }
-                n--; // Уменьшаем n, так как последний элемент уже на своем месте
-            } while (swapped); // Продолжаем, пока есть обмены
-
+                n--;
+            } while (swapped);
         };
 
 
-
-
+        //Отоброжение отсортированного массива на странице
         for (const question of array_element) {
-            const newbox = document.createElement('div');
+//            console.log(question.question_name, question.question_text)
+            const QuestionName = document.createElement('div');
+            QuestionName.className = 'name_question';
+            QuestionName.textContent=question.question_name;
+
+            const QuestionText = document.createElement('div');
+            QuestionText.className = 'text_question';
+            QuestionText.textContent=question.text_question;
+
+            const Estimation = document.createElement('div');
+            Estimation.className = 'estimation';
+            Estimation.textContent=question.average_estimation;
+
+            const textbox = document.createElement('div');
+            textbox.className = 'box_text';
+            textbox.appendChild(QuestionName)
+            textbox.appendChild(QuestionText)
+
+            const EstimationQuestion = document.createElement('div');
+            EstimationQuestion.className = 'question_estimation';
+            EstimationQuestion.appendChild(Estimation)
+
             const newlink  = document.createElement('a');
-            newlink.style.textDecoration = 'none';
-            newlink.style.color = 'inherit';
-
+            newlink.className = 'link_question_page';
             newlink.href=`/questions/${question.ID}/`;
-            newlink.textContent = question.question_name;
+            newlink.appendChild(textbox)
+            newlink.appendChild(EstimationQuestion)
 
-            newbox.textContent = question.average_estimation
+            const newbox = document.createElement('div');
+            newbox.className = 'link_box_question';
             newbox.appendChild(newlink)
             questions_box.appendChild(newbox)
         };
