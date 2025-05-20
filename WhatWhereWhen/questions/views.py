@@ -134,12 +134,12 @@ def question_main(request):
         #     file.write("Исключение по авторам" + str(questions) + '\n')
 
         #Считаем среднюю оценку
-        questions=questions.annotate(average_estimation=Coalesce(Round(Avg('Question__estimation'), 1), Value(1.1)))
+        questions=questions.annotate(average_estimation=Coalesce(Round(Avg('Question__estimation'), 1), Value(0.0)))
 
         # with open(filename, 'a', encoding='utf-8') as file:
         #     file.write("Считаем среднюю оценку" + str(questions) + '\n')
 
-        questions=questions[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
+        questions=questions.order_by(data_get.get("sorting_question"))[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
 
         # with open(filename, 'a', encoding='utf-8') as file:
         #     file.write("Отбираем нужное кол-во фильтруем порядок" + str(questions) + '\n')

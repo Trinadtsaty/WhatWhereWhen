@@ -30,6 +30,12 @@ search_box_button.addEventListener('click', () => {
     }
 });
 
+function formatQuestionText(text) {
+    // Заменяем переносы на пробелы
+    text = text.replace(/\n/g, ' ');
+    // Если длина текста больше 20 символов, обрезаем и добавляем "..."
+    return text.length > 20 ? text.slice(0, 20) + '...' : text;
+};
 
 
 function POST(URL) {
@@ -42,7 +48,7 @@ function POST(URL) {
 
         const question_page = 0
         const count_question = document.getElementById('count_question').value
-//        const sorting_question = document.getElementById('sorting_question').value
+        const sorting_question = document.getElementById('sorting_question').value
 
         const checkbox_search = document.getElementById('checkbox_search').checked
 
@@ -59,6 +65,7 @@ function POST(URL) {
             "unselect_tag":unselect_tag,
             "question_page": question_page,
             "count_question": count_question,
+            "sorting_question":sorting_question,
         };
 
     return fetch(URL, {
@@ -83,107 +90,107 @@ function POST(URL) {
         const questions_box = document.getElementById('question_scroll_box');
 
         //Очищаем элемент
-//        while (questions_box.firstChild) {
-//            questions_box.removeChild(questions_box.firstChild);
-//        }
+        while (questions_box.firstChild) {
+            questions_box.removeChild(questions_box.firstChild);
+        }
 
-        const sorting_question = document.getElementById('sorting_question').value
+//        const sorting_question = document.getElementById('sorting_question').value
         const array_element = data.questions
-        let n = data.questions.length;
-        let swapped;
+//        let n = data.questions.length;
+//        let swapped;
 
-        // Сортировка массива
-        if (sorting_question==="2") {
-
-            do {
-                swapped = false; // Флаг для отслеживания, были ли обмены
-                for (let i = 0; i < n - 1; i++) {
-                    // Сравнение соседних элементов
-                    if (array_element[i].ID > array_element[i + 1].ID) {
-                        // Меняем местами, если они в неправильном порядке
-                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-                        swapped = true; // Устанавливаем флаг, что был обмен
-                    }
-                }
-                n--; // Уменьшение n, так как последний элемент уже на своем месте
-            } while (swapped); // Продолжаем, пока флаг True
-
-        } else if (sorting_question==="1") {
-
-            do {
-                swapped = false;
-                for (let i = 0; i < n - 1; i++) {
-                    if (array_element[i].ID < array_element[i + 1].ID) {
-                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-                        swapped = true;
-                    }
-                }
-                n--;
-            } while (swapped);
-
-        } else if (sorting_question==="3") {
-
-            do {
-                swapped = false;
-                for (let i = 0; i < n - 1; i++) {
-                    if (array_element[i].average_estimation < array_element[i + 1].average_estimation) {
-                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-                        swapped = true;
-                    }
-                }
-                n--;
-            } while (swapped);
-
-        } else if (sorting_question==="4") {
-
-            do {
-                swapped = false;
-                for (let i = 0; i < n - 1; i++) {
-                    if (array_element[i].average_estimation > array_element[i + 1].average_estimation) {
-                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-                        swapped = true;
-                    }
-                }
-                n--;
-            } while (swapped);
-        };
+        // Сортировка массива пузырьками
+//        if (sorting_question==="2") {
+//
+//            do {
+//                swapped = false; // Флаг для отслеживания, были ли обмены
+//                for (let i = 0; i < n - 1; i++) {
+//                    // Сравнение соседних элементов
+//                    if (array_element[i].ID > array_element[i + 1].ID) {
+//                        // Меняем местами, если они в неправильном порядке
+//                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
+//                        swapped = true; // Устанавливаем флаг, что был обмен
+//                    }
+//                }
+//                n--; // Уменьшение n, так как последний элемент уже на своем месте
+//            } while (swapped); // Продолжаем, пока флаг True
+//
+//        } else if (sorting_question==="1") {
+//
+//            do {
+//                swapped = false;
+//                for (let i = 0; i < n - 1; i++) {
+//                    if (array_element[i].ID < array_element[i + 1].ID) {
+//                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
+//                        swapped = true;
+//                    }
+//                }
+//                n--;
+//            } while (swapped);
+//
+//        } else if (sorting_question==="3") {
+//
+//            do {
+//                swapped = false;
+//                for (let i = 0; i < n - 1; i++) {
+//                    if (array_element[i].average_estimation < array_element[i + 1].average_estimation) {
+//                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
+//                        swapped = true;
+//                    }
+//                }
+//                n--;
+//            } while (swapped);
+//
+//        } else if (sorting_question==="4") {
+//
+//            do {
+//                swapped = false;
+//                for (let i = 0; i < n - 1; i++) {
+//                    if (array_element[i].average_estimation > array_element[i + 1].average_estimation) {
+//                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
+//                        swapped = true;
+//                    }
+//                }
+//                n--;
+//            } while (swapped);
+//        };
 
 
         //Отоброжение отсортированного массива на странице
-//        for (const question of array_element) {
-////            console.log(question.question_name, question.question_text)
-//            const QuestionName = document.createElement('div');
-//            QuestionName.className = 'name_question';
-//            QuestionName.textContent=question.question_name;
-//
-//            const QuestionText = document.createElement('div');
-//            QuestionText.className = 'text_question';
-//            QuestionText.textContent=question.text_question;
-//
-//            const Estimation = document.createElement('div');
-//            Estimation.className = 'estimation';
-//            Estimation.textContent=question.average_estimation;
-//
-//            const textbox = document.createElement('div');
-//            textbox.className = 'box_text';
-//            textbox.appendChild(QuestionName)
-//            textbox.appendChild(QuestionText)
-//
-//            const EstimationQuestion = document.createElement('div');
-//            EstimationQuestion.className = 'question_estimation';
-//            EstimationQuestion.appendChild(Estimation)
-//
-//            const newlink  = document.createElement('a');
-//            newlink.className = 'link_question_page';
-//            newlink.href=`/questions/${question.ID}/`;
-//            newlink.appendChild(textbox)
-//            newlink.appendChild(EstimationQuestion)
-//
-//            const newbox = document.createElement('div');
-//            newbox.className = 'link_box_question';
-//            newbox.appendChild(newlink)
-//            questions_box.appendChild(newbox)
-//        };
+        for (const question of array_element) {
+//            console.log(question.question_name, question.question_text)
+            const QuestionName = document.createElement('div');
+            QuestionName.className = 'name_question';
+            QuestionName.textContent=question.question_name;
+
+            const QuestionText = document.createElement('div');
+            QuestionText.className = 'text_question';
+            QuestionText.textContent=formatQuestionText(question.text_question);
+
+            const Estimation = document.createElement('div');
+            Estimation.className = 'estimation';
+            Estimation.textContent=question.average_estimation;
+
+            const textbox = document.createElement('div');
+            textbox.className = 'box_text';
+            textbox.appendChild(QuestionName)
+            textbox.appendChild(QuestionText)
+
+            const EstimationQuestion = document.createElement('div');
+            EstimationQuestion.className = 'question_estimation';
+            EstimationQuestion.appendChild(Estimation)
+
+            const newlink  = document.createElement('a');
+            newlink.className = 'link_question_page';
+            newlink.href=`/questions/${question.ID}/`;
+            newlink.appendChild(textbox)
+            newlink.appendChild(EstimationQuestion)
+
+            const newbox = document.createElement('div');
+            newbox.className = 'link_box_question';
+            newbox.appendChild(newlink)
+            questions_box.appendChild(newbox)
+        };
 
     })
     .catch(error => {

@@ -154,11 +154,14 @@ body {
     margin-top: 10px;
     font-size: 32px;
     width: 80%;
-    height: 50%;
+    height: 550px;
 }
 
 #note{
-     height: 62%;
+    margin-left: 20px;
+    margin-top:10px;
+    height: 600px;
+    width: 770px;
 }
 
 .input_text::placeholder {

@@ -83,7 +83,7 @@ def validate_image(image):
         # print(ValidationError)
 
 def validate_tag(name):
-    dangerous_characters = ['<', '>', '&', '/', '\\', "'", '"', ';', ' ', '\n', '\r', '?', '#', '%']
+    dangerous_characters = ['<', '>', '&', '/', '\\', "'", '"', ';', '\n', '\r', '?', '#', '%']
     for i in range(len(dangerous_characters)):
         if dangerous_characters[i] in name:
             raise ValidationError("Недопустимые символы в логине, пожалуйста придумайте логин без специальных символов")
@@ -155,6 +155,7 @@ def chek_json_filter(data):
     unselect_tag = None
     question_page = 0
     count_question = 5
+    sorting_question = "ID"
     def chekArray(string_array):
         int_array = []
         for item in string_array:
@@ -202,6 +203,19 @@ def chek_json_filter(data):
     if array:
         unselect_tag = array[0]
 
+    sorting_question_test = data.get('sorting_question')
+    if sorting_question_test ==  "average_estimation":
+        sorting_question = "average_estimation"
+    elif sorting_question_test == "-average_estimation":
+        sorting_question = "-average_estimation"
+    elif sorting_question_test == "-ID":
+        sorting_question = "-ID"
+    else:
+        sorting_question = "ID"
+
+
+
+
     data_get = {
         "search": search,
         "search_name": search_name,
@@ -215,6 +229,7 @@ def chek_json_filter(data):
         "unselect_tag": unselect_tag,
         "question_page": question_page,
         "count_question": count_question,
+        "sorting_question":sorting_question,
     };
     return data_get
 
