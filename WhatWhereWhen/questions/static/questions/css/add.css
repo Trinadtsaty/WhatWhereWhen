@@ -154,7 +154,7 @@ body {
     margin-top: 10px;
     font-size: 32px;
     width: 80%;
-    height: 550px;
+    height: 500px;
 }
 
 #note{
@@ -210,4 +210,41 @@ body {
 #main_page:hover {
     background-color: #524F52;
     border: 0.6vh solid #C0A610;
+}
+
+.input_text_height {
+    font-size: 32px;
+    margin-top: 10px;
+    width: 80%;
+    height: 50%;
+}
+
+.input_text::placeholder {
+    font-size: 32px;
+}
+
+.input_text:focus {
+    font-size: 32px;
+}
+.annotation {
+    text-align: center;
+    height: 20%;
+    font-size: 50px;
+    color: white;
+}
+#form_claim_add {
+    height: 80%;
+}
+#claim_error {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f44336; /* Красный цвет */
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Поверх всех элементов */
 }

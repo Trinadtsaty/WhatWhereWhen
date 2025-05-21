@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Подать жалобу</title>
+    <link rel="stylesheet" href="{% static 'questions/css/add.css' %}">
+</head>
+<body>
+
+    <div id="claim_container" class="container">
+        <div id="screen">
+            <div id="annotation_question_claim" class="annotation">Жалоба на вопрос: "{{question_name}}"</div>
+            <form method="post" class="forms" id="form_claim_add">
+                {% csrf_token %}
+                <input name="claim_name" id="field_tag" type="text" placeholder="Введите Название жалобы" class="input_line">
+                <textarea name="text_question" id="text_claim" rows="20" cols="30" placeholder="Введите текст жалобы" class="input_text_height">{{ text_question|default:'' }}</textarea>
+                <input id="submit" type="submit" class="form_button" value="Отправить">
+            </form>
+            {% if error %}
+                <div id="claim_error" class="error">{{ error }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
+    <script>
+        function showError() {
+            var errorDiv = document.getElementById("claim_error");
+            errorDiv.style.display = "block"; // Показываем окно
+
+            // Скрываем окно через 10 секунд
+            setTimeout(function() {
+                errorDiv.style.display = "none";
+            }, 5000); // 10000 миллисекунд = 10 секунд
+        }
+        {% if error %}
+        showError()
+        {% endif %}
+    </script>
+</body>
+</html>

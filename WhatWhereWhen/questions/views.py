@@ -446,8 +446,16 @@ class Tag_Question_API(Tag_Question_APICreate):
 class Selection_Questions_API(Selection_Questions_APICreate):
     pass
 
-def questionClaim(request):
-    return render(request, "questions/plug.html")
+
+@login_required()
+def questionClaim(request, question_number):
+    question = get_object_or_404(Question, ID=question_number, publication=True)
+    error = "Имя вопроса слишком короткое"
+
+    return render(request, "questions/claim_question.html", {
+        "question_name":question.question_name,
+        "error":error,
+    })
 
 def tagClaim(request):
     return render(request, "questions/plug.html")

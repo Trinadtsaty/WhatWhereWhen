@@ -19,6 +19,8 @@ search_box_button.addEventListener('click', () => {
         question_search.value=""
         advanced_search_img.style.transform = 'rotate(180deg)';
         search_advanced_box.style.display = '';
+
+        Timer()
     } else {
         question_search.style.display = '';
         advanced_search_img.style.transform = 'rotate(0deg)';
@@ -27,8 +29,68 @@ search_box_button.addEventListener('click', () => {
         document.getElementById('question_search_text').value = "";
         document.getElementById('question_search_answer').value = "";
         document.getElementById('checkbox_search').checked = "";
+
+        Timer()
     }
 });
+
+const tags_box = document.getElementById('select_tags');
+const tags_search_img = document.getElementById('tags_search_img');
+const tags_name_button = document.getElementById('tags_name_box');
+
+tags_box.style.display = 'none';
+
+tags_name_button.addEventListener('click', () => {
+    if (tags_box.style.display === 'none') {
+
+        tags_search_img.style.transform = 'rotate(180deg)';
+        tags_box.style.display = '';
+    } else {
+        tags_box.style.display = 'none';
+        tags_search_img.style.transform = 'rotate(0deg)';
+
+        document.querySelectorAll('.select_item_tags').forEach(item => {
+            item.querySelector('.check_mark_box').querySelector('.select').style.display = 'none';
+            item.querySelector('.check_mark_box').querySelector('.unselect').style.display = 'none';
+            item.querySelector('.check_mark_box').querySelector('.base').style.display = '';
+        });
+
+        select_tag.length = 0;
+        unselect_tag.length = 0;
+
+        Timer()
+    }
+});
+
+const select_author_menu = document.getElementById('select_author');
+const author_search_img = document.getElementById('author_search_img');
+const author_name_button = document.getElementById('author_name_box');
+
+select_author_menu.style.display = 'none';
+
+author_name_button.addEventListener('click', () => {
+    if (select_author_menu.style.display === 'none') {
+
+        author_search_img.style.transform = 'rotate(180deg)';
+        select_author_menu.style.display = '';
+    } else {
+        select_author_menu.style.display = 'none';
+        tags_search_img.style.transform = 'rotate(0deg)';
+
+        document.querySelectorAll('.select_item_author').forEach(item => {
+            item.querySelector('.check_mark_box').querySelector('.select').style.display = 'none';
+            item.querySelector('.check_mark_box').querySelector('.unselect').style.display = 'none';
+            item.querySelector('.check_mark_box').querySelector('.base').style.display = '';
+        });
+
+        select_author.length = 0;
+        unselect_author.length = 0;
+
+        Timer()
+    }
+});
+
+
 
 function formatQuestionText(text) {
     // Заменяем переносы на пробелы
@@ -59,7 +121,7 @@ function POST(URL) {
             "search_answer": search_answer,
             "checkbox_search":checkbox_search,
             "coincidence_tag":coincidence_tag,
-            "select_author":select_author,
+            "select_author": select_author,
             "unselect_author":unselect_author,
             "select_tag":select_tag,
             "unselect_tag":unselect_tag,
@@ -94,70 +156,12 @@ function POST(URL) {
             questions_box.removeChild(questions_box.firstChild);
         }
 
-//        const sorting_question = document.getElementById('sorting_question').value
         const array_element = data.questions
-//        let n = data.questions.length;
-//        let swapped;
-
-        // Сортировка массива пузырьками
-//        if (sorting_question==="2") {
-//
-//            do {
-//                swapped = false; // Флаг для отслеживания, были ли обмены
-//                for (let i = 0; i < n - 1; i++) {
-//                    // Сравнение соседних элементов
-//                    if (array_element[i].ID > array_element[i + 1].ID) {
-//                        // Меняем местами, если они в неправильном порядке
-//                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-//                        swapped = true; // Устанавливаем флаг, что был обмен
-//                    }
-//                }
-//                n--; // Уменьшение n, так как последний элемент уже на своем месте
-//            } while (swapped); // Продолжаем, пока флаг True
-//
-//        } else if (sorting_question==="1") {
-//
-//            do {
-//                swapped = false;
-//                for (let i = 0; i < n - 1; i++) {
-//                    if (array_element[i].ID < array_element[i + 1].ID) {
-//                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-//                        swapped = true;
-//                    }
-//                }
-//                n--;
-//            } while (swapped);
-//
-//        } else if (sorting_question==="3") {
-//
-//            do {
-//                swapped = false;
-//                for (let i = 0; i < n - 1; i++) {
-//                    if (array_element[i].average_estimation < array_element[i + 1].average_estimation) {
-//                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-//                        swapped = true;
-//                    }
-//                }
-//                n--;
-//            } while (swapped);
-//
-//        } else if (sorting_question==="4") {
-//
-//            do {
-//                swapped = false;
-//                for (let i = 0; i < n - 1; i++) {
-//                    if (array_element[i].average_estimation > array_element[i + 1].average_estimation) {
-//                        [array_element[i], array_element[i + 1]] = [array_element[i + 1], array_element[i]];
-//                        swapped = true;
-//                    }
-//                }
-//                n--;
-//            } while (swapped);
-//        };
-
 
         //Отоброжение отсортированного массива на странице
+
         for (const question of array_element) {
+
 //            console.log(question.question_name, question.question_text)
             const QuestionName = document.createElement('div');
             QuestionName.className = 'name_question';
@@ -186,9 +190,34 @@ function POST(URL) {
             newlink.appendChild(textbox)
             newlink.appendChild(EstimationQuestion)
 
+            const button = document.createElement('div');
+            button.className = 'button_tools';
+            button.textContent = '|||';
+
+            const li_element_add = document.createElement('li');
+            li_element_add.className = 'tools_element';
+            li_element_add.textContent = 'Добавить в коллекцию';
+
+            const a_link = document.createElement('a');
+            a_link.className = 'a_link';
+            a_link.href=`/questionclaim/${question.ID}/`
+            a_link.textContent = 'Пожаловаться'
+
+            const li_element_claim = document.createElement('li');
+            li_element_claim.className = 'tools_element';
+            li_element_claim.appendChild(a_link)
+
+            const ul_spis = document.createElement('ul');
+            ul_spis.className = 'tools_menu';
+            ul_spis.appendChild(li_element_add)
+            ul_spis.appendChild(li_element_claim)
+
             const newbox = document.createElement('div');
             newbox.className = 'link_box_question';
             newbox.appendChild(newlink)
+            newbox.appendChild(button)
+            newbox.appendChild(ul_spis)
+
             questions_box.appendChild(newbox)
         };
 

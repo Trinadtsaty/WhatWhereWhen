@@ -24,13 +24,18 @@
                 <input id="question_search_answer" type="text" class="input_select hidden" placeholder="Поиск по ответу">
             </div>
 
+            <div id="tags_name_box" class="down_show_box">
+                <div id="tags_search" class="down_text">Теги</div>
+                <div id="tags_search_img_box" class="down_box"><img id="tags_search_img" class="down_img" alt="Вниз" src="{% static 'questions/img/cubes/down_button.png' %}"></div>
+            </div>
+
             <div id="select_tags" class="select_box">
                 <input id="select_tags_name" class="input_select" type="text" placeholder="Введите имя тега" onkeyup="filterItemsTags()">
                 <input type="checkbox" id="checkbox_tag" class="checkbox"> Строгое совпадение
                 <div id="scroll_box_tags" class="scroll_box">
                     <ul id="spis_select_tags" class="spis_select">
                         {% for tag in tags %}
-                        <li class="select_item" data-value="{{ tag.ID }}">
+                        <li class="select_item select_item_tags" data-value="{{ tag.ID }}">
                             <div class="check_mark_box">
                                 <img alt="галочки нет" class="check_mark_img base" src="{% static 'questions/img/cubes/base.png' %}">
                                 <img alt="выбрать" class="check_mark_img select" src="{% static 'questions/img/cubes/select.png' %}">
@@ -43,12 +48,17 @@
                 </div>
             </div>
 
+            <div id="author_name_box" class="down_show_box">
+                <div id="author_search" class="down_text">Авторы</div>
+                <div id="author_search_img_box" class="down_box"><img id="author_search_img" class="down_img" alt="Вниз" src="{% static 'questions/img/cubes/down_button.png' %}"></div>
+            </div>
+
             <div id="select_author" class="select_box">
                 <input id="select_author_name" class="input_select" type="text" placeholder="Введите имя тега" onkeyup="filterItemsAuthor()">
                 <div id="scroll_box_author" class="scroll_box">
                     <ul id="spis_select_author" class="spis_select">
                         {% for author in authors %}
-                        <li class="select_item" data-value="{{ author.ID }}">
+                        <li class="select_item select_item_author" data-value="{{ author.ID }}">
                             <div class="check_mark_box">
                                 <img alt="галочки нет" class="check_mark_img base" src="{% static 'questions/img/cubes/base.png' %}">
                                 <img alt="выбрать" class="check_mark_img select" src="{% static 'questions/img/cubes/select.png' %}">
@@ -90,7 +100,7 @@
                     <div class="button_tools">|||</div>
                     <ul class="tools_menu">
                         <li class="tools_element">Добавить в коллекцию</li>
-                        <li class="tools_element"><a href="{% url 'Claim_Question' %}?ref=pass">Пожаловаться</a></li>
+                        <li class="tools_element"><a class="a_link" href="{% url 'Claim_Question' %}?ref=pass">Пожаловаться</a></li>
                     </ul>
                 </div>
 
@@ -102,11 +112,12 @@
         </div>
     </div>
     <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
-    <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
+    <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <script src="{% static 'questions/js/select_tag.js' %}"></script>
     <script src="{% static 'questions/js/select_author.js' %}"></script>
     <script src="{% static 'questions/js/question_search.js' %}"></script>
     <script src="{% static 'questions/js/clean.js' %}"></script>
+    <script src="{% static 'questions/js/question_button.js' %}"></script>
 <!--    <script src="{% static 'questions/js/test.js' %}"></script>-->
 </body>
 </html>
