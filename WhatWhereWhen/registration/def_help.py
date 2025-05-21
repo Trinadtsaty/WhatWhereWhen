@@ -139,6 +139,9 @@ def question_answer_text(name):
     if len(name) > 700:
         raise ValidationError('Текст примечания к ответу слишком длинный, пожалуйста придумайте примечание до 700 символов')
 
+def Claim_text(text):
+    if len(text) <10:
+        raise ValidationError('Пожалуйста распишите текст жалобы подробнее (минимум 10 символов)')
 
 from django.utils.html import escape
 

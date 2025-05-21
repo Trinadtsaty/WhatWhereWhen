@@ -18,6 +18,5 @@ urlpatterns = [
     path('api/v1', Question_Evaluation_API.as_view()),
     path('api/v2', Tag_Question_API.as_view()),
     path('api/v3', Selection_Questions_API.as_view()),
-
 ]
 

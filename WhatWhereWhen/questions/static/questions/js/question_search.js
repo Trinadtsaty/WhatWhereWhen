@@ -200,7 +200,7 @@ function POST(URL) {
 
             const a_link = document.createElement('a');
             a_link.className = 'a_link';
-            a_link.href=`/questionclaim/${question.ID}/`
+            a_link.href=`questionclaim/${question.ID}/`
             a_link.textContent = 'Пожаловаться'
 
             const li_element_claim = document.createElement('li');

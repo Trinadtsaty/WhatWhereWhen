@@ -181,6 +181,14 @@ def question_add(request):
         answer = escape(request.POST.get('answer').strip())
         answer_description = escape(request.POST.get('answer_description').strip())
 
+        if not question_name or not text_question or not answer:
+            return render(request, "registration/registr.html", {
+                'error': 'Я рад, что вы демонстрируете ваши навыки програмирования, однако пожалуйста заполните поля в ручную',
+                'question_name': question_name,
+                'text_question': text_question,
+                'answer': answer,
+            })
+
         if question_name:
             try:
                 question_name_line(question_name)
@@ -451,6 +459,15 @@ class Selection_Questions_API(Selection_Questions_APICreate):
 def questionClaim(request, question_number):
     question = get_object_or_404(Question, ID=question_number, publication=True)
     error = "Имя вопроса слишком короткое"
+    if request.method == 'POST':
+        claim_name = escape(request.POST.get('claim_name', '').strip())
+        text_claim = escape(request.POST.get('text_claim', '').strip())
+
+        if claim_name and text_claim:
+            pass
+
+
+
 
     return render(request, "questions/claim_question.html", {
         "question_name":question.question_name,

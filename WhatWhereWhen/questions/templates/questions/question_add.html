@@ -14,22 +14,16 @@
                 <div id="question_box" class="appears_text">
                     <input name="question_name" id="question_name" type="text" placeholder="Введите Название Вопроса" class="input_line" value="{{ question_name|default:'' }}">
                     <textarea name="text_question" id="text_question" rows="20" cols="30" placeholder="Введите текст вопроса" class="input_text">{{ text_question|default:'' }}</textarea>
-                    {% if error %}
-                        <div class="error">{{ error }}</div>
-                    {% endif %}
+
                 </div>
                 <div id="note_box" class="appears_text">
                     <textarea name="note" id="note" rows="20" cols="30" placeholder="Введите текст Заметки" class="input_text">{{ note|default:'' }}</textarea>
-                    {% if error %}
-                        <div class="error">{{ error }}</div>
-                    {% endif %}
+
                 </div>
                 <div id="answer_box" class="appears_text">
                     <input name="answer" id="answer" type="text" placeholder="Введите отве" class="input_line" value="{{ answer|default:'' }}">
                     <textarea name="answer_description" id="answer_description" rows="20" cols="30" placeholder="Введите примечание к ответу" class="input_text">{{ answer_description|default:'' }}</textarea>
-                    {% if error %}
-                        <div class="error">{{ error }}</div>
-                    {% endif %}
+
                 </div>
                 <input id="submit" type="submit" style="display:none">
 
@@ -46,7 +40,24 @@
             </div>
         </div>
     </div>
+    {% if error %}
+        <div id="claim_error" class="error">{{ error }}</div>
+    {% endif %}
     <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <script src="{% static 'questions/js/show_box.js' %}"></script>
+    <script>
+        function showError() {
+            var errorDiv = document.getElementById("claim_error");
+            errorDiv.style.display = "block"; // Показываем окно
+
+            // Скрываем окно через 10 секунд
+            setTimeout(function() {
+                errorDiv.style.display = "none";
+            }, 5000); // 10000 миллисекунд = 10 секунд
+        }
+        {% if error %}
+        showError()
+        {% endif %}
+    </script>
 </body>
 </html>
