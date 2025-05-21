@@ -498,7 +498,10 @@ def selectionCreate(request):
         selection_name = escape(request.POST.get('selection_name', '').strip())
         selection_checkbox = request.POST.get('selection_checkbox')
 
-        print(selection_name, selection_checkbox)
+        if selection_checkbox:
+            selection_checkbox=True
+        else:
+            selection_checkbox=False
 
     return render(request, "questions/selection_create.html",{
         "error":error,
