@@ -12,7 +12,7 @@ urlpatterns = [
     path('<int:question_number>/', views.question, name="Question"),
     path('tag/', views.tag_add, name="Tag_add"),
     path('questionclaim/<int:question_number>/',  views.questionClaim, name="Claim_Question"),
-    path('tagclaim/',  views.tagClaim, name="Claim_Tag"),
+    path('selectionClaim/',  views.selectionClaim, name="Claim_Tag"),
     path('selection/',  views.selectionCreate, name="Selection_Create"),
     path('<int:question_number>/edit/', views.question_edit, name="Question_Edit"),
     path('api/v1', Question_Evaluation_API.as_view()),

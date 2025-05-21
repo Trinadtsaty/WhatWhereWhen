@@ -3,18 +3,17 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Подать жалобу</title>
+    <title>Создать подборку</title>
     <link rel="stylesheet" href="{% static 'questions/css/add.css' %}">
 </head>
 <body>
 
     <div id="claim_container" class="container">
         <div id="screen">
-            <div id="annotation_question_claim" class="annotation">Жалоба на вопрос: "{{question_name}}"</div>
-            <form method="post" class="forms" id="form_claim_add">
+            <form method="post" class="forms" id="form_selection_add">
                 {% csrf_token %}
-                <input name="claim_name" id="claim_name" type="text" placeholder="Введите Название жалобы" class="input_line" value="{{ claim_name|default:'' }}">
-                <textarea name="text_claim" id="text_claim" rows="20" cols="30" placeholder="Введите текст жалобы" class="input_text_height">{{ text_claim|default:'' }}</textarea>
+                <input name="selection_name" id="selection_name" type="text" placeholder="Введите Название жалобы" class="input_line" value="{{ selection_name|default:'' }}">
+                <input name="selection_checkbox" id="selection_checkbox" type="checkbox" class="input_checkbox"> Приватная коллекция
                 <input id="submit" type="submit" class="form_button" value="Отправить">
             </form>
             {% if error %}

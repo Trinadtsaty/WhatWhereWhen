@@ -458,27 +458,51 @@ class Selection_Questions_API(Selection_Questions_APICreate):
 @login_required()
 def questionClaim(request, question_number):
     question = get_object_or_404(Question, ID=question_number, publication=True)
-    error = "Имя вопроса слишком короткое"
     if request.method == 'POST':
         claim_name = escape(request.POST.get('claim_name', '').strip())
         text_claim = escape(request.POST.get('text_claim', '').strip())
 
-        if claim_name and text_claim:
-            pass
+        if not claim_name and not text_claim:
+            return render(request, "questions/claim_question.html", {
+                'error': 'Пожалуйста заполните все поля',
+                "question_name":question.question_name,
+                "claim_name":claim_name,
+                "text_claim":text_claim,
+            })
 
+        if text_claim:
+            try:
+                Claim_text(text_claim)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "questions/claim_question.html", {
+                    'error': error,
+                    "claim_name":claim_name,
+                    "text_claim":text_claim,
+                })
 
-
+        complaints, created = Complaints_Questions.objects.get_or_create(question_id=question, complaint_name=claim_name, complaint_description=text_claim, complaint_author=request.user)
+        if created:
+            complaints.save()
 
     return render(request, "questions/claim_question.html", {
         "question_name":question.question_name,
-        "error":error,
     })
 
-def tagClaim(request):
+def selectionClaim(request):
     return render(request, "questions/plug.html")
 
 def selectionCreate(request):
-    return render(request, "questions/plug.html")
+    error = 'Ошибка'
+    if request.method == 'POST':
+        selection_name = escape(request.POST.get('selection_name', '').strip())
+        selection_checkbox = request.POST.get('selection_checkbox')
+
+        print(selection_name, selection_checkbox)
+
+    return render(request, "questions/selection_create.html",{
+        "error":error,
+    })
 
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)

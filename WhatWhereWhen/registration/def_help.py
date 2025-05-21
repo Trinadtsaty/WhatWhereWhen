@@ -143,6 +143,18 @@ def Claim_text(text):
     if len(text) <10:
         raise ValidationError('Пожалуйста распишите текст жалобы подробнее (минимум 10 символов)')
 
+def validate_tag(name):
+    dangerous_characters = ['<', '>', '&', '/', '\\', ';', '\n', '\r', '#', '%']
+    for i in range(len(dangerous_characters)):
+        if dangerous_characters[i] in name:
+            raise ValidationError("Недопустимые символы в логине, пожалуйста придумайте логин без специальных символов")
+    if len(name) < 3:
+        raise ValidationError('Тег слишком короткий, пожалуйста придумайте тег длинной от 3 до 20 символов')
+    if len(name) > 20:
+        raise ValidationError('Тег слишком длинный, пожалуйста придумайте тег длинной от 3 до 20 символов')
+
+
+
 from django.utils.html import escape
 
 def chek_json_filter(data):
