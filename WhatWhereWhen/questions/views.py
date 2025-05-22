@@ -454,6 +454,33 @@ class Tag_Question_API(Tag_Question_APICreate):
 class Selection_Questions_API(Selection_Questions_APICreate):
     pass
 
+@login_required()
+def selectionCreate(request):
+    if request.method == 'POST':
+        selection_name = escape(request.POST.get('selection_name', '').strip())
+        selection_checkbox = request.POST.get('selection_checkbox')
+
+        if selection_checkbox:
+            selection_checkbox_bd=True
+        else:
+            selection_checkbox_bd=False
+
+        if selection_name:
+            try:
+                validate_selection(selection_name)
+            except ValidationError as e:
+                error = str(e)[2:-2]
+                return render(request, "questions/selection_create.html", {
+                    'error': error,
+                    "selection_name":selection_name,
+                    "selection_checkbox": selection_checkbox_bd,
+                })
+
+        selections, created = Selections.objects.get_or_create(selection_name=selection_name, private=selection_checkbox_bd, selection_author=request.user)
+        if created:
+            selections.save()
+
+    return render(request, "questions/selection_create.html")
 
 @login_required()
 def questionClaim(request, question_number):
@@ -492,20 +519,6 @@ def questionClaim(request, question_number):
 def selectionClaim(request):
     return render(request, "questions/plug.html")
 
-def selectionCreate(request):
-    error = 'Ошибка'
-    if request.method == 'POST':
-        selection_name = escape(request.POST.get('selection_name', '').strip())
-        selection_checkbox = request.POST.get('selection_checkbox')
-
-        if selection_checkbox:
-            selection_checkbox=True
-        else:
-            selection_checkbox=False
-
-    return render(request, "questions/selection_create.html",{
-        "error":error,
-    })
 
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)

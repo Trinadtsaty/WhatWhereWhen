@@ -100,7 +100,7 @@
 <!--                    </a>-->
 <!--                    <div class="button_tools">|||</div>-->
 <!--                    <ul class="tools_menu">-->
-<!--                        <li class="tools_element">Добавить в коллекцию</li>-->
+<!--                        <li class="tools_element selection">Добавить в коллекцию</li>-->
 <!--                        <li class="tools_element"><a class="a_link" href="#?ref=pass">Пожаловаться</a></li>-->
 <!--                    </ul>-->
 <!--                </div>-->
@@ -112,6 +112,11 @@
 
         </div>
     </div>
+
+    <div id="popup_windiw" class="popup_windiw">
+        <button id="popup_windiw_close" onclick="closePopup()">Закрыть</button>
+    </div>
+
     <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
     <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <script src="{% static 'questions/js/select_tag.js' %}"></script>

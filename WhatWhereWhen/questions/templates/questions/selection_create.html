@@ -13,7 +13,9 @@
             <form method="post" class="forms" id="form_selection_add">
                 {% csrf_token %}
                 <input name="selection_name" id="selection_name" type="text" placeholder="Введите Название жалобы" class="input_line" value="{{ selection_name|default:'' }}">
-                <input name="selection_checkbox" id="selection_checkbox" type="checkbox" class="input_checkbox"> Приватная коллекция
+                    <input name="selection_checkbox" id="selection_checkbox" type="checkbox" class="input_checkbox" value="1"
+           {% if selection_checkbox %}checked{% endif %}>Приватная коллекция
+<!--                <input name="selection_checkbox" id="selection_checkbox" type="checkbox" class="input_checkbox" value="{{ selection_checkbox|default:'' }}"> Приватная коллекция-->
                 <input id="submit" type="submit" class="form_button" value="Отправить">
             </form>
             {% if error %}

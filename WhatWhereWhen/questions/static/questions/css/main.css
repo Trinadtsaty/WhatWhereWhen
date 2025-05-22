@@ -349,3 +349,10 @@ body {
     color: inherit;
     text-decoration: none;
 }
+
+#Selection_button {
+    margin-top: 5px;
+    margin-left: 25%;
+    width: 250px;
+    height: 55px;
+}

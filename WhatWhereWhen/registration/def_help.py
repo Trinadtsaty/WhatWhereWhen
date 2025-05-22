@@ -147,12 +147,21 @@ def validate_tag(name):
     dangerous_characters = ['<', '>', '&', '/', '\\', ';', '\n', '\r', '#', '%']
     for i in range(len(dangerous_characters)):
         if dangerous_characters[i] in name:
-            raise ValidationError("Недопустимые символы в логине, пожалуйста придумайте логин без специальных символов")
+            raise ValidationError("Недопустимые символы в тэге, пожалуйста придумайте тэг без специальных символов")
     if len(name) < 3:
         raise ValidationError('Тег слишком короткий, пожалуйста придумайте тег длинной от 3 до 20 символов')
     if len(name) > 20:
         raise ValidationError('Тег слишком длинный, пожалуйста придумайте тег длинной от 3 до 20 символов')
 
+def validate_selection(name):
+    dangerous_characters = ['<', '>', '&', '/', '\\', ';', '\n', '\r', '#', '%']
+    for i in range(len(dangerous_characters)):
+        if dangerous_characters[i] in name:
+            raise ValidationError("Недопустимые символы в имени коллекции, пожалуйста придумайте имя без специальных символов")
+    if len(name) < 3:
+        raise ValidationError('Имя коллекции слишком короткое, пожалуйста придумайте имя длинной от 3 до 20 символов')
+    if len(name) > 20:
+        raise ValidationError('Имя коллекции слишком длинное, пожалуйста придумайте имя длинной от 3 до 20 символов')
 
 
 from django.utils.html import escape

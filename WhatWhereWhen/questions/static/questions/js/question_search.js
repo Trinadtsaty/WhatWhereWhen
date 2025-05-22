@@ -195,8 +195,15 @@ function POST(URL) {
             button.textContent = '|||';
 
             const li_element_add = document.createElement('li');
-            li_element_add.className = 'tools_element';
-            li_element_add.textContent = 'Добавить в коллекцию';
+            li_element_add.className = 'tools_element selection';
+            li_element_add.textContent = 'Добавить в коллекцию'
+            li_element_add.addEventListener('click', ()=> {
+                const data_selection = {
+                    "ID":
+                    ""
+                };
+            });
+
 
             const a_link = document.createElement('a');
             a_link.className = 'a_link';
@@ -214,6 +221,7 @@ function POST(URL) {
 
             const newbox = document.createElement('div');
             newbox.className = 'link_box_question';
+            newbox.setAttribute('data-value', question.ID);
             newbox.appendChild(newlink)
             newbox.appendChild(button)
             newbox.appendChild(ul_spis)
