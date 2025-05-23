@@ -356,3 +356,72 @@ body {
     width: 250px;
     height: 55px;
 }
+
+#popup_windiw {
+    display: none;
+    position: fixed;
+
+    width: 15vw;
+    height: 50vh;
+
+    min-height: 300px;
+    min-width: 200px;
+
+    z-index: 1000;
+    background-color: rgba(136, 128, 136, 1);
+    border: 3px solid black;
+}
+
+#popup_windiw_close {
+    margin-top: 5px;
+    float: right;
+/*    display: block;*/
+
+    height: 30px; /* Высота кнопки */
+    width: 90px; /* Ширина кнопки */
+    font-size: 16px; /* Размер шрифта */
+}
+
+#select_author_name {
+    display: block; /* Блочное отображение */
+}
+
+.scroll_box {
+    display: block;
+    margin-left: 5%;
+/*    position: absolute;*/
+    margin-top: 50px;
+
+    padding-left: 5px;
+    padding-bottom: 10px;
+
+    height: 70%;
+    width: 90%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+.spis {
+    width: 90%;
+    list-style-type: none;
+    padding: 0;
+    position: absolute;
+}
+
+.element {
+    margin-top: 5px;
+    text-align: center;
+    font-size: 32px;
+
+    width: 100%;
+    border: 3px solid rgba(82, 79, 82, 1);
+    background-color: rgba(192, 166, 16, 1);
+    padding: 10px;
+    cursor: pointer;
+}
+
+.element:hover {
+    background-color: rgba(217, 217, 217, 0.7);
+}

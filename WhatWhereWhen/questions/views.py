@@ -145,14 +145,6 @@ def question_main(request):
         #     file.write("Отбираем нужное кол-во фильтруем порядок" + str(questions) + '\n')
 
         questions_data = list(questions.values('ID', 'question_name','average_estimation', 'text_question'))  # Укажите поля, которые хотите вернуть
-        # questions_data=[]
-        # for question in questions:
-        #     questions_data.append({
-        #         "ID":question.ID,
-        #         "question_name": question.question_name,
-        #         "average_estimation":average_score(question),
-        #         "question_text":question.text_question[:50]+"...",
-        #     })
 
         # with open(filename, 'a', encoding='utf-8') as file:
         #     file.write("Передаваемый массив списков" + str(questions_data))
@@ -165,6 +157,15 @@ def question_main(request):
     authors = list(set(authors))
     users = Users.objects.filter(ID__in=authors)
     tags = Tags.objects.filter(publication=True)
+
+    if request.user.is_authenticated:
+        selection_user = Selections.objects.filter(publication=True, selection_author=request.user)
+
+        return render(request, "questions/question_main.html", {
+            "tags":tags,
+            "authors":users,
+            "selection_user":selection_user
+        })
 
     return render(request, "questions/question_main.html", {
         "tags":tags,

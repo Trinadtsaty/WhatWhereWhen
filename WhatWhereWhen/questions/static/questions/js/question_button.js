@@ -45,3 +45,42 @@ function POST_Selection(data, URL) {
 //        console.log(number)
 //    });
 //});
+
+const popup_windiw = document.querySelector("#popup_windiw");
+
+
+function checkScale() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const width_windiw = popup_windiw.offsetWidth;
+    const height_windiw = popup_windiw.offsetHeight;
+
+    popup_windiw.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`
+    popup_windiw.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`
+}
+
+function closePopup() {
+    document.getElementById('popup_windiw').style.display = 'none';
+}
+
+if (popup_windiw) {
+    checkScale()
+    window.addEventListener('resize', checkScale);
+}
+
+function filterItemsSelection() {
+    const input = document.getElementById('select_Selections_name');
+    const filter = input.value.toLowerCase();
+    const ul = document.getElementById('select_Selections_name');
+    const li = ul.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        const item = li[i].textContent || li[i].innerText;
+        if (item.toLowerCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}

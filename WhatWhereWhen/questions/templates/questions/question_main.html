@@ -114,7 +114,17 @@
     </div>
 
     <div id="popup_windiw" class="popup_windiw">
-        <button id="popup_windiw_close" onclick="closePopup()">Закрыть</button>
+        <button id="popup_windiw_close" class="button" onclick="closePopup()">Закрыть</button>
+        {% if request.user.is_authenticated %}
+        <input id="select_Selections_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelection()">
+        <div id="scroll_selection" class="scroll_box">
+            <ul class="spis">
+                {% for select in selection_user %}
+                <li class="element">{{ select.selection_name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 
     <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
