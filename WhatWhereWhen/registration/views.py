@@ -33,7 +33,6 @@ class Users_mainAPI(generics.ListAPIView):
             'questions_count': questions_count,
             'room_online': room_online
         }
-
         return Response(response_data)
 
 @not_authenticated
