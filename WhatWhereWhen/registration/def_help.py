@@ -92,48 +92,25 @@ def validate_tag(name):
     if len(name) > 20:
         raise ValidationError('Тег слишком длинный, пожалуйста придумайте тег длинной от 3 до 20 символов')
 
-
 def question_name_line_edit(name):
     if len(name) < 5:
         raise ValidationError('Название вопроса слишком короткое, пожалуйста придумайте название длинной от 5 до 50 символов')
     if len(name) > 50:
         raise ValidationError('Название вопроса слишком длинное, пожалуйста придумайте название длинной от 5 до 50 символов')
 
-def question_name_text_edit(name):
-    if len(name) < 20:
-        # print(name)
-        raise ValidationError('Текст вопроса слишком короткий, пожалуйста придумайте вопрос от 20 до 1000 символов')
-    if len(name) > 1000:
-        raise ValidationError('Текст вопроса слишком длинный, пожалуйста придумайте вопрос от 20 до 1000 символов')
 
-def question_name_line(name):
-    estimations = Question.objects.filter(question_name=name)
-    if estimations:
-        raise ValidationError('Вопрос с таким названием уже существует')
-    if len(name) < 5:
-        raise ValidationError('Название вопроса слишком короткое, пожалуйста придумайте название длинной от 5 до 50 символов')
-    if len(name) > 50:
-        raise ValidationError('Название вопроса слишком длинное, пожалуйста придумайте название длинной от 5 до 50 символов')
+
 
 def question_name_text(name):
     estimations = Question.objects.filter(text_question=name)
-    if estimations:
-        raise ValidationError('Такой вопрос уже существует')
+    if estimations.exists():
+        raise ValidationError('Вопрос с таким текстом уже существует. Пожалуйста, попробуйте сформулировать его иначе.')
     if len(name) < 20:
         # print(name)
         raise ValidationError('Текст вопроса слишком короткий, пожалуйста придумайте вопрос от 20 до 1000 символов')
     if len(name) > 1000:
         raise ValidationError('Текст вопроса слишком длинный, пожалуйста придумайте вопрос от 20 до 1000 символов')
 
-def question_note(name):
-    if len(name) > 700:
-        raise ValidationError('Текст описания вопроса слишком длинный, пожалуйста придумайте описание о 700 символов')
-
-def question_answer_name(name):
-    if len(name) < 3:
-        raise ValidationError('Текст ответа слишком короткий, пожалуйста придумайте ответ от 3 до 50 символов')
-    if len(name) > 50:
-        raise ValidationError('Текст ответа слишком длинный, пожалуйста придумайте ответ от 3 до 50 символов')
 
 def question_answer_text(name):
     if len(name) > 700:

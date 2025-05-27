@@ -48,28 +48,68 @@ class Selection_Questions_APICreate(generics.CreateAPIView):
     queryset = Selection_Questions.objects.all()
     serializer_class = SelectionQuestionsSerializer
 
+    def _raise_error(self, message):
+        return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
+
 class Selection_Questions_APIDestroy(generics.DestroyAPIView):
     queryset = Selection_Questions.objects.all()
     serializer_class = SelectionQuestionsSerializer
-#
-#     def get_object(self):
-#         selection_id = self.request.data.get("selection_id")
-#         question_id = self.request.data.get("question_id")
-#
-#         if not selection_id:
-#             self._raise_error("PUT is not user")
-#         if not question_id:
-#             self._raise_error("PUT is not question")
-#
-#         try:
-#             return Selection_Questions.objects.get(selection_id=selection_id, question_id=question_id)
-#         except Estimation_Quest_User.DoesNotExist:
-#             self._raise_error("Объекта нет")
-#
-#     def _raise_error(self, message):
-#         return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_object(self):
+        selection_id = self.request.data.get("selection_id")
+        question_id = self.request.data.get("question_id")
+
+        if not selection_id:
+            self._raise_error("DELETE is not selection")
+        if not question_id:
+            self._raise_error("DELETE is not question")
+
+        try:
+            return Selection_Questions.objects.get(selection_id=selection_id, question_id=question_id)
+        except Estimation_Quest_User.DoesNotExist:
+            self._raise_error("Объекта нет")
+
+    def _raise_error(self, message):
+        return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
 
 
+from rest_framework.views import APIView
+
+
+class SelectionsByQuestionAPIView(APIView):
+
+    def get(self, request, question_id):
+        # Проверяем, существует ли question_id
+        if not question_id:
+            return self._raise_error("Отсутствует question_id")
+
+        try:
+            # Получаем все связи по question_id
+            selection_questions = Selection_Questions.objects.filter(question_id=question_id)
+            # Получаем все уникальные подборки
+            selections = Selections.objects.filter(
+                ID__in=selection_questions.values_list('selection_id', flat=True),
+                selection_author=request.user
+            )
+
+            serializer = SelectionsSerializer(selections, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Selection_Questions.DoesNotExist:
+            return self._raise_error("Объекта нет")
+
+    def _raise_error(self, message):
+        return Response({"error": message}, status=status.HTTP_400_BAD_REQUEST)
+
+    # def get(self, request, question_id):
+    #     # Получаем все связи по question_id
+    #     selection_questions = Selection_Questions.objects.filter(question_id=question_id)
+    #
+    #     # Получаем все уникальные подборки
+    #     selections = Selections.objects.filter(ID__in=selection_questions.values_list('selection_id', flat=True), selection_author=request.user)
+    #
+    #     serializer = SelectionsSerializer(selections, many=True)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
 # Вопросы
 # class Question_APIView(generics.ListCreateAPIView):
 #     queryset = Question.objects.all()

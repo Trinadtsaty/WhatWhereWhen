@@ -1,12 +1,7 @@
-from array import array
-from idlelib.rpc import request_queue
-
-
-from .models import *
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from registration.def_help import *
+
 from registration.models import Users
 from django.utils.html import escape
 from .decorators import edit_question
@@ -17,12 +12,30 @@ import json
 from django.db.models import Q, Count, Avg, Value
 from django.db.models.functions import Coalesce, Round
 
-# def question_main(request):
-#
-#     title = 'Вопросы'
-#     return render(request, "questions/question_main.html")
+def question_note(name):
+    if len(name) > 700:
+        raise ValidationError('Текст описания вопроса слишком длинный, пожалуйста придумайте описание о 700 символов')
+
+def question_answer_name(name):
+    if len(name) < 3:
+        raise ValidationError('Текст ответа слишком короткий, пожалуйста придумайте ответ от 3 до 50 символов')
+    if len(name) > 50:
+        raise ValidationError('Текст ответа слишком длинный, пожалуйста придумайте ответ от 3 до 50 символов')
+
+def question_name_text_edit(name):
+    if len(name) < 20:
+        # print(name)
+        raise ValidationError('Текст вопроса слишком короткий, пожалуйста придумайте вопрос от 20 до 1000 символов')
+    if len(name) > 1000:
+        raise ValidationError('Текст вопроса слишком длинный, пожалуйста придумайте вопрос от 20 до 1000 символов')
 
 
+def question_name_line(name):
+    if Question.objects.filter(question_name=name).exists():
+        raise ValidationError('Вопрос с таким названием уже существует')
+
+    if not (5 <= len(name) <= 50):
+        raise ValidationError('Название вопроса должно быть длиной от 5 до 50 символов')
 
 
 from django.views.decorators.csrf import csrf_exempt
@@ -92,8 +105,8 @@ def question_main(request):
                 query = Q()
                 for question in questions_solo:
                     count = questions.filter(ID=question.ID).count()
-                    with open(filename, 'a', encoding='utf-8') as file:
-                        file.write(f"Элемент {question} повторяется {count} раз\n")
+                    # with open(filename, 'a', encoding='utf-8') as file:
+                    #     file.write(f"Элемент {question} повторяется {count} раз\n")
                     if count == len(data_get["select_tag"]):
                         query |= Q(ID=question.ID)
                 questions = questions_solo.filter(query)
@@ -165,6 +178,7 @@ def question_main(request):
             "tags":tags,
             "authors":users,
             "selection_user":selection_user
+
         })
 
     return render(request, "questions/question_main.html", {
@@ -191,10 +205,13 @@ def question_add(request):
             })
 
         if question_name:
+
             try:
                 question_name_line(question_name)
             except ValidationError as e:
-                error = str(e)[2:-2]
+                error = str(e).strip("string=")
+
+                print(error)
                 return render(request, "questions/question_add.html", {
                     'error': error,
                     'submit': "Отправить",
@@ -209,6 +226,7 @@ def question_add(request):
             try:
                 question_name_text(text_question)
             except ValidationError as e:
+                print(e.string)
                 error = str(e)[2:-2]
                 return render(request, "questions/question_add.html", {
                     'error': error,
@@ -452,9 +470,13 @@ class Tag_Question_API(Tag_Question_APICreate):
     permission_classes = (IsAuthenticated, )
     # pass
 
-class Selection_Questions_API(Selection_Questions_APICreate):
+class Selection_Questions_API(Selection_Questions_APICreate, Selection_Questions_APIDestroy):
     permission_classes = (IsAuthenticated,)
-    pass
+
+class Selection_API(SelectionsByQuestionAPIView):
+    permission_classes = (IsAuthenticated,)
+
+
 
 @login_required()
 def selectionCreate(request):

@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     POST(URL_server + URL_adress);
 });
 
+
+
 search_advanced_box.style.display = 'none';
 document.getElementById('question_search_title').value = "";
 document.getElementById('question_search_text').value = "";
@@ -100,6 +102,32 @@ function formatQuestionText(text) {
 };
 
 
+
+const URL_Selection_chek = '/questions/api/v4/';
+
+function GET(URL) {
+    fetch(URL, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // Обычно CSRF-токен не нужен для GET, но если нужен — оставьте
+        }
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json(); // Возвращаем ответ в формате JSON
+    })
+    .then(data => {
+        console.log(data);
+//        if(document.getElementByID('scroll_selection')) {
+//            console.log(123)
+//        }
+    });
+
+};
+
 function POST(URL) {
         const search = document.getElementById('question_search').value;
         const search_name = document.getElementById('question_search_title').value;
@@ -164,8 +192,9 @@ function POST(URL) {
 
 //            console.log(question.question_name, question.question_text)
             const QuestionName = document.createElement('div');
+
             QuestionName.className = 'name_question';
-            QuestionName.textContent=question.question_name;
+            QuestionName.textContent=formatQuestionText(question.question_name);
 
             const QuestionText = document.createElement('div');
             QuestionText.className = 'text_question';
@@ -198,13 +227,17 @@ function POST(URL) {
             li_element_add.className = 'tools_element selection';
             li_element_add.textContent = 'Добавить в коллекцию'
             li_element_add.addEventListener('click', ()=> {
-                document.getElementById('popup_windiw').style.display = 'flex';
-                document.getElementById('popup_windiw').setAttribute('data-value', question.ID);
+                GET(URL_server+URL_Selection_chek+`${question.ID}/`)
+
+
+
+//                document.getElementById('popup_windiw').style.display = 'flex';
+//                document.getElementById('popup_windiw').setAttribute('data-value', question.ID);
 //                const value = element.getAttribute('data-value');
-                if (popup_windiw) {
-                    checkScale()
-                    window.addEventListener('resize', checkScale);
-                }
+//                if (popup_windiw) {
+//                    checkScale()
+//                    window.addEventListener('resize', checkScale);
+//                }
 
             });
 

@@ -4,6 +4,7 @@
 const URL_Selection = '/questions/api/v3';
 
 
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -102,18 +103,29 @@ selections.forEach(item => {
     item.addEventListener('click', ()=> {
     const selection_number = item.getAttribute('data-value');
         const question_number = document.getElementById('popup_windiw').getAttribute('data-value');
-//        const selection_number = 3
         const data = {
-            "selection_id":selection_number,
             "question_id":question_number,
         };
         console.log(data)
-        POST_Selection(data, URL_server+URL_Selection)
-//        console.log(data)
+        GET_Selection(URL_server+URL_Selection_chek+`${question_number}/`)
+
     });
 });
 
 const popup_windiw = document.querySelector("#popup_windiw");
+
+//document.addEventListener('DOMContentLoaded', (event) => {
+//    function checkScale() {
+//        const width = window.innerWidth;
+//        const height = window.innerHeight;
+//
+//        const width_windiw = popup_windiw.offsetWidth;
+//        const height_windiw = popup_windiw.offsetHeight;
+//
+//        popup_windiw.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`
+//        popup_windiw.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`
+//    }
+//});
 
 
 function checkScale() {

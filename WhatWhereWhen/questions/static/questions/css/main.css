@@ -152,6 +152,9 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     height: 70%;
+
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
 }
 
 
@@ -235,9 +238,11 @@ body {
     height: 55px;
 }
 #question_scroll_box {
-    height: 80%;
+    height: 70%;
     overflow-y: auto;
     overflow-x: hidden;
+
+
 }
 
 /*Стили для блока с вопросами*/
@@ -431,12 +436,20 @@ body {
     width: 88%;
 }
 
+.li_element{
+    display: flex;
+    align-items: center;
+/*    height: 32px;*/
+/*    margin-bottom: 20px;*/
+}
+
 .element {
+/*    float: left;*/
     margin-top: 5px;
     text-align: center;
     font-size: 16px;
 
-    width: 100%;
+    width: 70%;
     border: 3px solid rgba(82, 79, 82, 1);
     background-color: rgba(192, 166, 16, 1);
     padding: 10px;
@@ -447,6 +460,10 @@ body {
     background-color: rgba(217, 217, 217, 0.7);
 }
 
-
+.check_mark_img_selection {
+    width: 20%;
+    margin-left: 1%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
 
 

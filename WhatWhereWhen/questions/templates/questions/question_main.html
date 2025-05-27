@@ -121,17 +121,20 @@
         <div id="scroll_selection" class="scroll_box">
             <ul class="spis" id="spis_selections">
                 {% for select in selection_user %}
-                <li><div class="element" data-value="{{ select.ID }}">
-                    {{ select.selection_name }}
+                <li class="li_element">
+                    <div class="element" data-value="{{ select.ID }}">
+                        {{ select.selection_name }}
+                    </div>
 
-                    <img alt="галочки нет" class="check_mark_img base_selection" src="{% static 'questions/img/cubes/base.png' %}">
-                    <img alt="выбрать" class="check_mark_img select_selection" src="{% static 'questions/img/cubes/select.png' %}">
-                </div>
+                    <img alt="галочки нет" class="check_mark_img_selection base_selection" src="{% static 'questions/img/cubes/base.png' %}">
+                    <img alt="выбрать" class="check_mark_img_selection select_selection" src="{% static 'questions/img/cubes/select.png' %}">
 
                 </li>
                 {% endfor %}
             </ul>
         </div>
+        {% else %}
+        <div class="button" id="button_login"><a href="{% url 'Login' %}" style="text-decoration: none; color: inherit;">Пожалуйста авторизуйтесь</a></div>
         {% endif %}
     </div>
 
