@@ -47,10 +47,10 @@ class Tag_Question_APICreate(generics.CreateAPIView):
 class Selection_Questions_APICreate(generics.CreateAPIView):
     queryset = Selection_Questions.objects.all()
     serializer_class = SelectionQuestionsSerializer
-#
-# class Selection_Questions_APIDestroy(generics.DestroyAPIView):
-#     queryset = Selection_Questions.objects.all()
-#     serializer_class = SelectionQuestionsSerializer
+
+class Selection_Questions_APIDestroy(generics.DestroyAPIView):
+    queryset = Selection_Questions.objects.all()
+    serializer_class = SelectionQuestionsSerializer
 #
 #     def get_object(self):
 #         selection_id = self.request.data.get("selection_id")

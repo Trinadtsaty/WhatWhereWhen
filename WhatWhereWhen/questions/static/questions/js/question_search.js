@@ -198,11 +198,9 @@ function POST(URL) {
             li_element_add.className = 'tools_element selection';
             li_element_add.textContent = 'Добавить в коллекцию'
             li_element_add.addEventListener('click', ()=> {
-//                const data_selection = {
-//                    "ID":
-//                    ""
-//                };
                 document.getElementById('popup_windiw').style.display = 'flex';
+                document.getElementById('popup_windiw').setAttribute('data-value', question.ID);
+//                const value = element.getAttribute('data-value');
                 if (popup_windiw) {
                     checkScale()
                     window.addEventListener('resize', checkScale);

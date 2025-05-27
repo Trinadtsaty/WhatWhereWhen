@@ -111,10 +111,17 @@ body {
     font-size: 32px;
 }
 
+.select_search_box{
+/*    background-color: rgba(136, 128, 136, 1);*/
+    background-color: rgba(217, 217, 217, 0.7);
+    width: 90%;
+    margin-left:5%;
+}
 
 .select_box {
     margin-top: 5px;
-    background-color: white;
+/*    background-color: rgba(136, 128, 136, 1);*/
+    background-color: rgba(217, 217, 217, 0.7);
     margin-left: 5%;
     height: 30%;
     width: 90%;
@@ -357,13 +364,21 @@ body {
     height: 55px;
 }
 
-#popup_windiw {
+#question_button {
+    margin-top: 5px;
+    margin-left: 25%;
+    width: 250px;
+    height: 55px;
+}
+
+
+#popup_windiw{
     display: none;
     position: fixed;
+    flex-direction: column;
 
     width: 15vw;
     height: 50vh;
-
     min-height: 300px;
     min-width: 200px;
 
@@ -374,46 +389,52 @@ body {
 
 #popup_windiw_close {
     margin-top: 5px;
-    float: right;
-/*    display: block;*/
-
-    height: 30px; /* Высота кнопки */
-    width: 90px; /* Ширина кнопки */
-    font-size: 16px; /* Размер шрифта */
+    margin-bottom: 10px;
+    margin-right: 5px;
+    align-self: flex-end;
+    height: 30px;
+    width: 100px;
+    font-size: 16px;
 }
 
-#select_author_name {
-    display: block; /* Блочное отображение */
-}
-
-.scroll_box {
-    display: block;
-    margin-left: 5%;
-/*    position: absolute;*/
-    margin-top: 50px;
-
-    padding-left: 5px;
-    padding-bottom: 10px;
-
-    height: 70%;
+#select_Selections_name{
+    margin-bottom: 10px;
     width: 90%;
+    margin-left: 5%;
+    font-size: 16px;
+}
 
+.input_select::placeholder {
+    font-size: 16px;
+}
+
+.input_select:focus{
+    font-size: 16px;
+}
+
+#scroll_selection{
+/*    display: block;*/
     overflow-y: auto;
     overflow-x: hidden;
-}
-
-
-.spis {
+/*    margin-right: 3px;*/
     width: 90%;
+    height: 75%;
+    margin-left: 5%;
+
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+}
+.spis {
     list-style-type: none;
+    margin:0;
     padding: 0;
-    position: absolute;
+    width: 88%;
 }
 
 .element {
     margin-top: 5px;
     text-align: center;
-    font-size: 32px;
+    font-size: 16px;
 
     width: 100%;
     border: 3px solid rgba(82, 79, 82, 1);
@@ -425,3 +446,7 @@ body {
 .element:hover {
     background-color: rgba(217, 217, 217, 0.7);
 }
+
+
+
+

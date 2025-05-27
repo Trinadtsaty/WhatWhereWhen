@@ -72,6 +72,7 @@
             </div>
             <div id="clean_button" class="button">Очистить</div>
             <div id="Selection_button" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Selection_Create' %}">Создать коллекцию</a></div>
+            <div id="question_button" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Question_add' %}">Создать Вопрос</a></div>
 
         </div>
         <div id="question_box">
@@ -114,13 +115,20 @@
     </div>
 
     <div id="popup_windiw" class="popup_windiw">
-        <button id="popup_windiw_close" class="button" onclick="closePopup()">Закрыть</button>
+        <div id="popup_windiw_close" class="button" onclick="closePopup()">Закрыть</div>
         {% if request.user.is_authenticated %}
         <input id="select_Selections_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelection()">
         <div id="scroll_selection" class="scroll_box">
-            <ul class="spis">
+            <ul class="spis" id="spis_selections">
                 {% for select in selection_user %}
-                <li class="element">{{ select.selection_name }}</li>
+                <li><div class="element" data-value="{{ select.ID }}">
+                    {{ select.selection_name }}
+
+                    <img alt="галочки нет" class="check_mark_img base_selection" src="{% static 'questions/img/cubes/base.png' %}">
+                    <img alt="выбрать" class="check_mark_img select_selection" src="{% static 'questions/img/cubes/select.png' %}">
+                </div>
+
+                </li>
                 {% endfor %}
             </ul>
         </div>

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from rest_framework.exceptions import ValidationError
 
 class EstimationQuestUserSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -17,6 +18,25 @@ class SelectionQuestionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Selection_Questions
         fields = ("selection_id", "question_id")
+
+    def validate(self, data):
+
+        selection_id = data.get('selection_id').ID
+        print("тип поля selection_id",type(selection_id))
+        print(selection_id)
+        user = self.context['request'].user
+        if selection_id:
+            try:
+                selection = Selections.objects.get(ID=selection_id)
+                print(selection.selection_author)
+                print(user)
+                if selection.selection_author != user:
+                    raise ValidationError("Вы не имеете прав на добавление вопросов в этот выбор.")
+            except Selections.DoesNotExist:
+                raise ValidationError("Выбор с данным ID не существует.")
+        return data
+
+
 
 # class SelectionsSerializer(serializers.ModelSerializer):
 #     selection_author = serializers.HiddenField(default=serializers.CurrentUserDefault())

@@ -453,6 +453,7 @@ class Tag_Question_API(Tag_Question_APICreate):
     # pass
 
 class Selection_Questions_API(Selection_Questions_APICreate):
+    permission_classes = (IsAuthenticated,)
     pass
 
 @login_required()
