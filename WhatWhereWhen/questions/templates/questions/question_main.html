@@ -54,7 +54,7 @@
             </div>
 
             <div id="select_author" class="select_box">
-                <input id="select_author_name" class="input_select" type="text" placeholder="Введите имя тега" onkeyup="filterItemsAuthor()">
+                <input id="select_author_name" class="input_select" type="text" placeholder="Введите имя автора" onkeyup="filterItemsAuthor()">
                 <div id="scroll_box_author" class="scroll_box">
                     <ul id="spis_select_author" class="spis_select">
                         {% for author in authors %}
@@ -78,12 +78,12 @@
             </div>
 
             <div id="select_selection_all" class="select_box">
-                <input id="select_selection_all_name" class="input_select" type="text" placeholder="Введите имя тега" onkeyup="filterItemsAuthor()">
+                <input id="select_selection_all_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelectionAll()">
                 <div id="scroll_box_selection_all" class="scroll_box">
                     <ul id="spis_select_selection_all" class="spis_select">
                         {% for selection in selections %}
                         {% if selection.selection_author != request.user %}
-                            <li class="select_item select_item_author" data-value="{{ selection.ID }}">
+                            <li class="select_item select_item_selection" data-value="{{ selection.ID }}">
                             <div class="check_mark_box">
                                 <img alt="галочки нет" class="check_mark_img base" src="{% static 'questions/img/cubes/base.png' %}">
                                 <img alt="выбрать" class="check_mark_img select" src="{% static 'questions/img/cubes/select.png' %}">

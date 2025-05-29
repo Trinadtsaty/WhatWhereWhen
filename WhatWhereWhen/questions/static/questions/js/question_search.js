@@ -77,7 +77,7 @@ author_name_button.addEventListener('click', () => {
         select_author_menu.style.display = '';
     } else {
         select_author_menu.style.display = 'none';
-        tags_search_img.style.transform = 'rotate(0deg)';
+        author_search_img.style.transform = 'rotate(0deg)';
 
         document.querySelectorAll('.select_item_author').forEach(item => {
             item.querySelector('.check_mark_box').querySelector('.select').style.display = 'none';
@@ -92,6 +92,31 @@ author_name_button.addEventListener('click', () => {
     }
 });
 
+const select_selection_menu = document.getElementById('select_selection_all');
+const selection_search_img = document.getElementById('selection_all_search_img');
+const selection_name_button = document.getElementById('selection_all_name_box');
+
+select_selection_menu.style.display = 'none';
+
+selection_name_button.addEventListener('click', () => {
+    if (select_selection_menu.style.display === 'none') {
+
+        selection_search_img.style.transform = 'rotate(180deg)';
+        select_selection_menu.style.display = '';
+    } else {
+        select_selection_menu.style.display = 'none';
+        selection_search_img.style.transform = 'rotate(0deg)';
+
+        document.querySelectorAll('.select_item_selection').forEach(item => {
+            item.querySelector('.check_mark_box').querySelector('.select').style.display = 'none';
+            item.querySelector('.check_mark_box').querySelector('.base').style.display = '';
+        });
+
+        select_selection.length = 0;
+
+//        Timer()
+    };
+});
 
 
 function formatQuestionText(text) {

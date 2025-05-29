@@ -20,48 +20,36 @@ document.addEventListener('DOMContentLoaded', (event) => {
         checkMarkBox.querySelector('.select').style.display = 'none';
 
         item.addEventListener('click', ()=> {
-            Timer()
+//            console.log(select_selection)
+//            Timer()
             let number = item.getAttribute('data-value');
-            if (checkMarkBox.querySelector('.select').style.display === 'none' && checkMarkBox.querySelector('.unselect').style.display === 'none') {
+            if (checkMarkBox.querySelector('.select').style.display === 'none') {
                 checkMarkBox.querySelector('.select').style.display = '';
                 checkMarkBox.querySelector('.base').style.display = 'none';
 
-                if (!select_author.includes(number)) {
-                    select_author.push(number);
+                if (!select_selection.includes(number)) {
+                    select_selection.push(number);
                 }
 
-            } else if (checkMarkBox.querySelector('.base').style.display === 'none' && checkMarkBox.querySelector('.unselect').style.display === 'none') {
-                checkMarkBox.querySelector('.unselect').style.display = '';
+            } else if (checkMarkBox.querySelector('.base').style.display === 'none') {
+                checkMarkBox.querySelector('.base').style.display = '';
                 checkMarkBox.querySelector('.select').style.display = 'none';
 
-                let index = select_author.indexOf(number);
+                let index = select_selection.indexOf(number);
 
                 if (index !== -1) {
-                    select_author.splice(index, 1);
-                };
-
-                if (!unselect_author.includes(number)) {
-                    unselect_author.push(number);
-                };
-
-            } else if (checkMarkBox.querySelector('.base').style.display === 'none' && checkMarkBox.querySelector('.select').style.display === 'none') {
-                checkMarkBox.querySelector('.base').style.display = '';
-                checkMarkBox.querySelector('.unselect').style.display = 'none';
-
-                let index = unselect_author.indexOf(number);
-
-                if (index !== -1) {
-                    unselect_author.splice(index, 1);
+                    select_selection.splice(index, 1);
                 };
             };
         });
     });
 });
 
-function filterItemsAuthor() {
-    const input = document.getElementById('select_author_name');
+function filterItemsSelectionAll() {
+    console.log("Функция вызвана");
+    const input = document.getElementById('select_selection_all_name');
     const filter = input.value.toLowerCase();
-    const ul = document.getElementById('spis_select_author');
+    const ul = document.getElementById('spis_select_selection_all');
     const li = ul.getElementsByTagName('li');
 
     for (let i = 0; i < li.length; i++) {
@@ -70,6 +58,6 @@ function filterItemsAuthor() {
             li[i].style.display = "";
         } else {
             li[i].style.display = "none";
-        }
-    }
-}
+        };
+    };
+};
