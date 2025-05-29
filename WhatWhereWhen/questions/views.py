@@ -171,19 +171,24 @@ def question_main(request):
     users = Users.objects.filter(ID__in=authors)
     tags = Tags.objects.filter(publication=True)
 
+    selections = Selections.objects.filter(publication=True, private=False)
+    print(selections)
+
     if request.user.is_authenticated:
+
         selection_user = Selections.objects.filter(publication=True, selection_author=request.user)
 
         return render(request, "questions/question_main.html", {
             "tags":tags,
             "authors":users,
-            "selection_user":selection_user
-
+            "selection_user":selection_user,
+            "selections":selections,
         })
 
     return render(request, "questions/question_main.html", {
         "tags":tags,
         "authors":users,
+        "selections": selections,
     })
 
 
