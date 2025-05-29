@@ -36,10 +36,11 @@ class SelectionQuestionsSerializer(serializers.ModelSerializer):
                 raise ValidationError("Выбор с данным ID не существует.")
         return data
 
-# class SelectionsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Selections
-#         fields = '__all__'
+class SelectionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Selections
+        # fields = '__all__'
+        fields = ("ID", "selection_name")
 
 # class SelectionsSerializer(serializers.ModelSerializer):
 #     selection_author = serializers.HiddenField(default=serializers.CurrentUserDefault())

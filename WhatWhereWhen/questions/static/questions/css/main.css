@@ -423,7 +423,7 @@ body {
     overflow-x: hidden;
 /*    margin-right: 3px;*/
     width: 90%;
-    height: 75%;
+    height: 60%;
     margin-left: 5%;
 
     scrollbar-width: thin;
@@ -464,6 +464,12 @@ body {
     width: 20%;
     margin-left: 1%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#Selection_button_popup {
+    margin-top: 5px;
+    margin-left: 5%;
+    width: 90%;
 }
 
 

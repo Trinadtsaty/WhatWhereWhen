@@ -76,24 +76,13 @@ function delete_Selection(data, URL) {
         body: JSON.stringify(data),
     })
     .then((response) => {
-        if (!response.ok) {
-            return response.json().then((errorData) => {
-                // Предполагаем, что сервер возвращает сообщение об ошибке в формате JSON
-                throw new Error(errorData.message || 'Произошла ошибка при обработке запроса');
-            });
-        }
-        return response.json(); // Возвращаем данные в случае успешного запроса
-    })
-    .then((data) => {
-        console.log('Успешно отправлено:', data);
-        // Здесь можно обработать успешный ответ
-    })
-    .catch((error) => {
-        console.error('Ошибка:', error);
-        // Здесь можно вывести сообщение об ошибке пользователю
-        alert('Ошибка: ' + error.message); // Например, используем alert для отображения ошибки
+//        console.log(response)
+        if (response.status === 204) {
+            console.log("успешно", response)
+
+        };
     });
-}
+};
 
 
 //document.getElementById('popup_windiw')
@@ -113,20 +102,6 @@ selections.forEach(item => {
 });
 
 const popup_windiw = document.querySelector("#popup_windiw");
-
-//document.addEventListener('DOMContentLoaded', (event) => {
-//    function checkScale() {
-//        const width = window.innerWidth;
-//        const height = window.innerHeight;
-//
-//        const width_windiw = popup_windiw.offsetWidth;
-//        const height_windiw = popup_windiw.offsetHeight;
-//
-//        popup_windiw.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`
-//        popup_windiw.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`
-//    }
-//});
-
 
 function checkScale() {
     const width = window.innerWidth;
@@ -160,6 +135,24 @@ function filterItemsSelection() {
             li[i].style.display = "";
         } else {
             li[i].style.display = "none";
-        }
-    }
-}
+        };
+    };
+};
+
+function click_on_element_selection(element, data) {
+    console.log(data)
+    const parent = element.parentElement;
+    if (parent.querySelector(".base_selection").style.display === 'none') {
+        parent.querySelector(".base_selection").style.display = 'flex'
+        parent.querySelector(".select_selection").style.display = 'none'
+        delete_Selection(data, URL_server+URL_Selection)
+
+    } else if (parent.querySelector(".select_selection").style.display === 'none') {
+        parent.querySelector(".base_selection").style.display = 'none'
+        parent.querySelector(".select_selection").style.display = 'flex'
+        POST_Selection(data, URL_server+URL_Selection)
+    };
+};
+
+
+
