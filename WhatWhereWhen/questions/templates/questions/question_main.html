@@ -177,10 +177,7 @@
     <script>
         const src_check_mark_false = "{% static 'questions/img/cubes/base.png' %}";
         const src_check_mark_true = "{% static 'questions/img/cubes/select.png' %}";
-
         const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
-
-
     </script>
 <!--    <script src="{% static 'questions/js/test.js' %}"></script>-->
 </body>
