@@ -231,12 +231,12 @@ body {
     border: 3px solid #C0A610;
 }
 
-#clean_button {
-    margin-top: 5px;
-    margin-left: 25%;
-    width: 250px;
-    height: 55px;
-}
+/*#clean_button {*/
+/*    margin-top: 5px;*/
+/*    margin-left: 25%;*/
+/*    width: 250px;*/
+/*    height: 55px;*/
+/*}*/
 #question_scroll_box {
     height: 70%;
     overflow-y: auto;
@@ -362,19 +362,19 @@ body {
     text-decoration: none;
 }
 
-#Selection_button {
-    margin-top: 5px;
-    margin-left: 25%;
-    width: 250px;
-    height: 55px;
-}
+/*#Selection_button {*/
+/*    margin-top: 5px;*/
+/*    margin-left: 25%;*/
+/*    width: 250px;*/
+/*    height: 55px;*/
+/*}*/
 
-#question_button {
-    margin-top: 5px;
-    margin-left: 25%;
-    width: 250px;
-    height: 55px;
-}
+/*#question_button {*/
+/*    margin-top: 5px;*/
+/*    margin-left: 25%;*/
+/*    width: 250px;*/
+/*    height: 55px;*/
+/*}*/
 
 
 #popup_windiw{
@@ -472,4 +472,8 @@ body {
     width: 90%;
 }
 
-
+.menu_button {
+    margin-top: 5px;
+    margin-left: 5%;
+    width: 90%;
+}

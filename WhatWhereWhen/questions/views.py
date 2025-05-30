@@ -1,17 +1,3 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from registration.def_help import *
-
-from registration.models import Users
-from django.utils.html import escape
-from .decorators import edit_question
-from django.core.exceptions import ValidationError
-from .models import Question
-from django.http import JsonResponse
-import json
-from django.db.models import Q, Count, Avg, Value
-from django.db.models.functions import Coalesce, Round
-
 def question_note(name):
     if len(name) > 700:
         raise ValidationError('Текст описания вопроса слишком длинный, пожалуйста придумайте описание о 700 символов')
@@ -38,6 +24,20 @@ def question_name_line(name):
         raise ValidationError('Название вопроса должно быть длиной от 5 до 50 символов')
 
 
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from registration.def_help import *
+
+from registration.models import Users
+from django.utils.html import escape
+from .decorators import edit_question
+from django.core.exceptions import ValidationError
+from .models import Question
+from django.http import JsonResponse
+import json
+from django.db.models import Q, Count, Avg, Value
+from django.db.models.functions import Coalesce, Round
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.functions import Lower
 
@@ -548,6 +548,9 @@ def questionClaim(request, question_number):
 
 def selectionClaim(request):
     return render(request, "questions/plug.html")
+
+def selection(request):
+    return render(request, "questions/question_selections.html")
 
 
 def custom_404_view(request, exception):

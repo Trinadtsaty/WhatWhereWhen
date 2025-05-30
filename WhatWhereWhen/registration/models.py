@@ -47,7 +47,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     # Активен ли пользователь сейчас
     last_activity = models.DateTimeField(default=timezone.now)
-    # Является ли пользователь разработчиком
+    # Является ли пользователь разработчиком убрать при следующей обновлении
     is_root = models.BooleanField(default=False)
     # Является ли пользователь модератором
     is_moder = models.BooleanField(default=False)

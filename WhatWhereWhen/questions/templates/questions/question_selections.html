@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Поиск вопросов</title>
+    <title>Поиск коллекций</title>
     <link rel="stylesheet" href="{% static 'questions/css/main.css' %}">
 </head>
 <body>
@@ -77,29 +77,29 @@
                 <div id="selection_all_search_img_box" class="down_box"><img id="selection_all_search_img" class="down_img" alt="Вниз" src="{% static 'questions/img/cubes/down_button.png' %}"></div>
             </div>
 
-<!--            <div id="select_selection_all" class="select_box">-->
-<!--                <input id="select_selection_all_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelectionAll()">-->
-<!--                <div id="scroll_box_selection_all" class="scroll_box">-->
-<!--                    <ul id="spis_select_selection_all" class="spis_select">-->
-<!--                        {% for selection in selections %}-->
-<!--                        {% if selection.selection_author != request.user %}-->
-<!--                            <li class="select_item select_item_selection" data-value="{{ selection.ID }}">-->
-<!--                            <div class="check_mark_box">-->
-<!--                                <img alt="галочки нет" class="check_mark_img base" src="{% static 'questions/img/cubes/base.png' %}">-->
-<!--                                <img alt="выбрать" class="check_mark_img select" src="{% static 'questions/img/cubes/select.png' %}">-->
-<!--                                {{ selection.selection_name }}-->
-<!--                            </div>-->
-<!--                        </li>-->
-<!--                        {% endif %}-->
-<!--                        {% endfor %}-->
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            </div>-->
-
-            <div id="clean_button" class="button menu_button">Очистить</div>
-            <div id="selection_button" class="button menu_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Selection_Create' %}">Создать коллекцию</a></div>
-            <div id="question_button" class="button menu_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Question_add' %}">Создать Вопрос</a></div>
-            <div id="search_selection_button" class="button menu_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Selection_Room' %}">Поиск коллекций</a></div>
+            <div id="select_selection_all" class="select_box">
+                <input id="select_selection_all_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelectionAll()">
+                <div id="scroll_box_selection_all" class="scroll_box">
+                    <ul id="spis_select_selection_all" class="spis_select">
+                        {% for selection in selections %}
+                        {% if selection.selection_author != request.user %}
+                            <li class="select_item select_item_selection" data-value="{{ selection.ID }}">
+                            <div class="check_mark_box">
+                                <img alt="галочки нет" class="check_mark_img base" src="{% static 'questions/img/cubes/base.png' %}">
+                                <img alt="выбрать" class="check_mark_img select" src="{% static 'questions/img/cubes/select.png' %}">
+                                {{ selection.selection_name }}
+                            </div>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}
+            {% endif %}
+            <div id="clean_button" class="button">Очистить</div>
+            <div id="Selection_button" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Selection_Create' %}">Создать коллекцию</a></div>
+            <div id="question_button" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Question_add' %}">Создать Вопрос</a></div>
 
         </div>
         <div id="question_box">
@@ -118,6 +118,20 @@
 
             <div id="question_scroll_box">
 
+<!--                <div class="link_box_question">-->
+<!--                    <a class="link_question_page">-->
+<!--                        <div class="box_text">-->
+<!--                            <div class="name_question">Имя</div>-->
+<!--                            <div class="text_question">Текст</div>-->
+<!--                        </div>-->
+<!--                        <div class="question_estimation"><div class="estimation">7.7</div></div>-->
+<!--                    </a>-->
+<!--                    <div class="button_tools">|||</div>-->
+<!--                    <ul class="tools_menu">-->
+<!--                        <li class="tools_element selection">Добавить в коллекцию</li>-->
+<!--                        <li class="tools_element"><a class="a_link" href="#?ref=pass">Пожаловаться</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
 
             </div>
 
@@ -155,6 +169,7 @@
     <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
     <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <script src="{% static 'questions/js/select_tag.js' %}"></script>
+    <script src="{% static 'questions/js/select_selection.js' %}"></script>
     <script src="{% static 'questions/js/select_author.js' %}"></script>
     <script src="{% static 'questions/js/question_search.js' %}"></script>
     <script src="{% static 'questions/js/clean.js' %}"></script>
