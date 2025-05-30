@@ -58,6 +58,7 @@ class Selection_Questions_APIDestroy(generics.DestroyAPIView):
     def get_object(self):
         selection_id = self.request.data.get("selection_id")
         question_id = self.request.data.get("question_id")
+        print(selection_id, question_id)
 
         if not selection_id:
             self._raise_error("DELETE is not selection")
@@ -89,11 +90,23 @@ class SelectionsByQuestionAPIView(APIView):
             # Получаем все уникальные подборки
             selections = Selections.objects.filter(
                 ID__in=selection_questions.values_list('selection_id', flat=True),
-                selection_author=request.user
+                selection_author=request.user,
+                publication = True,
             )
+            selections_user = Selections.objects.filter(selection_author=request.user, publication = True)
 
-            serializer = SelectionsSerializer(selections, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            # serializer = SelectionsSerializer(selections, many=True)
+            # Сериализуем данные
+            selections_serializer = SelectionsSerializer(selections, many=True)
+            selections_user_serializer = SelectionsSerializer(selections_user, many=True)
+
+            response_data = {
+                'selections': selections_serializer.data,
+                'selections_user': selections_user_serializer.data,
+                'question_id': question_id,
+            }
+
+            return Response(response_data, status=status.HTTP_200_OK)
 
         except Selection_Questions.DoesNotExist:
             return self._raise_error("Объекта нет")

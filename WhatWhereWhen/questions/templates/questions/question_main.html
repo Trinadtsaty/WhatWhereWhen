@@ -54,7 +54,7 @@
             </div>
 
             <div id="select_author" class="select_box">
-                <input id="select_author_name" class="input_select" type="text" placeholder="Введите имя тега" onkeyup="filterItemsAuthor()">
+                <input id="select_author_name" class="input_select" type="text" placeholder="Введите имя автора" onkeyup="filterItemsAuthor()">
                 <div id="scroll_box_author" class="scroll_box">
                     <ul id="spis_select_author" class="spis_select">
                         {% for author in authors %}
@@ -70,13 +70,40 @@
                     </ul>
                 </div>
             </div>
+
+
+            <div id="selection_all_name_box" class="down_show_box">
+                <div id="selection_all_search" class="down_text">Коллекции</div>
+                <div id="selection_all_search_img_box" class="down_box"><img id="selection_all_search_img" class="down_img" alt="Вниз" src="{% static 'questions/img/cubes/down_button.png' %}"></div>
+            </div>
+
+            <div id="select_selection_all" class="select_box">
+                <input id="select_selection_all_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelectionAll()">
+                <div id="scroll_box_selection_all" class="scroll_box">
+                    <ul id="spis_select_selection_all" class="spis_select">
+                        {% for selection in selections %}
+                        {% if selection.selection_author != request.user %}
+                            <li class="select_item select_item_selection" data-value="{{ selection.ID }}">
+                            <div class="check_mark_box">
+                                <img alt="галочки нет" class="check_mark_img base" src="{% static 'questions/img/cubes/base.png' %}">
+                                <img alt="выбрать" class="check_mark_img select" src="{% static 'questions/img/cubes/select.png' %}">
+                                {{ selection.selection_name }}
+                            </div>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}
+            {% endif %}
             <div id="clean_button" class="button">Очистить</div>
             <div id="Selection_button" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Selection_Create' %}">Создать коллекцию</a></div>
             <div id="question_button" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Question_add' %}">Создать Вопрос</a></div>
 
         </div>
         <div id="question_box">
-            <input id="search" placeholder="Введите имя вопроса (Это поле пока не работает)" class="input_select">
+            <input id="search" placeholder="Введите имя вопроса" class="input_select">
             <select id="count_question" class="count">
                 <option value="5">5</option>
                 <option value="20">20</option>
@@ -120,19 +147,20 @@
         <input id="select_Selections_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelection()">
         <div id="scroll_selection" class="scroll_box">
             <ul class="spis" id="spis_selections">
-                {% for select in selection_user %}
-                <li class="li_element">
-                    <div class="element" data-value="{{ select.ID }}">
-                        {{ select.selection_name }}
-                    </div>
+<!--                {% for select in selection_user %}-->
+<!--                <li class="li_element">-->
+<!--                    <div class="element" data-value="{{ select.ID }}">-->
+<!--                        {{ select.selection_name }}-->
+<!--                    </div>-->
 
-                    <img alt="галочки нет" class="check_mark_img_selection base_selection" src="{% static 'questions/img/cubes/base.png' %}">
-                    <img alt="выбрать" class="check_mark_img_selection select_selection" src="{% static 'questions/img/cubes/select.png' %}">
+<!--                    <img alt="галочки нет" class="check_mark_img_selection base_selection" src="{% static 'questions/img/cubes/base.png' %}">-->
+<!--                    <img alt="выбрать" class="check_mark_img_selection select_selection" src="{% static 'questions/img/cubes/select.png' %}">-->
 
-                </li>
-                {% endfor %}
+<!--                </li>-->
+<!--                {% endfor %}-->
             </ul>
         </div>
+        <div id="Selection_button_popup" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Selection_Create' %}">Создать коллекцию</a></div>
         {% else %}
         <div class="button" id="button_login"><a href="{% url 'Login' %}" style="text-decoration: none; color: inherit;">Пожалуйста авторизуйтесь</a></div>
         {% endif %}
@@ -141,10 +169,19 @@
     <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
     <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
     <script src="{% static 'questions/js/select_tag.js' %}"></script>
+    <script src="{% static 'questions/js/select_selection.js' %}"></script>
     <script src="{% static 'questions/js/select_author.js' %}"></script>
     <script src="{% static 'questions/js/question_search.js' %}"></script>
     <script src="{% static 'questions/js/clean.js' %}"></script>
     <script src="{% static 'questions/js/question_button.js' %}"></script>
+    <script>
+        const src_check_mark_false = "{% static 'questions/img/cubes/base.png' %}";
+        const src_check_mark_true = "{% static 'questions/img/cubes/select.png' %}";
+
+        const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+
+
+    </script>
 <!--    <script src="{% static 'questions/js/test.js' %}"></script>-->
 </body>
 </html>
