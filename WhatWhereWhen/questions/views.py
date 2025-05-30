@@ -181,14 +181,14 @@ def question_main(request):
         return render(request, "questions/question_main.html", {
             "tags":tags,
             "authors":users,
-            "selection_user":selection_user,
-            "selections":selections,
+            # "selection_user":selection_user,
+            # "selections":selections,
         })
 
     return render(request, "questions/question_main.html", {
         "tags":tags,
         "authors":users,
-        "selections": selections,
+        # "selections": selections,
     })
 
 
