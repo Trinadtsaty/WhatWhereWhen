@@ -1,3 +1,20 @@
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from registration.def_help import *
+
+from registration.models import Users
+from django.utils.html import escape
+from .decorators import edit_question
+from django.core.exceptions import ValidationError
+from .models import Question
+from django.http import JsonResponse
+import json
+from django.db.models import Q, Count, Avg, Value
+from django.db.models.functions import Coalesce, Round
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models.functions import Lower
+import math
+
 def question_note(name):
     if len(name) > 700:
         raise ValidationError('Текст описания вопроса слишком длинный, пожалуйста придумайте описание о 700 символов')
@@ -25,21 +42,7 @@ def question_name_line(name):
 
 
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from registration.def_help import *
 
-from registration.models import Users
-from django.utils.html import escape
-from .decorators import edit_question
-from django.core.exceptions import ValidationError
-from .models import Question
-from django.http import JsonResponse
-import json
-from django.db.models import Q, Count, Avg, Value
-from django.db.models.functions import Coalesce, Round
-from django.views.decorators.csrf import csrf_exempt
-from django.db.models.functions import Lower
 
 @csrf_exempt
 def question_main(request):
@@ -51,6 +54,7 @@ def question_main(request):
 
         # Получаем вопросы, которые опубликованы
         questions = Question.objects.filter(publication=True)
+        questions_count=questions.count()
 
         # Фильтрация по поисковым запросам
         if data_get.get("search"):
@@ -162,7 +166,9 @@ def question_main(request):
         # with open(filename, 'a', encoding='utf-8') as file:
         #     file.write("Передаваемый массив списков" + str(questions_data))
 
-        response_data = {'message': 'Данные получены', 'questions': questions_data}
+        count_page = math.ceil(questions_count / data_get.get("count_question"))
+
+        response_data = {'message': 'Данные получены', 'questions': questions_data, 'count_page':count_page}
 
         return JsonResponse(response_data)
 
@@ -171,24 +177,23 @@ def question_main(request):
     users = Users.objects.filter(ID__in=authors)
     tags = Tags.objects.filter(publication=True)
 
-    selections = Selections.objects.filter(publication=True, private=False)
-    print(selections)
+    # selections = Selections.objects.filter(publication=True, private=False)
+    # print(selections)
 
-    if request.user.is_authenticated:
-
-        selection_user = Selections.objects.filter(publication=True, selection_author=request.user)
-
-        return render(request, "questions/question_main.html", {
-            "tags":tags,
-            "authors":users,
-            # "selection_user":selection_user,
-            # "selections":selections,
-        })
+    # if request.user.is_authenticated:
+    #
+    #     selection_user = Selections.objects.filter(publication=True, selection_author=request.user)
+    #
+    #     return render(request, "questions/question_main.html", {
+    #         "tags":tags,
+    #         "authors":users,
+    #         # "selection_user":selection_user,
+    #         # "selections":selections,
+    #     })
 
     return render(request, "questions/question_main.html", {
         "tags":tags,
         "authors":users,
-        # "selections": selections,
     })
 
 

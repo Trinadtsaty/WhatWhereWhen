@@ -214,9 +214,6 @@ def chek_json_filter(data):
     else:
         sorting_question = "ID"
 
-
-
-
     data_get = {
         "search": search,
         "search_name": search_name,
@@ -228,9 +225,11 @@ def chek_json_filter(data):
         "unselect_author": unselect_author,
         "select_tag": select_tag,
         "unselect_tag": unselect_tag,
+
         "question_page": question_page,
         "count_question": count_question,
         "sorting_question":sorting_question,
+
     };
     return data_get
 

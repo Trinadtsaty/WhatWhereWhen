@@ -477,3 +477,26 @@ body {
     margin-left: 5%;
     width: 90%;
 }
+#number_box {
+
+}
+
+#page_scroll_box {
+    background-color: black;
+    color: white;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+#page_list {
+    padding: 0;
+	margin: 0;
+    display: flex;
+    list-style-type: none;
+}
+.page_number {
+    margin-right: 100px;
+    cursor: pointer;
+}
+.page_number:hover {
+    color: red;
+}

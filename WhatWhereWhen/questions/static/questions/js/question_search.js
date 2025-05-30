@@ -3,6 +3,7 @@ const search_advanced_box = document.getElementById('search_advanced_box');
 const question_search = document.getElementById('question_search');
 const advanced_search_img = document.getElementById('advanced_search_img');
 
+
 document.addEventListener('DOMContentLoaded', (event) => {
     POST(URL_server + URL_adress);
 });
@@ -212,6 +213,13 @@ function GET(URL) {
     });
 };
 
+var question_page = 0
+function page_change(number) {
+    question_page = number
+    console.log(question_page)
+    Timer()
+};
+
 function POST(URL) {
         const search = document.getElementById('question_search').value;
         const search_name = document.getElementById('question_search_title').value;
@@ -220,27 +228,30 @@ function POST(URL) {
 
         const coincidence_tag = document.getElementById('checkbox_tag').checked
 
-        const question_page = 0
+
+
         const count_question = document.getElementById('count_question').value
         const sorting_question = document.getElementById('sorting_question').value
 
         const checkbox_search = document.getElementById('checkbox_search').checked
 
         const data = {
-            "search": search,
-            "search_name": search_name,
-            "search_text": search_text,
-            "search_answer": search_answer,
-            "checkbox_search":checkbox_search,
-            "coincidence_tag":coincidence_tag,
-            "select_author": select_author,
-            "unselect_author":unselect_author,
-            "select_tag":select_tag,
-            "unselect_tag":unselect_tag,
-            "question_page": question_page,
-            "count_question": count_question,
-            "sorting_question":sorting_question,
+            "search": search, // Общий поиск
+            "search_name": search_name, // Поиск по имени вопроса
+            "search_text": search_text, // Поиск по тексту вопроса
+            "search_answer": search_answer, // Поиск по ответу
+            "checkbox_search":checkbox_search, // Строгое совподение по поиску
+            "coincidence_tag":coincidence_tag, // Строгое совподение по тэгу
+            "select_author": select_author, // Выбранные авторы
+            "unselect_author":unselect_author, // Убраные авторы
+            "select_tag":select_tag, // Выбранные тэги
+            "unselect_tag":unselect_tag, // Убраные тэги
+            "question_page": question_page, // Страница вопроса
+            "count_question": count_question, // Кол-во вопросов на странице
+            "sorting_question":sorting_question, // Способ сортировки
+
         };
+    console.log(data)
 
     return fetch(URL, {
         method: 'POST',
@@ -261,9 +272,28 @@ function POST(URL) {
         // Вы можете также получить доступ к другим данным:
         console.log(data.questions); // Данные, которые вы передали через JsonResponse
 //        console.log(data.questions[0].question_name)
-        const questions_box = document.getElementById('question_scroll_box');
 
-        //Очищаем элемент
+        // Очищаем элемент с номерами страниц
+        const number_page_box = document.getElementById('page_scroll_box');
+        while (number_page_box.firstChild) {
+            number_page_box.removeChild(number_page_box.firstChild);
+        }
+
+        // Отоброжаем номера страниц
+        const ul_spis = document.createElement('ul');
+        ul_spis.id = 'page_list';
+
+        for (let i = 0; i < data.count_page; i++) {
+            const li_element = document.createElement('li');
+            li_element.className = 'page_number';
+            li_element.textContent = `${i+1}`;
+            li_element.onclick = () => page_change(i);
+            ul_spis.appendChild(li_element)
+        }
+        number_page_box.appendChild(ul_spis)
+
+        //Очищаем элемент c вопросами
+        const questions_box = document.getElementById('question_scroll_box');
         while (questions_box.firstChild) {
             questions_box.removeChild(questions_box.firstChild);
         }
@@ -271,7 +301,6 @@ function POST(URL) {
         const array_element = data.questions
 
         //Отоброжение отсортированного массива на странице
-
         for (const question of array_element) {
 
 //            console.log(question.question_name, question.question_text)
