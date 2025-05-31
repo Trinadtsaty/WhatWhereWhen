@@ -120,7 +120,7 @@ class Selections(models.Model):
 
 class Selection_Questions(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    selection_id = models.ForeignKey(Selections, on_delete=models.PROTECT, related_name='Selection')
+    selection_id = models.ForeignKey(Selections, on_delete=models.CASCADE, related_name='Selection')
     question_id = models.ForeignKey(Question, on_delete=models.PROTECT, related_name='Question_Select')
 
     publication = models.BooleanField(default=True)

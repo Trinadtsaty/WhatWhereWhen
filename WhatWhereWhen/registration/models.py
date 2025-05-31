@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
-import os
-import datetime
 
 
 class CustomUserManager(BaseUserManager):
@@ -48,7 +46,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
     # Активен ли пользователь сейчас
     last_activity = models.DateTimeField(default=timezone.now)
     # Является ли пользователь разработчиком убрать при следующей обновлении
-    is_root = models.BooleanField(default=False)
+    # is_root = models.BooleanField(default=False)
     # Является ли пользователь модератором
     is_moder = models.BooleanField(default=False)
     # Является ли пользователь администратором
