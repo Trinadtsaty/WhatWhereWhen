@@ -9,6 +9,7 @@ function Timer() {
     };
     Time = setTimeout(() => {
         POST(URL_server + URL_adress);
+        page_change_notpush(0)
     }, 500);
 }
 
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         checkMarkBox.querySelector('.unselect').style.display = 'none';
 
         item.addEventListener('click', ()=> {
+//            page_change_notpush(0)
             Timer()
             let number = item.getAttribute('data-value');
             if (checkMarkBox.querySelector('.select').style.display === 'none' && checkMarkBox.querySelector('.unselect').style.display === 'none') {

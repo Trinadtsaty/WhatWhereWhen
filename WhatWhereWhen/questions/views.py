@@ -54,7 +54,7 @@ def question_main(request):
 
         # Получаем вопросы, которые опубликованы
         questions = Question.objects.filter(publication=True)
-        questions_count=questions.count()
+
 
         # Фильтрация по поисковым запросам
         if data_get.get("search"):
@@ -155,7 +155,7 @@ def question_main(request):
 
         # with open(filename, 'a', encoding='utf-8') as file:
         #     file.write("Считаем среднюю оценку" + str(questions) + '\n')
-
+        questions_count = questions.count()
         questions=questions.order_by(data_get.get("sorting_question"))[0+(data_get.get("count_question")*data_get.get("question_page")):data_get.get("count_question")+(data_get.get("count_question")*data_get.get("question_page"))]
 
         # with open(filename, 'a', encoding='utf-8') as file:
@@ -165,8 +165,12 @@ def question_main(request):
 
         # with open(filename, 'a', encoding='utf-8') as file:
         #     file.write("Передаваемый массив списков" + str(questions_data))
-
+        # print(questions_count)
+        # print(data_get.get("count_question"))
         count_page = math.ceil(questions_count / data_get.get("count_question"))
+        if count_page==1:
+            count_page=0
+
 
         response_data = {'message': 'Данные получены', 'questions': questions_data, 'count_page':count_page}
 

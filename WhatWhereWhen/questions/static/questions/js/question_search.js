@@ -93,31 +93,7 @@ author_name_button.addEventListener('click', () => {
     }
 });
 
-//const select_selection_menu = document.getElementById('select_selection_all');
-//const selection_search_img = document.getElementById('selection_all_search_img');
-//const selection_name_button = document.getElementById('selection_all_name_box');
-//
-//select_selection_menu.style.display = 'none';
-//
-//selection_name_button.addEventListener('click', () => {
-//    if (select_selection_menu.style.display === 'none') {
-//
-//        selection_search_img.style.transform = 'rotate(180deg)';
-//        select_selection_menu.style.display = '';
-//    } else {
-//        select_selection_menu.style.display = 'none';
-//        selection_search_img.style.transform = 'rotate(0deg)';
-//
-//        document.querySelectorAll('.select_item_selection').forEach(item => {
-//            item.querySelector('.check_mark_box').querySelector('.select').style.display = 'none';
-//            item.querySelector('.check_mark_box').querySelector('.base').style.display = '';
-//        });
-//
-//        select_selection.length = 0;
-//
-////        Timer()
-//    };
-//});
+
 
 
 function formatQuestionText(text) {
@@ -212,12 +188,24 @@ function GET(URL) {
         };
     });
 };
-
+function Timer_not_null_page() {
+    console.log("Timer Start")
+    if (Time) {
+        clearTimeout(Time);
+    };
+    Time = setTimeout(() => {
+        POST(URL_server + URL_adress);
+    }, 1000);
+}
 var question_page = 0
 function page_change(number) {
     question_page = number
-    console.log(question_page)
-    Timer()
+//    console.log(question_page)
+    Timer_not_null_page()
+};
+
+function page_change_notpush(number) {
+    question_page = number
 };
 
 function POST(URL) {
@@ -251,7 +239,7 @@ function POST(URL) {
             "sorting_question":sorting_question, // Способ сортировки
 
         };
-    console.log(data)
+    console.log('Пакет для отправки:',data)
 
     return fetch(URL, {
         method: 'POST',
@@ -267,10 +255,10 @@ function POST(URL) {
         return response.json(); // Возвращаем ответ в формате JSON
     })
     .then(data => {
-        console.log(data); // Логируем ответ для отладки
+        console.log('Полученный ответ:',data); // Логируем ответ для отладки
 
         // Вы можете также получить доступ к другим данным:
-        console.log(data.questions); // Данные, которые вы передали через JsonResponse
+//        console.log(data.questions); // Данные, которые вы передали через JsonResponse
 //        console.log(data.questions[0].question_name)
 
         // Очищаем элемент с номерами страниц
