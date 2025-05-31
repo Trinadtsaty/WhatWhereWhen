@@ -11,12 +11,33 @@
         <div id="tools_search">
             <div id="button_create" class="button">Создать</div>
             <div id="input_box"><input id="input_search" class="input_select" placeholder="Название комнаты"></div>
+            <div id="select_box">
+                <div class="line">Ведущий<input id="leader" type="checkbox" class="check"></div>
+                <div class="line">Пароль<input id="password" type="checkbox" class="check"></div>
+            </div>
+            <div id="button_search" class="button">Поиск</div>
+            <div id="refresh_button" class="button"><img id="img_refresh" alt="обновить" src="{% static 'main/img/refresh.png' %}"></div>
         </div>
         <div id="rooms">
+            <div id="room_scroll_box">
+                <ul id="list_rooms">
+                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
+                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
+                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
+                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
+                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
 
+                </ul>
+            </div>
         </div>
         <div id="info_room">
-
+            <div id="session_name_box" class="info_text_box">123</div>
+            <div id="count_players" class="info_text_box">456</div>
+            <div id="room_hours" class="info_text_box">789</div>
+            <div id="room_mode" class="info_text_box">1011</div>
+            <div id="room_pack_name" class="info_text_box">1213</div>
+            <div id="room_description" class="info_text_box">1415</div>
+            <div class="button" id="button_connect">Присоединиться</div>
         </div>
     </div>
     <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
