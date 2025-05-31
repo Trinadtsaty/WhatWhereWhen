@@ -17,17 +17,7 @@ body {
     background-position: center; /* Центрирует изображение */
     background-repeat: no-repeat; /* Отключает повторение изображения */
 }
-#page {
-    width: 100vw;
-    height: 85vh;
-}
-#hint {
-    position: fixed; /* Фиксированное позиционирование относительно окна браузера */
-    bottom: 20px; /* Отступ от нижнего края */
-    right: 20px; /* Отступ от правого края */
-    z-index: 1000; /* Уровень наложения, чтобы элемент был поверх других */
-    cursor: pointer;
-}
+
 #main_page {
     position: fixed;
     bottom: 20px;
@@ -59,25 +49,36 @@ body {
     border: 0.6vh solid #C0A610;
 }
 
-#tools_search {
+#page_left {
     float: left;
-    background-color: #ff000049;
+    width: 25vw;
+    height: 85vh;
+}
+#page_right {
+    float: left;
+    margin-left: 5vw;
+    width: 70vw;
+    height: 100vh;
+}
+#tools_search {
     height: 100%;
-    width: 25%;
+    width: 100%;
 }
 #rooms {
-    margin-left: 2.5%;
-    margin-right: 2.5%;
     float: left;
-/*    background-color: grey;*/
     height: 100%;
-    width: 45%;
+    width: 60%;
 }
 #info_room {
     float: left;
+    margin-left: 5%;
     background-color: rgba(136, 128, 136, 1);
     height: 100%;
-    width: 25%;
+    width: 35%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .button {
     background-color: #C0A610;
@@ -172,22 +173,36 @@ body {
     float: right;
     height: 100%;
 }
-#info_room {
-    float: left;
-    background-color: rgba(136, 128, 136, 1);
-    height: 100%;
-    width: 25%;
-}
+
 .info_text_box {
     margin-top: 20px;
     width: 100%;
     font-size: 32px;
     color: white;
     background-color: rgba(82, 79, 82, 1);
+    padding-left: 5px;
+    box-sizing: border-box;
 }
+
+/* Для первого блока увеличенный отступ сверху */
 .info_text_box:first-child {
     margin-top: 50px;
 }
-#button_connect {
-
+#room_description {
+    height: 30%;
 }
+
+/* Кнопке можно добавить стили, например, чтобы она была шириной 100% */
+#button_connect {
+    width: 90%;
+    margin-left: 5%;
+    margin-bottom: 20px;
+    font-size: 48px;
+    height: 125px;
+
+    display: flex;                /* Включаем flexbox */
+    align-items: center;          /* Центрируем по вертикали */
+    justify-content: center;      /* Центрируем по горизонтали */
+}
+
+
