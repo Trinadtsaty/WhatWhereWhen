@@ -1,10 +1,25 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Поиск Комнат</title>
+    <link rel="stylesheet" href="{% static 'main/css/game_search.css' %}">
 </head>
 <body>
-  <h1>Заглушка</h1>
+    <div id="page">
+        <div id="tools_search">
+            <div id="button_create" class="button">Создать</div>
+            <div id="input_box"><input id="input_search" class="input_select" placeholder="Название комнаты"></div>
+        </div>
+        <div id="rooms">
+
+        </div>
+        <div id="info_room">
+
+        </div>
+    </div>
+    <div id="hint"><a href="{% url 'Hint' %}"><img  alt="?" src="{% static 'registration/img/hint.png' %}"></a></div>
+    <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
 </body>
 </html>
