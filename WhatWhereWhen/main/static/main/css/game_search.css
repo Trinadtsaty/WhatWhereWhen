@@ -11,7 +11,6 @@ body {
     margin: 0;
     height: 100vh;
 
-
     background-image: url('../img/background.png'); /* Укажите путь к вашему изображению */
     background-size: cover; /* Это свойство позволяет изображению покрывать весь элемент */
     background-position: center; /* Центрирует изображение */
@@ -63,11 +62,13 @@ body {
 #tools_search {
     height: 100%;
     width: 100%;
+    min-width: 350px;
 }
 #rooms {
     float: left;
     height: 100%;
     width: 60%;
+    min-width: 550px;
 }
 #info_room {
     float: left;
@@ -75,6 +76,7 @@ body {
     background-color: rgba(136, 128, 136, 1);
     height: 100%;
     width: 35%;
+    min-width: 350px;
 
     display: flex;
     flex-direction: column;
