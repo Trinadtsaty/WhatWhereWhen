@@ -18,7 +18,7 @@
                     <img {% if close %}     style="display: none;" {% endif %} id="room_close_false" alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"   data-type="close">
                     <img {% if not close %} style="display: none;" {% endif %} id="room_close_true"  alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"    data-type="close">
                 </div>
-                <div class="block text" id="room_password_box"><input id="room_password" name="room_password" type="password" class="input_text" placeholder="пароль комнаты" value="{{ password|default:'' }}"></div>
+                <div class="block text" id="room_password_box"><input id="room_password" name="room_password" type="password" class="input_text" placeholder="Пароль комнаты" value="{{ password|default:'' }}"></div>
 
                 <div class="block search">Выбрать коллекцию<div id="select_selections" class="button">Выбрать</div></div>
                 <div class="block search">Режим игры<div id="select_mode" class="button">Выбрать</div></div>

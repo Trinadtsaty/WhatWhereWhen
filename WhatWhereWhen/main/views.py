@@ -9,6 +9,11 @@ from django.utils.html import escape
 # def questions(request):
 #     return render(request, 'main/questions.html')
 
+def True_False(element):
+    if element == "on":
+        return True
+    else:
+        return False
 
 def Game_Room(request):
     return render(request, "main/main_game.html")
@@ -33,20 +38,20 @@ def Create_Room(request):
         break_questions = escape(request.POST.get('room_break_questions'))
 
         output = {
-            "name":name,
-            "close": close,
+            "name": name,
+            "close": True_False(close),
             "password": password,
             "selection": selection,
             "mode": mode,
             "role": role,
             "people_limit": people_limit,
-            "early_answer": early_answer,
+            "early_answer": True_False(early_answer),
             "time_early_answer": time_early_answer,
-            "chat_clean": chat_clean,
+            "chat_clean": True_False(chat_clean),
             "time_question": time_question,
-            "show_question": show_question,
+            "show_question": True_False(show_question),
             "reading_speed": reading_speed,
-            "random_order": random_order,
+            "random_order": True_False(random_order),
             "break_questions": break_questions,
         }
 
