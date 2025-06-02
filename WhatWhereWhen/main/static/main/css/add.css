@@ -44,3 +44,137 @@ body {
     background-color: #524F52;
     border: 0.6vh solid #C0A610;
 }
+.button {
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+    border-radius: 30px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: #524F52;
+    border: 3px solid #C0A610;
+}
+#page {
+    width: 100vw;
+    height: 100vh;
+    color: white;
+}
+.page_element {
+    float: left;
+}
+
+.block.search, .block.return{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#popup_roles {
+/*    display: none;*/
+    height: 250px;
+    width: 500px;
+}
+#popup_modes {
+/*    display: none;*/
+    height: 250px;
+    width: 500px;
+}
+.popup {
+    padding-top: 15px;
+    padding-left: 32.5px;
+    box-sizing: border-box;
+
+    position: fixed;
+    flex-direction: column;
+    border: 3px solid black;
+    background-color: rgba(136, 128, 136, 1);
+
+    z-index: 1000;
+}
+
+.select_button {
+    width: 435px;
+    height: 60px;
+    font-size: 40px;
+
+
+    margin-top: 5px;
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.select_button:hover {
+    background-color: #524F52;
+    border: 3px solid #C0A610;
+}
+
+
+
+#popup_selections {
+    width: 500px;
+    height: 300px;
+
+    position: fixed;
+    flex-direction: column;
+    border: 3px solid black;
+    background-color: rgba(136, 128, 136, 1);
+
+    z-index: 1000;
+}
+
+
+#select_Selections_name {
+    margin-top: 25px;
+    width: 90%;
+    margin-left: 5%;
+
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    color: white;
+    border-bottom: 3px solid rgba(82, 79, 82, 1);
+    font-size: 32px;
+}
+#select_Selections_name::placeholder {
+    font-size: 32px;
+}
+#select_Selections_name:focus {
+    font-size: 32px;
+}
+
+#scroll_selection {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 70%;
+
+    margin-left: 5%;
+    width: 90%;
+
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+}
+#spis_selections {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.li_element {
+    width: 430px;
+    height: 30px;
+    font-size: 16px;
+    margin-top: 5px;
+
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+    cursor: pointer;
+}
+.li_element:hover {
+    background-color: #524F52;
+    border: 3px solid #C0A610;
+}

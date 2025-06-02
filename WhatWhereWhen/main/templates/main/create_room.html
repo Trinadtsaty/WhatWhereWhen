@@ -7,11 +7,69 @@
     <link rel="stylesheet" href="{% static 'main/css/add.css' %}">
 </head>
 <body>
-    <div id="page">
-        <form>
-
-        </form>
+    <form class="forms" id="reg" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div id="page">
+            <div id="page_left" class="page_element">
+                <div class="block text"><input id="room_name" name="room_name" type="text" class="input_text" placeholder="Название сессии" value="{{ name|default:'' }}"></div>
+                <div class="block check">Закрытая сессия<input id="room_close" name="room_close" type="checkbox" class="checkbox" {% if close %}checked{% endif %}></div>
+                <div class="block text" id="room_password_box"><input id="room_password" name="room_password" type="password" class="input_text" placeholder="пароль комнаты" value="{{ password|default:'' }}"></div>
+                <div class="block search">Выбрать коллекцию<div id="select_selections" class="button">Выбрать</div></div>
+                <div class="block search">Режим игры<div id="select_mode" class="button">Выбрать</div></div>
+                <input type="text" style="display: none;" id="select_selections_send" name="select_selections_send" value="{{ selections|default:'' }}">
+                <input type="text" style="display: none;" id="select_game_mode_send" name="select_game_mode_send" value="{{ game_mode|default:'classic' }}">
+                <input type="text" style="display: none;" id="select_role_send" name="select_role_send" value="{{ select_role|default:'leader' }}">
+            </div>
+            <div id="page_center" class="page_element">
+                <div class="block search">Роль хоста<div id="role_choose" class="button">Выбрать</div></div>
+                <div class="block search">Дополнительно<div id="additional_settings" class="button">Открыть</div></div>
+                <div class="block">Количество игроков</div>
+                <div class="block return"><input type="range" id="room_people_limit" name="room_people_limit" min="3" max="8" step="1" value="{{ people_limit|default:'5' }}"><div id="slider_return" class="return slider">{{ people_limit|default:'5' }}</div></div>
+                <h2 id="name"><b class="W">W</b>hat<b class="W">W</b>here<b class="W">W</b>hen</h2>
+            </div>
+            <div id="page_right" class="page_element">
+                <textarea style="resize: none;" name="room_description" id="room_description" rows="20" cols="30" placeholder="Описание сессии" class="input_text text">{{ description|default:'' }}</textarea>
+            </div>
+            <div id="page_hidden" class="page_element">
+                <div class="block check">Досрочный ответ<input id="room_early_answer" name="room_early_answer" type="checkbox" class="checkbox" {% if not early_answer_opposite %}checked{% endif %}></div>
+                <div class="block text_right" id="room_time_early_answer_box">Время на ответ<input id="room_time_early_answer" name="room_time_early_answer" type="text" class="input_text_number" value="{{ time_early_answer|default:'5' }}"></div>
+                <div class="block check">Очистка чата после вопроса<input id="room_chat_clean" name="room_chat_clean" type="checkbox" class="checkbox" {% if not chat_clean_opposite %}checked{% endif %}></div>
+                <div class="block text_right">Время на вопрос (сек)<input id="room_time_question" name="room_time_question" type="text" class="input_text_number" value="{{ time_question|default:'60' }}"></div>
+                <div class="block check">Показывать вопрос игрокам<input id="room_show_question" name="room_show_question" type="checkbox" class="checkbox" {% if not show_question_opposite %}checked{% endif %}></div>
+                <div class="block text_right">Скорость чтения (знак/сек)<input id="room_reading_speed" name="room_reading_speed" type="text" class="input_text_number" value="{{ reading_speed|default:'10' }}"></div>
+                <div class="block check">Случайный порядок вопросов<input id="room_random_order" name="room_random_order" type="checkbox" class="checkbox" {% if not random_order_opposite %}checked{% endif %}></div>
+                <div class="block text_right" id="room_break_questions_box">Перерыв между вопросами (сек)<input id="room_break_questions" name="room_break_questions" type="text" class="input_text_number" value="{{ break_questions|default:'30' }}"></div>
+                <div class="button" id="accept_additional_settings">Принять</div>
+            </div>
+        </div>
+    </form>
+    <div id="popup_roles" class="popup">
+        <div class="select_button" id="room_leader_role" data-type="role" data-value="leader">Ведущий</div>
+        <div class="select_button" id="room_captain_role" data-type="role" data-value="captain">Капитан</div>
+        <div class="select_button" id="room_player_role" data-type="role" data-value="player">Игрок</div>
+    </div>
+    <div id="popup_selections">
+        <input id="select_Selections_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelection()">
+        <div id="scroll_selection" class="scroll_box">
+            <ul class="spis" id="spis_selections">
+                <li class="li_element" data-value="1">Коллекция 1</li>
+                <li class="li_element" data-value="2">Коллекция 2</li>
+                <li class="li_element" data-value="3">Коллекция 3</li>
+                <li class="li_element" data-value="4">Коллекция 4</li>
+                <li class="li_element" data-value="5">Коллекция 5</li>
+                <li class="li_element" data-value="6">Коллекция 6</li>
+                <li class="li_element" data-value="7">Коллекция 7</li>
+                <li class="li_element" data-value="8">Коллекция 8</li>
+                <li class="li_element" data-value="9">Коллекция 9</li>
+            </ul>
+        </div>
+    </div>
+    <div id="popup_modes" class="popup">
+        <div class="select_button" id="room_classic_mode" data-type="mode" data-value="classic">Классика</div>
+        <div class="select_button" id="room_sport_mode" data-type="mode" data-value="sport">Спорт</div>
+        <div class="select_button" id="room_collective_answer_mode" data-type="mode" data-value="collective_answer">Совместный ответ</div>
     </div>
     <div id="main_page" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
+    <script src="{% static 'main/js/room_settings.js' %}"></script>
 </body>
 </html>
