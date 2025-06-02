@@ -12,13 +12,25 @@
         <div id="page">
             <div id="page_left" class="page_element">
                 <div class="block text"><input id="room_name" name="room_name" type="text" class="input_text" placeholder="Название сессии" value="{{ name|default:'' }}"></div>
-                <div class="block check">Закрытая сессия<input id="room_close" name="room_close" type="checkbox" class="checkbox" {% if close %}checked{% endif %}></div>
+
+                <div class="block check">
+                    Закрытая сессия
+                    <img {% if close %}     style="display: none;" {% endif %} id="room_close_false" alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"   data-type="close">
+                    <img {% if not close %} style="display: none;" {% endif %} id="room_close_true"  alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"    data-type="close">
+                </div>
                 <div class="block text" id="room_password_box"><input id="room_password" name="room_password" type="password" class="input_text" placeholder="пароль комнаты" value="{{ password|default:'' }}"></div>
+
                 <div class="block search">Выбрать коллекцию<div id="select_selections" class="button">Выбрать</div></div>
                 <div class="block search">Режим игры<div id="select_mode" class="button">Выбрать</div></div>
                 <input type="text" style="display: none;" id="select_selections_send" name="select_selections_send" value="{{ selections|default:'' }}">
                 <input type="text" style="display: none;" id="select_game_mode_send" name="select_game_mode_send" value="{{ game_mode|default:'classic' }}">
                 <input type="text" style="display: none;" id="select_role_send" name="select_role_send" value="{{ select_role|default:'leader' }}">
+
+                <input id="room_close"          style="display: none;" name="room_close"         type="checkbox" class="checkbox" {% if close %}checked{% endif %}>
+                <input id="room_early_answer"   style="display: none;" name="room_early_answer"  type="checkbox" class="checkbox" {% if early_answer %}checked{% endif %}>
+                <input id="room_chat_clean"     style="display: none;" name="room_chat_clean"    type="checkbox" class="checkbox" {% if chat_clean %}checked{% endif %}>
+                <input id="room_show_question"  style="display: none;" name="room_show_question" type="checkbox" class="checkbox" {% if show_question %}checked{% endif %}>
+                <input id="room_random_order"   style="display: none;" name="room_random_order"  type="checkbox" class="checkbox" {% if random_order %}checked{% endif %}>
             </div>
             <div id="page_center" class="page_element">
                 <div class="block search">Роль хоста<div id="role_choose" class="button">Выбрать</div></div>
@@ -32,13 +44,29 @@
                 <textarea style="resize: none;" name="room_description" id="room_description" rows="20" cols="30" placeholder="Описание сессии" class="input_text text">{{ description|default:'' }}</textarea>
             </div>
             <div id="page_hidden" class="page_element">
-                <div class="block check">Досрочный ответ<input id="room_early_answer" name="room_early_answer" type="checkbox" class="checkbox" {% if not early_answer_opposite %}checked{% endif %}></div>
+                <div class="block check">
+                    Досрочный ответ
+                    <img {% if early_answer %}      style="display: none;" {% endif %} id="room_early_answer_false"     alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"    data-type="early_answer">
+                    <img {% if not early_answer %}  style="display: none;" {% endif %} id="room_early_answer_true"      alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="early_answer">
+                </div>
                 <div class="block text_right" id="room_time_early_answer_box">Время на ответ<input id="room_time_early_answer" name="room_time_early_answer" type="text" class="input_text_number" value="{{ time_early_answer|default:'5' }}"></div>
-                <div class="block check">Очистка чата после вопроса<input id="room_chat_clean" name="room_chat_clean" type="checkbox" class="checkbox" {% if not chat_clean_opposite %}checked{% endif %}></div>
+                <div class="block check">
+                    Очистка чата после вопроса
+                    <img {% if chat_clean %}        style="display: none;" {% endif %} id="room_chat_clean_false"       alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"    data-type="chat_clean">
+                    <img {% if not chat_clean %}    style="display: none;" {% endif %} id="room_chat_clean_true"        alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="chat_clean">
+                </div>
                 <div class="block text_right">Время на вопрос (сек)<input id="room_time_question" name="room_time_question" type="text" class="input_text_number" value="{{ time_question|default:'60' }}"></div>
-                <div class="block check">Показывать вопрос игрокам<input id="room_show_question" name="room_show_question" type="checkbox" class="checkbox" {% if not show_question_opposite %}checked{% endif %}></div>
+                <div class="block check">
+                    Показывать вопрос игрокам
+                    <img {% if show_question %}     style="display: none;" {% endif %} id="room_show_question_false"    alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"    data-type="show_question">
+                    <img {% if not show_question %} style="display: none;" {% endif %} id="room_show_question_true"     alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="show_question">
+                </div>
                 <div class="block text_right">Скорость чтения (знак/сек)<input id="room_reading_speed" name="room_reading_speed" type="text" class="input_text_number" value="{{ reading_speed|default:'10' }}"></div>
-                <div class="block check">Случайный порядок вопросов<input id="room_random_order" name="room_random_order" type="checkbox" class="checkbox" {% if not random_order_opposite %}checked{% endif %}></div>
+                <div class="block check">
+                    Случайный порядок вопросов
+                    <img {% if random_order %}      style="display: none;" {% endif %} id="room_random_order_false"     alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"    data-type="random_order">
+                    <img {% if not random_order %}  style="display: none;" {% endif %} id="room_random_order_true"      alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="random_order">
+                </div>
                 <div class="block text_right" id="room_break_questions_box">Перерыв между вопросами (сек)<input id="room_break_questions" name="room_break_questions" type="text" class="input_text_number" value="{{ break_questions|default:'30' }}"></div>
                 <div class="button" id="accept_additional_settings">Принять</div>
             </div>

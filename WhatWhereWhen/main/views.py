@@ -1,3 +1,5 @@
+from idlelib.rpc import request_queue
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.html import escape
@@ -48,8 +50,14 @@ def Create_Room(request):
             "break_questions": break_questions,
         }
 
-        # print(output)
+        print(output)
+        return  render(request, "main/create_room.html", output)
+    # error="123234234"
 
-
-
-    return render(request, "main/create_room.html")
+    return render(request, "main/create_room.html", {
+        "close": False,
+        "early_answer": True,
+        "chat_clean": True,
+        "show_question": True,
+        "random_order": True,
+    })

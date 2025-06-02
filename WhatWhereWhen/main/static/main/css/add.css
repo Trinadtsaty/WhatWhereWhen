@@ -63,8 +63,21 @@ body {
 }
 .page_element {
     float: left;
+    width: 30%;
+    height: 100%;
 }
-
+#page_center, #page_right, #page_hidden {
+    margin-left: 5%;
+}
+#page_left {
+    background-color: green;
+}
+#page_center {
+    background-color: grey;
+}
+#page_right, #page_hidden {
+    background-color: red;
+}
 .block.search, .block.return{
     display: flex;
     align-items: center;
@@ -112,9 +125,6 @@ body {
     background-color: #524F52;
     border: 3px solid #C0A610;
 }
-
-
-
 #popup_selections {
     width: 500px;
     height: 300px;
@@ -126,8 +136,6 @@ body {
 
     z-index: 1000;
 }
-
-
 #select_Selections_name {
     margin-top: 25px;
     width: 90%;
@@ -147,7 +155,6 @@ body {
 #select_Selections_name:focus {
     font-size: 32px;
 }
-
 #scroll_selection {
     overflow-y: auto;
     overflow-x: hidden;
@@ -190,4 +197,20 @@ body {
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000; /* Поверх всех элементов */
+}
+.block.check {
+    border: 3px solid white;
+    background-color: rgba(217, 217, 217, 0.7);
+    height: 65px;
+    font-size: 40px;
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+.img_check {
+    margin-top: -3px;
+    margin-right: -3px;
+    float: right;
+    height: 65px;
+    width: 65px;
+    cursor: pointer;
 }
