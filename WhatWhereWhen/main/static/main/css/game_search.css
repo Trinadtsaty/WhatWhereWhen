@@ -4,7 +4,6 @@
     font-weight: normal;
     font-style: normal;
 }
-
 body {
     font-family: 'Oswald', sans-serif;
     padding: 0;
@@ -16,7 +15,6 @@ body {
     background-position: center; /* Центрирует изображение */
     background-repeat: no-repeat; /* Отключает повторение изображения */
 }
-
 #main_page {
     position: fixed;
     bottom: 20px;
@@ -32,7 +30,6 @@ body {
     border-radius: 20px;
     color: white;
     font-family: 'Oswald', sans-serif;
-/*    -webkit-text-stroke: 0.2vh black;*/
     text-align: center;
 
     font-size: 45px;
@@ -47,27 +44,21 @@ body {
     background-color: #524F52;
     border: 0.6vh solid #C0A610;
 }
-
-#page_left {
-    float: left;
-    width: 25vw;
-    height: 85vh;
-}
-#page_right {
-    float: left;
-    margin-left: 5vw;
-    width: 70vw;
+#page {
+    width: 100vw;
     height: 100vh;
 }
 #tools_search {
+    float: left;
     height: 100%;
-    width: 100%;
+    width: 25%;
     min-width: 350px;
 }
 #rooms {
     float: left;
     height: 100%;
-    width: 60%;
+    width: 40%;
+    margin-left: 5%;
     min-width: 550px;
 }
 #info_room {
@@ -75,7 +66,7 @@ body {
     margin-left: 5%;
     background-color: rgba(136, 128, 136, 1);
     height: 100%;
-    width: 35%;
+    width: 25%;
     min-width: 350px;
 
     display: flex;

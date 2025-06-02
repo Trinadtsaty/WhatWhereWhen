@@ -6,6 +6,10 @@ from django.contrib.auth.decorators import login_required
 # def questions(request):
 #     return render(request, 'main/questions.html')
 
-@login_required()
+
 def Game_Room(request):
     return render(request, "main/main_game.html")
+
+@login_required()
+def Create_Room(request):
+    return render(request, "main/create_room.html")
