@@ -18,11 +18,11 @@
                     <img {% if close %}     style="display: none;" {% endif %} id="room_close_false" alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"   data-type="close">
                     <img {% if not close %} style="display: none;" {% endif %} id="room_close_true"  alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"    data-type="close">
                 </div>
-                <div class="block text" id="room_password_box"><input id="room_password" name="room_password" type="password" class="input_text" placeholder="Пароль комнаты" value="{{ password|default:'' }}"></div>
+                <div {% if not close %} style="display: none;" {% endif %} class="block text" id="room_password_box"><input id="room_password" name="room_password" type="password" class="input_text" placeholder="Пароль комнаты" value="{{ password|default:'' }}"></div>
 
-                <div class="block search">Выбрать коллекцию<div id="select_selections" class="button">Выбрать</div></div>
-                <div class="block search">Режим игры<div id="select_mode" class="button">Выбрать</div></div>
-                <input type="text" style="display: none;" id="select_selections_send" name="select_selections_send" value="{{ selections|default:'' }}">
+                <div class="block search">Выбрать коллекцию<div id="select_selections" class="button panel">Выбрать</div></div>
+                <div class="block search">Режим игры<div id="select_mode" class="button panel">Выбрать</div></div>
+                <input type="text" style="display: none;" id="select_selections_send" name="select_selections_send" value="{{ selection|default:'' }}">
                 <input type="text" style="display: none;" id="select_game_mode_send" name="select_game_mode_send" value="{{ game_mode|default:'classic' }}">
                 <input type="text" style="display: none;" id="select_role_send" name="select_role_send" value="{{ select_role|default:'leader' }}">
 
@@ -33,12 +33,15 @@
                 <input id="room_random_order"   style="display: none;" name="room_random_order"  type="checkbox" class="checkbox" {% if random_order %}checked{% endif %}>
             </div>
             <div id="page_center" class="page_element">
-                <div class="block search">Роль хоста<div id="role_choose" class="button">Выбрать</div></div>
-                <div class="block search">Дополнительно<div id="additional_settings" class="button">Открыть</div></div>
-                <div class="block">Количество игроков</div>
-                <div class="block return"><input type="range" id="room_people_limit" name="room_people_limit" min="3" max="8" step="1" value="{{ people_limit|default:'5' }}"><div id="slider_return" class="return slider">{{ people_limit|default:'5' }}</div></div>
+                <div class="block search">Роль хоста<div id="role_choose" class="button panel">Выбрать</div></div>
+                <div class="block search">Дополнительно<div id="additional_settings" class="button panel">Открыть</div></div>
+                <div class="block" id="number_of_players">Количество игроков</div>
+                <div class="block return">
+                    <input type="range" id="room_people_limit" name="room_people_limit" min="3" max="8" step="1" value="{{ people_limit|default:'5' }}">
+                    <div id="slider_return" class="return slider">{{ people_limit|default:'5' }}</div>
+                </div>
                 <h2 id="name"><b class="W">W</b>hat<b class="W">W</b>here<b class="W">W</b>hen</h2>
-                <input type="submit" placeholder="Отправить" class="button" id="button_submit">
+                <input type="submit" value="Создать" class="button" id="button_submit">
             </div>
             <div id="page_right" class="page_element">
                 <textarea style="resize: none;" name="room_description" id="room_description" rows="20" cols="30" placeholder="Описание сессии" class="input_text text">{{ description|default:'' }}</textarea>

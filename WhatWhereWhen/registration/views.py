@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import Titles, Users_and_Titles, Users
 from questions.models import Question
+from main.models import game_rooms
 from django.contrib.auth.decorators import login_required
 from .decorators import not_authenticated
 
@@ -24,7 +25,7 @@ class Users_mainAPI(generics.ListAPIView):
         #Кол-во созданных вопросов
         questions_count = Question.objects.filter(publication=True).count()
         # Кол-во комнат
-        room_online = "pass"
+        room_online = game_rooms.objects.all().count()
 
         # Формируем ответ с только необходимыми данными
         response_data = {

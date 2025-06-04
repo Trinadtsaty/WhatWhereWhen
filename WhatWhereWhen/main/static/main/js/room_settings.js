@@ -13,6 +13,7 @@ img_check.forEach(item => {
 
             if (item.dataset.type === "close") {
                 password.style.display = "none";
+                document.getElementById('room_password').value = '';
                 document.getElementById("room_close").checked = false;
             } else if (item.dataset.type === "early_answer") {
                 document.getElementById("room_time_early_answer_box").style.display = "none";

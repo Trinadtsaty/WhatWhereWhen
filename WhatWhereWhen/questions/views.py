@@ -223,10 +223,8 @@ def question_add(request):
             try:
                 question_name_line(question_name)
             except ValidationError as e:
-                error = str(e).strip("string=")
+                error = str(e).strip()
 
-                print(error
-                      )
                 return render(request, "questions/question_add.html", {
                     'error': error,
                     'submit': "Отправить",

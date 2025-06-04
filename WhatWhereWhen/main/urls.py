@@ -8,4 +8,5 @@ handler404 = custom_404_view
 urlpatterns = [
     path('', views.Game_Room, name="Game_Room"),
     path('create', views.Create_Room, name="Create_Room"),
+    path('<int:room_number>/', views.Room, name="Room"),
 ]

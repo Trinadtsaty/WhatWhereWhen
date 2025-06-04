@@ -1,8 +1,12 @@
+from dbm import error
 from idlelib.rpc import request_queue
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.html import escape
+from django.core.exceptions import ValidationError
+from .models import *
+from questions.models import *
 
 # def index(request):
 #     return render(request, 'main/index.html')
@@ -18,9 +22,11 @@ def True_False(element):
 def Game_Room(request):
     return render(request, "main/main_game.html")
 
+
 @login_required()
 def Create_Room(request):
     if request.method == 'POST':
+        user_creater = request.user
         name = escape(request.POST.get('room_name'))
         close = escape(request.POST.get('room_close'))
         password = escape(request.POST.get('room_password'))
@@ -36,6 +42,7 @@ def Create_Room(request):
         reading_speed = escape(request.POST.get('room_reading_speed'))
         random_order = escape(request.POST.get('room_random_order'))
         break_questions = escape(request.POST.get('room_break_questions'))
+        description = escape(request.POST.get('room_description'))
 
         output = {
             "name": name,
@@ -53,11 +60,172 @@ def Create_Room(request):
             "reading_speed": reading_speed,
             "random_order": True_False(random_order),
             "break_questions": break_questions,
+            "description" : description,
         }
 
-        print(output)
-        return  render(request, "main/create_room.html", output)
-    # error="123234234"
+        try:
+            if name:
+                if len(name) < 3 or len(name) > 20:
+                    raise ValidationError('Пожалуйста введите имя комнаты длинной от 3 до 20 символов')
+                if game_rooms.objects.filter(room_name=name).exists():
+                    raise ValidationError('Комната с таким названием уже существует, пожалуйста смените имя')
+            else:
+                raise ValidationError('Заполните поле "Название сессии"')
+            if output["close"]:
+                if password:
+                    if len(password) > 20:
+                        raise ValidationError('Пожалуйста придумайте пароль длинной до 20 символов')
+                else:
+                    raise ValidationError('Пожалуйста введите пароль или сделайте сессию открытой')
+            if output["selection"]:
+                if not Selections.objects.filter(ID=output["selection"]).exists():
+                    raise ValidationError('Ваша коллекция не существует, пожалуйста укажите верное значение')
+                selection = Selections.objects.get(ID=output["selection"])
+                if selection.private and selection.selection_author != user_creater:
+                    raise ValidationError('Данная коллекция является закрытой!!!')
+                if not selection.publication:
+                    raise ValidationError('Данная коллекция была удалена')
+            else:
+                raise ValidationError('Выберите коллекцию вопросов')
+            if output["mode"]:
+                if not (output["mode"] == 'classic' or output["mode"] == 'sport' or output["mode"] == 'collective_answer'):
+                    raise ValidationError('Указан неверный игровой режим')
+            else:
+                raise ValidationError('Выберите режим игры')
+            if output["role"]:
+                if not (output["role"] == 'leader' or output["role"] == 'captain' or output["role"] == 'player'):
+                    raise ValidationError('Указан неверная роль хоста')
+            else:
+                raise ValidationError('Выберите роль хоста')
+            if output["people_limit"]:
+                try:
+                    int(output["people_limit"])
+                except:
+                    raise ValidationError('Укажите числом кол-во игроков')
+                if int(output["people_limit"]) < 3 or int(output["people_limit"]) > 8:
+                    raise ValidationError('Укажите число игроков от 3 до 8 человек')
+            else:
+                raise ValidationError('Укажите кол-во игроков')
+            if output["early_answer"]:
+                if output["time_early_answer"]:
+                    try:
+                        int(output["time_early_answer"])
+                    except:
+                        raise ValidationError('Время досрочного ответа должно быть числом')
+                    if int(output["time_early_answer"]) < 5 or int(output["time_early_answer"]) > 600:
+                        raise ValidationError('Время досрочного ответа должно быть от 5 до 600 секунд')
+                else:
+                    raise ValidationError('Укажите время на досрочный ответ')
+            if output["time_question"]:
+                try:
+                    int(output["time_question"])
+                except:
+                    raise ValidationError('Время на вопрос должно быть числом')
+                if int(output["time_question"]) < 10 or int(output["time_question"]) > 600:
+                    raise ValidationError('Время на вопрос должно быть от 10 до 600 секунд')
+            else:
+                raise ValidationError('Укажите время на вопрос')
+            if output["reading_speed"]:
+                try:
+                    int(output["reading_speed"])
+                except:
+                    raise ValidationError('Скорость чтения должна быть числом')
+                if int(output["reading_speed"]) < 1 or int(output["reading_speed"]) > 60:
+                    raise ValidationError('Скорость чтения должна быть от 1 до 60 символов в секунду')
+            else:
+                raise ValidationError('УКажите скорость чтения')
+            if output["break_questions"]:
+                try:
+                    int(output["break_questions"])
+                except:
+                    raise ValidationError('Перерыв между вопросами должен быть числом')
+                if int(output["break_questions"]) < 0 or int(output["break_questions"]) > 600:
+                    raise ValidationError('Перерыв между вопросами должен быть от 0 до 600 секунд')
+            else:
+                raise ValidationError('Укажите время перерыва между вопросами')
+            if output["description"]:
+                if len(output["description"]) > 500:
+                    output["description"] = output["description"][:497]+'...'
+                    raise ValidationError('Описание комнаты должно быть до 500 символов')
+        except ValidationError as e:
+            output["error"] = str(e)[2:-2]
+            return render(request, "main/create_room.html", output)
+
+        if output["mode"] == 'classic':
+            game_mode = 0
+        elif output["mode"] == 'sport':
+            game_mode = 1
+        else:
+            game_mode = 2
+
+        if output["role"] == 'leader':
+            Room, created = game_rooms.objects.get_or_create(
+                room_name=output["name"],
+                clos_room=output["close"],
+                password_room=output["password"],
+                selections=Selections.objects.get(ID=output["selection"]),
+                game_mode=game_mode,
+                host=user_creater,
+                leader=user_creater,
+                room_limit=output["people_limit"],
+                room_description=output["description"],
+                early_answer=output["early_answer"],
+                time_answer=output["time_early_answer"],
+                clear_chat=output["chat_clean"],
+                question_time=output["time_question"],
+                show_question=output["show_question"],
+                reading_speed=output["reading_speed"],
+                random_order=output["random_order"],
+                break_between_questions=output["break_questions"],
+            )
+        elif output["role"] == 'captain':
+            Room, created = game_rooms.objects.get_or_create(
+                room_name=output["name"],
+                clos_room=output["close"],
+                password_room=output["password"],
+                selections=Selections.objects.get(ID=output["selection"]),
+                game_mode=game_mode,
+                host=user_creater,
+                captain=user_creater,
+                room_limit=output["people_limit"],
+                room_description=output["description"],
+                early_answer=output["early_answer"],
+                time_answer=output["time_early_answer"],
+                clear_chat=output["chat_clean"],
+                question_time=output["time_question"],
+                show_question=output["show_question"],
+                reading_speed=output["reading_speed"],
+                random_order=output["random_order"],
+                break_between_questions=output["break_questions"],
+            )
+        else:
+            Room, created = game_rooms.objects.get_or_create(
+                room_name=output["name"],
+                clos_room=output["close"],
+                password_room=output["password"],
+                selections=Selections.objects.get(ID=output["selection"]),
+                game_mode=game_mode,
+                host=user_creater,
+                room_limit=output["people_limit"],
+                room_description=output["description"],
+                early_answer=output["early_answer"],
+                time_answer=output["time_early_answer"],
+                clear_chat=output["chat_clean"],
+                question_time=output["time_question"],
+                show_question=output["show_question"],
+                reading_speed=output["reading_speed"],
+                random_order=output["random_order"],
+                break_between_questions=output["break_questions"],
+            )
+
+        if created:
+            Room.save()
+            return redirect('Room', room_number=Room.ID)
+
+        else:
+            output["error"] = "Комната уже существует"
+            return render(request, "main/create_room.html", output)
+
 
     return render(request, "main/create_room.html", {
         "close": False,
@@ -66,3 +234,9 @@ def Create_Room(request):
         "show_question": True,
         "random_order": True,
     })
+
+
+@login_required()
+def Room(request, room_number):
+    question = get_object_or_404(game_rooms, ID=room_number)
+    return render(request, "main/pattern.html")
