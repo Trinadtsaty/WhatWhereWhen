@@ -1,6 +1,6 @@
 from dbm import error
 from idlelib.rpc import request_queue
-
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.html import escape
@@ -20,13 +20,21 @@ def True_False(element):
         return False
 
 def Game_Room(request):
-    return render(request, "main/main_game.html")
+    rooms = game_rooms.objects.all()
+    return render(request, "main/main_game.html",{"rooms":rooms})
 
 
 @login_required()
 def Create_Room(request):
+    user_creator = request.user
+    query = Q(publication=True)
+    additional_conditions = Q()
+    additional_conditions |= Q(private=False) & ~Q(selection_author=user_creator)
+    additional_conditions |= Q(selection_author=user_creator)
+    query &= additional_conditions
+    Selection_on_page = Selections.objects.filter(query)
+
     if request.method == 'POST':
-        user_creater = request.user
         name = escape(request.POST.get('room_name'))
         close = escape(request.POST.get('room_close'))
         password = escape(request.POST.get('room_password'))
@@ -62,6 +70,7 @@ def Create_Room(request):
             "break_questions": break_questions,
             "description" : description,
         }
+        output["Selections_on_page"] = Selection_on_page
 
         try:
             if name:
@@ -81,7 +90,7 @@ def Create_Room(request):
                 if not Selections.objects.filter(ID=output["selection"]).exists():
                     raise ValidationError('Ваша коллекция не существует, пожалуйста укажите верное значение')
                 selection = Selections.objects.get(ID=output["selection"])
-                if selection.private and selection.selection_author != user_creater:
+                if selection.private and selection.selection_author != user_creator:
                     raise ValidationError('Данная коллекция является закрытой!!!')
                 if not selection.publication:
                     raise ValidationError('Данная коллекция была удалена')
@@ -165,8 +174,8 @@ def Create_Room(request):
                 password_room=output["password"],
                 selections=Selections.objects.get(ID=output["selection"]),
                 game_mode=game_mode,
-                host=user_creater,
-                leader=user_creater,
+                host=user_creator,
+                leader=user_creator,
                 room_limit=output["people_limit"],
                 room_description=output["description"],
                 early_answer=output["early_answer"],
@@ -185,8 +194,8 @@ def Create_Room(request):
                 password_room=output["password"],
                 selections=Selections.objects.get(ID=output["selection"]),
                 game_mode=game_mode,
-                host=user_creater,
-                captain=user_creater,
+                host=user_creator,
+                captain=user_creator,
                 room_limit=output["people_limit"],
                 room_description=output["description"],
                 early_answer=output["early_answer"],
@@ -205,7 +214,7 @@ def Create_Room(request):
                 password_room=output["password"],
                 selections=Selections.objects.get(ID=output["selection"]),
                 game_mode=game_mode,
-                host=user_creater,
+                host=user_creator,
                 room_limit=output["people_limit"],
                 room_description=output["description"],
                 early_answer=output["early_answer"],
@@ -233,6 +242,7 @@ def Create_Room(request):
         "chat_clean": True,
         "show_question": True,
         "random_order": True,
+        'Selections_on_page':Selection_on_page,
     })
 
 
@@ -240,3 +250,11 @@ def Create_Room(request):
 def Room(request, room_number):
     question = get_object_or_404(game_rooms, ID=room_number)
     return render(request, "main/pattern.html")
+
+@login_required()
+def Password_Room(request):
+    ref_value = request.GET.get('pas')
+    room = get_object_or_404(game_rooms, ID=ref_value)
+    # if room
+    # return redirect('Room', room_number=Room.ID)
+    return render(request, "main/password_room.html")

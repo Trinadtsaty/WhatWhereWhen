@@ -85,15 +85,11 @@
         <input id="select_Selections_name" class="input_select" type="text" placeholder="Введите имя коллекции" onkeyup="filterItemsSelection()">
         <div id="scroll_selection" class="scroll_box">
             <ul class="spis" id="spis_selections">
-                <li class="li_element" data-value="1">Коллекция 1</li>
-                <li class="li_element" data-value="2">Коллекция 2</li>
-                <li class="li_element" data-value="3">Коллекция 3</li>
-                <li class="li_element" data-value="4">Коллекция 4</li>
-                <li class="li_element" data-value="5">Коллекция 5</li>
-                <li class="li_element" data-value="6">Коллекция 6</li>
-                <li class="li_element" data-value="7">Коллекция 7</li>
-                <li class="li_element" data-value="8">Коллекция 8</li>
-                <li class="li_element" data-value="9">Коллекция 9</li>
+                {% for selection in Selections_on_page %}
+                    <li class="li_element" data-value="{{ selection.ID }}">{{ selection.selection_name }}</li>
+                {% empty %}
+                    <li class="li_element">Коллекции отсутствуют</li>
+                {% endfor %}
             </ul>
         </div>
     </div>

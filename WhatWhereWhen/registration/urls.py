@@ -11,6 +11,7 @@ urlpatterns = [
     path('change/', views.change_profile, name="Change"),
     path('hint/', views.hint, name="Hint"),
     path('author/', views.author, name="Author"),
+
 ]
 
 

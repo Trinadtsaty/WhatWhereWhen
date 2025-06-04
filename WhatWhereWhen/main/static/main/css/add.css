@@ -361,10 +361,8 @@ body {
 .input_text.text {
     padding: 0;
     margin: 0;
-    height: 50%:
+    height: 50%;
 }
-
-
 #room_people_limit {
     -webkit-appearance: none; /* Убираем стандартный стиль для WebKit-браузеров */
     width: 60%; /* Ширина ползунка */
@@ -399,4 +397,23 @@ h2 {
 }
 b {
     font-size: 100px;
+}
+
+#button_submit {
+    height: 150px;
+    width: 70%;
+    margin-left: 15%;
+
+    font-size: 70px;
+    border-radius: 30px;
+    box-shadow: -10px -29px 4px 0 rgba(0, 0, 0, 0.25);
+}
+#accept_additional_settings {
+    margin-top: 25px;
+    width: 70%;
+    margin-left: 15%;
+    font-size: 50px;
+/*    box-shadow: -10px -29px 4px 0 rgba(0, 0, 0, 0.25);*/
+    border-radius: 30px;
+    text-align: center;
 }

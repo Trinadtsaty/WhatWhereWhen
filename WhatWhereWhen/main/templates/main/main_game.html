@@ -10,7 +10,7 @@
     <div id="page">
         <div id="tools_search">
             <div id="button_create" class="button"><a style="text-decoration: none; color: inherit;" href="{% url 'Create_Room' %}">Создать</a></div>
-            <div id="input_box"><input id="input_search" class="input_select" placeholder="Название комнаты"></div>
+            <div id="input_box"><input id="input_search" class="input_select" placeholder="Название комнаты" onkeyup="filterItemsSesion()"></div>
             <div id="select_box">
                 <div class="line">Ведущий<input id="leader" type="checkbox" class="check"></div>
                 <div class="line">Пароль<input id="password" type="checkbox" class="check"></div>
@@ -21,25 +21,38 @@
         <div id="rooms">
             <div id="room_scroll_box">
                 <ul id="list_rooms">
-                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
-                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
-                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
-                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
-                    <li class="room">Название комнаты<img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}"></li>
-
+                    {% for room in rooms %}
+                    <li class="room"
+                        data-name="{{ room.room_name }}"
+                        data-description="{{ room.room_description }}"
+                        data-selection="{{ room.selections.selection_name }}"
+                        {% if room.leader %} data-leader="True" {% else %} data-leader="False" {% endif %}
+                        data-password="{{ room.clos_room }}"
+                        data-room="{{ room.ID }}"
+                        data-time="{{room.question_time}}"
+                        data-mode = "{{room.game_mode}}">
+                        {{ room.room_name }}
+                        {% if room.clos_room %}
+                        <img class="img_lock" alt="close" src="{% static 'main/img/lock.png' %}">
+                        {% endif %}
+                    </li>
+                    {% empty %}
+                    <li class="room">Нет созданных комнат</li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
-        <div id="info_room">
-            <div id="session_name_box" class="info_text_box">Название:</div>
+        <div id="info_room" style="display:none;">
+            <div id="session_name_box" class="info_text_box">Название: </div>
             <div id="count_players" class="info_text_box">Количество игроков: </div>
             <div id="room_hours" class="info_text_box">Время на вопрос: </div>
             <div id="room_mode" class="info_text_box">Режим: </div>
             <div id="room_pack_name" class="info_text_box">Название пака: </div>
             <div id="room_description" class="info_text_box">Описание комнаты</div>
-            <div class="button" id="button_connect">Присоединиться</div>
+            <div class="button" id="button_connect"><a id="link_room" href="{% url 'Room_passwoed' %}?pas=3" style="text-decoration: none; color: inherit;">Присоединиться</a></div>
         </div>
     </div>
-    <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}">Меню</a></div>
+    <div id="main_page" class="main_button"><a style="text-decoration: none; color: inherit;" href="{% url 'Menu' %}?pas=123">Меню</a></div>
+    <script src="{% static 'main/js/room_search.js' %}"></script>
 </body>
 </html>
