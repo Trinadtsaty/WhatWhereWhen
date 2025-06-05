@@ -29,6 +29,7 @@ class game_rooms(models.Model):
             MaxValueValidator(8)
         ]
     )
+    people_on_page = models.JSONField(default=dict, null=True, blank=True)
     room_description = models.TextField(null=True, blank=True)
     early_answer = models.BooleanField(default=True)
     time_answer = models.IntegerField(

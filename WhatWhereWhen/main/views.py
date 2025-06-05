@@ -22,7 +22,13 @@ def True_False(element):
         return False
 
 def Game_Room(request):
+    error = request.GET.get('err')
     rooms = game_rooms.objects.all()
+    if error:
+        return render(request, "main/main_game.html", {
+            "rooms": rooms,
+            "error": error,
+        })
     return render(request, "main/main_game.html",{"rooms":rooms})
 
 
@@ -179,6 +185,7 @@ def Create_Room(request):
                 host=user_creator,
                 leader=user_creator,
                 room_limit=output["people_limit"],
+                people_on_page={"users":[user_creator.ID]},
                 room_description=output["description"],
                 early_answer=output["early_answer"],
                 time_answer=output["time_early_answer"],
@@ -199,6 +206,7 @@ def Create_Room(request):
                 host=user_creator,
                 captain=user_creator,
                 room_limit=output["people_limit"],
+                people_on_page={"users":[user_creator.ID]},
                 room_description=output["description"],
                 early_answer=output["early_answer"],
                 time_answer=output["time_early_answer"],
@@ -218,6 +226,7 @@ def Create_Room(request):
                 game_mode=game_mode,
                 host=user_creator,
                 room_limit=output["people_limit"],
+                people_on_page={"users":[user_creator.ID]},
                 room_description=output["description"],
                 early_answer=output["early_answer"],
                 time_answer=output["time_early_answer"],
@@ -231,6 +240,7 @@ def Create_Room(request):
 
         if created:
             Room.save()
+            request.session[f'access_{Room.ID}'] = True
             return redirect('Room', room_number=Room.ID)
 
         else:
@@ -250,11 +260,26 @@ def Create_Room(request):
 
 @login_required()
 def Room(request, room_number):
-    question = get_object_or_404(game_rooms, ID=room_number)
-    if question.clos_room:
+    room = get_object_or_404(game_rooms, ID=room_number)
+    if room.clos_room:
         if not request.session.get(f'access_{room_number}'):
             return redirect(reverse('Room_passwoed') + f'?pas={room_number}')
-    return render(request, "main/room.html", {"room_number":room_number})
+    user_on_page = request.user
+    array = room.people_on_page['users']
+
+    if len(array) < room.room_limit and user_on_page.ID not in array:
+        room.people_on_page['users'].append(user_on_page.ID)
+        room.save()
+    elif len(array) <= room.room_limit and user_on_page.ID in array:
+        pass
+    else:
+        return redirect(reverse('Game_Room') + f'?err=Комната заполнена')
+
+
+    return render(request, "main/room.html", {
+        "room_number" : room_number,
+        "room" : room,
+    })
 
 @login_required()
 def Password_Room(request):
@@ -271,7 +296,14 @@ def Password_Room(request):
             })
     return render(request, "main/password_room.html")
 
+@login_required()
 def logout_secret(request, room_number):
-    if f'access_{room_number}' in request.session:
-        del request.session[f'access_{room_number}']
-    return redirect(reverse('Room_passwoed') + f'?pas={room_number}')
+    room = get_object_or_404(game_rooms, ID=room_number)
+    if room.clos_room:
+        if f'access_{room_number}' in request.session:
+            del request.session[f'access_{room_number}']
+    room.people_on_page["users"].remove(request.user.ID)
+    room.save()
+    # return redirect(reverse('Room_passwoed') + f'?pas={room_number}')
+    return redirect('Game_Room')
+

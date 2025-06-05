@@ -4,8 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Комната</title>
+    <link rel="stylesheet" href="{% static 'main/css/room.css' %}">
 </head>
 <body>
-    <div><a href="{% url 'Logout_Secret' room_number=room_number  %}">Выйти со страници</a></div>
+
+    <div id="page">
+        <div id="info_page" class="page_element">
+            <div id="first_half">
+
+            </div>
+            <div id="second_half">
+
+            </div>
+            <div id="log_out_info" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Logout_Secret' room_number=room_number  %}">Выйти со страници</a></div>
+<!--            {% if room.clos_room %}-->
+<!--            <div id="log_out_info" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Logout_Secret' room_number=room_number  %}">Выйти со страници</a></div>-->
+<!--            {% else %}-->
+<!--            <div id="log_out_info" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Game_Room' %}">Выйти со страници</a></div>-->
+<!--            {% endif %}-->
+        </div>
+        <div id="players_page" class="page_element">
+
+        </div>
+        <div id="button_page" class="page_element">
+
+        </div>
+    </div>
+    <div id="chat_page">
+
+    </div>
+
 </body>
 </html>

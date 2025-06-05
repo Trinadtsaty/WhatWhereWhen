@@ -15,40 +15,6 @@ body {
     background-position: center; /* Центрирует изображение */
     background-repeat: no-repeat; /* Отключает повторение изображения */
 }
-#main_page {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 1000;
-}
-
-.reg_log_button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background-color: #C0A610;
-    border: 2px solid #524F52;
-    border-radius: 20px;
-    color: white;
-    font-family: 'Oswald', sans-serif;
-    -webkit-text-stroke: 0.2vh black;
-    text-align: center;
-
-    font-size: 45px;
-    height: 75px;
-    width: 300px;
-
-
-    cursor: pointer;
-    transition: .5s;
-    box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
-}
-
-.reg_log_button:hover {
-    background-color: #524F52;
-    border: 0.6vh solid #C0A610;
-}
 .container {
     display: flex;
     justify-content: center;
@@ -121,4 +87,57 @@ body {
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000; /* Поверх всех элементов */
+}
+#page {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+.page_element {
+    flex: 0 0 auto;
+    width: 30%;
+    height: 100%;
+}
+#players_page, #button_page {
+    margin-left: 5%;
+}
+#info_page {
+    background-color: green;
+    min-width: 350px;
+}
+#players_page {
+    min-width: 530px;
+    background-color: grey;
+}
+#button_page {
+    min-width: 530px;
+    background-color: red;
+}
+.log_out {
+    background-color: #C0A610;
+    border: 2px solid #524F52;
+    text-align: center;
+    color: white;
+    border-radius: 15px;
+    font-size: 40px;
+    height: 75px;
+    width: 300px;
+    box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.log_out:hover {
+    background-color: #524F52;
+    border: 2px solid #C0A610;
+}
+#log_out {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+#log_out_info {
+    width: 70%;
+    margin-left: 15%;
 }
