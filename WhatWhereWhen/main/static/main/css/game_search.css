@@ -45,24 +45,30 @@ body {
     border: 0.6vh solid #C0A610;
 }
 #page {
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: auto;
     width: 100vw;
     height: 100vh;
 }
 #tools_search {
-    float: left;
+    flex: 0 0 auto;
+/*    float: left;*/
     height: 100%;
     width: 25%;
     min-width: 350px;
 }
 #rooms {
-    float: left;
+    flex: 0 0 auto;
+/*    float: left;*/
     height: 100%;
     width: 40%;
     margin-left: 5%;
     min-width: 550px;
 }
 #info_room {
-    float: left;
+/*    float: left;*/
+    flex: 0 0 auto;
     margin-left: 5%;
     background-color: rgba(136, 128, 136, 1);
     height: 100%;
@@ -160,6 +166,7 @@ body {
     font-size: 30px;
     background-color: rgba(82, 79, 82, 1);
     cursor: pointer;
+/*    width: 95%;*/
 }
 .img_lock {
     float: right;

@@ -53,10 +53,62 @@ rooms.forEach(item => {
         document.getElementById("room_pack_name").textContent = "Название пака: " + formatQuestionText19(item.dataset.selection);
         document.getElementById("room_description").textContent = check_description(item.dataset.description);
         if (item.dataset.password === "False") {
-            ducument.getElementById("link_room").href=`/game/${item.dataset.room}/`
+//            console.log("False")
+            document.getElementById("link_room").href=`/game/${item.dataset.room}/`
         } else {
-//            ducument.getElementById("link_room").href=`/game/${item.dataset.room}/`
+//            console.log("True")
+            document.getElementById("link_room").href=`/game/password/?pas=${item.dataset.room}`
         };
 
     });
+});
+
+const leader_checkbox = document.getElementById('leader')
+leader_checkbox.addEventListener('change', () => {
+    const checkbox_tag = leader_checkbox.checked;
+    const ul = document.getElementById('list_rooms');
+    const li = ul.getElementsByTagName('li');
+
+    if (checkbox_tag) {
+        for (let i = 0; i < li.length; i++) {
+            const item = li[i].dataset.leader;
+            if (item === "True") {
+                li[i].style.display = "none";
+            } else {
+                li[i].style.display = "";
+            };
+        };
+    } else {
+        for (let i = 0; i < li.length; i++) {
+            li[i].style.display = "";
+        };
+    };
+});
+
+const password_checkbox = document.getElementById('password')
+password_checkbox.addEventListener('change', () => {
+    const checkbox_tag = password_checkbox.checked;
+    const ul = document.getElementById('list_rooms');
+    const li = ul.getElementsByTagName('li');
+
+    if (checkbox_tag) {
+        for (let i = 0; i < li.length; i++) {
+            const item = li[i].dataset.password;
+            if (item === "True") {
+                li[i].style.display = "none";
+            } else {
+                li[i].style.display = "";
+            };
+        };
+    } else {
+        for (let i = 0; i < li.length; i++) {
+            li[i].style.display = "";
+        };
+    };
+});
+
+
+
+document.getElementById("refresh_button").addEventListener("click", function() {
+    location.reload(true); // Перезагрузить страницу с обновлением кэша
 });
