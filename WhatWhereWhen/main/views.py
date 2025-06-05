@@ -7,6 +7,8 @@ from django.utils.html import escape
 from django.core.exceptions import ValidationError
 from .models import *
 from questions.models import *
+from django.urls import reverse
+
 
 # def index(request):
 #     return render(request, 'main/index.html')
@@ -249,12 +251,27 @@ def Create_Room(request):
 @login_required()
 def Room(request, room_number):
     question = get_object_or_404(game_rooms, ID=room_number)
-    return render(request, "main/pattern.html")
+    if question.clos_room:
+        if not request.session.get(f'access_{room_number}'):
+            return redirect(reverse('Room_passwoed') + f'?pas={room_number}')
+    return render(request, "main/room.html", {"room_number":room_number})
 
 @login_required()
 def Password_Room(request):
     ref_value = request.GET.get('pas')
     room = get_object_or_404(game_rooms, ID=ref_value)
-    # if room
-    # return redirect('Room', room_number=Room.ID)
+    if request.method == 'POST':
+        password = escape(request.POST.get('room_password'))
+        if room.password_room == password:
+            request.session[f'access_{ref_value}'] = True
+            return redirect('Room', room_number=ref_value)
+        else:
+            return render(request, "main/password_room.html", {
+                "error": "Неверный пароль",
+            })
     return render(request, "main/password_room.html")
+
+def logout_secret(request, room_number):
+    if f'access_{room_number}' in request.session:
+        del request.session[f'access_{room_number}']
+    return redirect(reverse('Room_passwoed') + f'?pas={room_number}')
