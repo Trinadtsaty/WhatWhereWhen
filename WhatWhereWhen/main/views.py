@@ -308,8 +308,8 @@ def logout_secret(request, room_number):
     if room.clos_room:
         if f'access_{room_number}' in request.session:
             del request.session[f'access_{room_number}']
-    room.people_on_page["users"].remove(request.user.ID)
-    room.save()
+    # room.people_on_page["users"].remove(request.user.ID)
+    # room.save()
     # return redirect(reverse('Room_passwoed') + f'?pas={room_number}')
     return redirect('Game_Room')
 

@@ -141,3 +141,17 @@ body {
     width: 70%;
     margin-left: 15%;
 }
+.button {
+    background-color: #C0A610;
+    border: 2px solid #524F52;
+    cursor: pointer;
+    margin-left: 15%;
+    width: 70%;
+}
+.button:hover {
+    background-color: #524F52;
+    border: 2px solid #C0A610;
+}
+#start {
+    margin-top: 100px;
+}

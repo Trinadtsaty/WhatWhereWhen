@@ -83,7 +83,7 @@ User = get_user_model()
 
 class ChatMessage(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    room = models.ForeignKey(game_rooms, on_delete=models.PROTECT, related_name='Room_Chat')
+    room = models.ForeignKey(game_rooms, on_delete=models.CASCADE, related_name='Room_Chat')
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Пользователь, отправивший сообщение
     message = models.TextField()                             # Текст сообщения
     timestamp = models.DateTimeField(auto_now_add=True)       # Время создания сообщения
