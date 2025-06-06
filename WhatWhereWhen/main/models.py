@@ -75,3 +75,23 @@ class game_rooms(models.Model):
     class Meta:
         verbose_name = 'Игровая комната'
         verbose_name_plural = 'Игровые комнаты'
+
+from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class ChatMessage(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    room = models.ForeignKey(game_rooms, on_delete=models.PROTECT, related_name='Room_Chat')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Пользователь, отправивший сообщение
+    message = models.TextField()                             # Текст сообщения
+    timestamp = models.DateTimeField(auto_now_add=True)       # Время создания сообщения
+
+    class Meta:
+        ordering = ['timestamp']  # Сортировка по времени
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
+
+    def __str__(self):
+        return f'{self.user.login}: {self.message[:20]}'

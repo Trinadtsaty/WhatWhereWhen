@@ -24,7 +24,13 @@
 <!--            {% endif %}-->
         </div>
         <div id="players_page" class="page_element">
-            <div id="dinamic">Текст</div>
+            <div id="chat-log">
+                {% for message in messages %}
+                <div><strong>{{ message.user.login }}:</strong> {{ message.message }}</div>
+                {% endfor %}
+            </div>
+            <input id="chat-message-input" type="text" size="100"/>
+            <input id="chat-message-submit" type="button" value="Send"/>
         </div>
         <div id="button_page" class="page_element">
 
@@ -34,5 +40,35 @@
 
     </div>
     <script src="{% static 'main/js/WebSocket.js' %}"></script>
+    <script>
+        // Подключаемся к WebSocket
+        const room_number = '{{ room_number }}';
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/chat/' + room_number + '/'
+        );
+
+        // Обработчик получения сообщений
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const chatLog = document.querySelector('#chat-log');
+            chatLog.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;
+            chatLog.scrollTop = chatLog.scrollHeight;
+        };
+
+        // Обработчик отправки сообщений
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+
+            chatSocket.send(JSON.stringify({
+                'room_ID': room_number,
+                'message': message,
+                'user_id': '{{ request.user.ID }}'
+            }));
+
+            messageInputDom.value = '';
+        };
+    </script>
 </body>
 </html>

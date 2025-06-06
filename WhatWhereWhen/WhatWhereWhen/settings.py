@@ -157,3 +157,30 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',  # Пример разрешения
     ],
 }
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("redis://127.0.0.1:6379/0")],  # Без пароля
+#             "prefix": "asgi",
+#             "capacity": 1500,
+#             "expiry": 10,
+#             "socket_timeout": 5,
+#             "socket_connect_timeout": 5,
+#         },
+#     }
+# }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("redis://127.0.0.1:6379", {"socket_timeout": 5})],  # Новый формат
+#         },
+#     }
+# }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    }
+}

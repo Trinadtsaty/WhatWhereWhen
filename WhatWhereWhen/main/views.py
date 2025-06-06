@@ -275,11 +275,17 @@ def Room(request, room_number):
     else:
         return redirect(reverse('Game_Room') + f'?err=Комната заполнена')
 
+    # Получаем последние 50 сообщений из БД
+    messages = ChatMessage.objects.filter(room=game_rooms.objects.get(ID=room_number)).order_by('-timestamp')[:50]
 
     return render(request, "main/room.html", {
         "room_number" : room_number,
         "room" : room,
+        'messages': messages,
     })
+
+
+
 
 @login_required()
 def Password_Room(request):
