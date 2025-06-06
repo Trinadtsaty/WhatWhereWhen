@@ -34,12 +34,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     # Вызывается при получении сообщения от WebSocket.
     async def receive(self, text_data):
-        print("мы в receive")
+        # print("мы в receive")
         # Парсим JSON данные
         try:
 
             text_data_json = json.loads(text_data)
-            print(text_data_json)
+            # print(text_data_json)
             room_id = text_data_json['room_ID']
             message = text_data_json['message']
             user_id = text_data_json['user_id']
@@ -56,7 +56,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         saved_msg = await self.save_message(room, user, message)
 
         # Лог после сохранения
-        print(f"Message saved with ID: {saved_msg.ID}")
+        # print(f"Message saved with ID: {saved_msg.ID}")
 
         # Отправляем сообщение в группу комнаты
         await self.channel_layer.group_send(
@@ -93,5 +93,5 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Вспомогательный метод для сохранения сообщения в БД.
     @database_sync_to_async
     def save_message(self, room, user, message):
-        print("мы в save_message")
+        # print("мы в save_message")
         return ChatMessage.objects.create(room=room, user=user, message=message)
