@@ -11,8 +11,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Вызывается при установке WebSocket соединения.
     async def connect(self):
         # Имя комнаты из URL (можно использовать для групповых чатов)
-        self.room_name = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = f'chat_{self.room_name}'
+        self.room_id = self.scope['url_route']['kwargs']['room_id']
+        self.room_group_name = f'chat_{self.room_id}'
 
         # Присоединяемся к группе комнаты
         await self.channel_layer.group_add(
@@ -98,15 +98,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return ChatMessage.objects.create(room=room, user=user, message=message)
 
 
+
+
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 import json
 
-
-class StartConsumer(AsyncWebsocketConsumer):
+class PeopleConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = f'active_{self.room_id}'
+        self.room_group_name = f'people_{self.room_id}'
         self.user_id = self.scope['user'].ID
 
         await self.add_user_to_room()
@@ -125,6 +127,95 @@ class StartConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_name
             )
+    async def send_users_list(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'users_list',
+            'users': event['users']
+        }))
+
+    @sync_to_async
+    def remove_user_from_room(self):
+        from .models import game_rooms
+        try:
+            room = game_rooms.objects.get(ID=self.room_id)
+            if self.user_id in room.people_on_page.get("users", []):
+                room.people_on_page["users"].remove(self.user_id)
+                room.save()
+                print(len(room.people_on_page["users"]))
+
+                #Раскомитить когда завершу отладку
+                # if len(room.people_on_page["users"]) ==0:
+                #     room.delete()
+
+        except Exception as e:
+            print(f"Error removing user: {e}")
+
+    async def notify_all_about_users(self):
+        users_data = await self.get_room_users_data()
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'send_users_list',
+                'users': users_data
+            }
+        )
+
+    @sync_to_async
+    def get_room_users_data(self):
+        from registration.models import Users
+        from .models import game_rooms
+        from django.conf import settings
+
+        try:
+            room = game_rooms.objects.get(ID=self.room_id)
+            users_ids = room.people_on_page.get("users", [])
+            users = Users.objects.filter(ID__in=users_ids)
+
+            return [
+                {
+                    'id': user.ID,
+                    'login': user.login,
+                    'picture': settings.MEDIA_URL + str(
+                        user.picture) if user.picture else settings.STATIC_URL + 'default-avatar.png'
+                }
+                for user in users
+            ]
+        except Exception as e:
+            print(f"Error getting room users data: {e}")
+            return []
+
+    @sync_to_async
+    def add_user_to_room(self):
+        from .models import game_rooms
+
+        room = game_rooms.objects.get(ID=self.room_id)
+        if "users" not in room.people_on_page:
+            room.people_on_page = {"users": []}
+
+        if self.user_id not in room.people_on_page["users"]:
+            room.people_on_page["users"].append(self.user_id)
+            room.save()
+
+
+class StartConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.room_id = self.scope['url_route']['kwargs']['room_id']
+        self.user_id = self.scope['user'].ID
+        self.room_group_name = f'action_{self.room_id}'
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+        await self.accept()
+
+    # Вызывается при закрытии WebSocket соединения.
+    async def disconnect(self, close_code):
+        # Покидаем группу комнаты
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
 
     async def receive(self, text_data):
         try:
@@ -202,70 +293,6 @@ class StartConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"Ошибка отправки сообщения: {e}")
 
-    async def notify_all_about_users(self):
-        users_data = await self.get_room_users_data()
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'send_users_list',
-                'users': users_data
-            }
-        )
-
-    async def send_users_list(self, event):
-        await self.send(text_data=json.dumps({
-            'type': 'users_list',
-            'users': event['users']
-        }))
-
-    @sync_to_async
-    def get_room_users_data(self):
-        from .models import Users, game_rooms
-        from django.conf import settings
-
-        room = game_rooms.objects.get(ID=self.room_id)
-        users_ids = room.people_on_page.get("users", [])
-        users = Users.objects.filter(ID__in=users_ids)
-
-        return [
-            {
-                'id': user.ID,
-                'login': user.login,
-                'picture': settings.MEDIA_URL + str(
-                    user.picture) if user.picture else settings.STATIC_URL + 'default-avatar.png'
-            }
-            for user in users
-        ]
-
-    @sync_to_async
-    def add_user_to_room(self):
-        from .models import game_rooms
-
-        room = game_rooms.objects.get(ID=self.room_id)
-        if "users" not in room.people_on_page:
-            room.people_on_page = {"users": []}
-
-        if self.user_id not in room.people_on_page["users"]:
-            room.people_on_page["users"].append(self.user_id)
-            room.save()
-
-    @sync_to_async
-    def remove_user_from_room(self):
-        from .models import game_rooms
-
-        try:
-            room = game_rooms.objects.get(ID=self.room_id)
-            if self.user_id in room.people_on_page.get("users", []):
-                room.people_on_page["users"].remove(self.user_id)
-                room.save()
-                print(len(room.people_on_page["users"]))
-
-                #Раскомитить когда завершу отладку
-                # if len(room.people_on_page["users"]) ==0:
-                #     room.delete()
-
-        except Exception as e:
-            print(f"Error removing user: {e}")
 
     @database_sync_to_async
     def get_user(self, user_id):

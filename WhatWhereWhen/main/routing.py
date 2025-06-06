@@ -17,6 +17,5 @@ websocket_urlpatterns = [
     # Или просто числовой ID
     re_path(r'ws/chat/(?P<room_id>\d+)/$', consumers.ChatConsumer.as_asgi()),
     re_path(r'ws/active/(?P<room_id>\d+)/$', consumers.StartConsumer.as_asgi()),
-
-
+    re_path(r'ws/people/(?P<room_id>\d+)/$', consumers.PeopleConsumer.as_asgi()),
 ]
