@@ -11,13 +11,21 @@
     <div id="page">
         <div id="info_page" class="page_element">
             <div id="first_half">
-
+                <div class="Background_text">{{room.room_name}}</div>
+                <div class="Background_text">Время на вопрос: {{room.question_time}}</div>
+                <div class="Background_text">Название пака: {{room.selections.selection_name}}</div>
+                <div class="Background_text">Режим: {{ room.get_game_mode_display }}</div>
+                {% if room.room_description %}
+                <div id="room_description" class="Background_text">{{ room.room_description }}</div>
+                {% else %}
+                <div id="room_description" class="Background_text">Описание отсутствует</div>
+                {% endif %}
             </div>
             <div id="second_half">
-
+                <div id="log_out_info" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Logout_Secret' room_number=room.ID  %}">Выйти со страници</a></div>
             </div>
-            <div id="log_out_info" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Logout_Secret' room_number=room_number  %}">Выйти со страници</a></div>
-            <div id="start" class="button">Старт</div>
+
+
             <div id="pause" class="button">Пауза</div>
             <div id="play" class="button">Продолжить</div>
 <!--            {% if room.clos_room %}-->
@@ -27,25 +35,31 @@
 <!--            {% endif %}-->
         </div>
         <div id="players_page" class="page_element">
-            <div id="chat-log">
-                {% for message in messages %}
-                <div><strong>{{ message.user.login }}:</strong> {{ message.message }}</div>
-                {% endfor %}
-            </div>
             <input id="chat-message-input" type="text" size="100"/>
             <input id="chat-message-submit" type="button" value="Send"/>
         </div>
         <div id="button_page" class="page_element">
-
+            <div id="chat_page">
+                <div id="chat-log">
+                    {% for message in messages %}
+                    <div><strong>{{ message.user.login }}:</strong> {{ message.message }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="question" class="button"></div>
+            {% if user.ID = room.host %}
+            <div id="start" class="button">Старт</div>
+            <div id="cancellation" class="button">Отмена</div>
+            {% endif %}
+<!--            <div id="send_ready" class="button">готов</div>-->
+<!--            <div id="send_not_ready" class="button">Не готов</div>-->
         </div>
-    </div>
-    <div id="chat_page">
 
     </div>
     <script src="{% static 'main/js/WebSocket.js' %}"></script>
     <script>
         // Подключаемся к WebSocket
-        const room_number = '{{ room_number }}';
+        const room_number = '{{ room.ID }}';
         const chatSocket = new WebSocket(
             'ws://' + window.location.host +
             '/ws/chat/' + room_number + '/'
@@ -105,6 +119,11 @@
                 'play': "play",
             }));
         };
+        document.querySelector('#cancellation').onclick = function(e) {
+            activeSocket.send(JSON.stringify({
+                'cancellation': "cancellation",
+            }));
+        };
 
         activeSocket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
@@ -115,6 +134,17 @@
                 const data = JSON.parse(e.data);
                 console.log(data);
             };
+
+//        document.querySelector('#send_ready').onclick = function(e) {
+//            activeSocket.send(JSON.stringify({
+//                'ready': true,
+//            }));
+//        };
+//        document.querySelector('#send_not_ready').onclick = function(e) {
+//            activeSocket.send(JSON.stringify({
+//                'ready': "False",
+//            }));
+//        };
 
     </script>
 </body>

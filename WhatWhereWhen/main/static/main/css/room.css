@@ -105,9 +105,14 @@ body {
     margin-left: 5%;
 }
 #info_page {
-    background-color: green;
-    min-width: 350px;
+    background-color: rgba(136, 128, 136, 1);
+    min-width: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
 }
+
 #players_page {
     min-width: 530px;
     background-color: grey;
@@ -154,4 +159,24 @@ body {
 }
 #start {
     margin-top: 100px;
+}
+.Background_text {
+    background-color: rgba(82, 79, 82, 1);
+    font-size: 30px;
+    padding: 0;
+    margin-top: 15px;
+}
+.Background_text:first-of-type {
+    font-size: 50px;
+    text-align: center;
+}
+.first_half {
+    height: 80%;
+}
+.second_half {
+    height: 20%;
+}
+#room_description {
+    height: 500px;
+    margin-bottom: 20px;
 }

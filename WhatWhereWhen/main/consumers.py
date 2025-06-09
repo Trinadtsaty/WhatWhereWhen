@@ -103,6 +103,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 import json
 
+
+
 class PeopleConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
@@ -114,7 +116,6 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-
         await self.accept()
         await self.notify_all_about_users()
 
@@ -127,12 +128,39 @@ class PeopleConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_name
             )
+
+    # # Нововедение
+    # async def receive(self, text_data):
+    #     try:
+    #         # Получаем данные пользователя
+    #         user = await self.get_user(self.user_id)
+    #         data = json.loads(text_data)
+    #
+    #         print(f"Получены данные от {user.login}:", data, type(data))
+
+
+        # except json.JSONDecodeError:
+        #     error_msg = "Ошибка декодирования JSON"
+        #     print(error_msg)
+        #     await self.send(text_data=json.dumps({
+        #         'error': error_msg,
+        #         'received_data': text_data
+        #     }))
+        # except Exception as e:
+        #     error_msg = f"Ошибка обработки сообщения: {str(e)}"
+        #     print(error_msg)
+        #     await self.send(text_data=json.dumps({
+        #         'error': error_msg,
+        #         'details': str(e)
+        #     }))
+
     async def send_users_list(self, event):
         await self.send(text_data=json.dumps({
             'type': 'users_list',
             'users': event['users']
         }))
 
+    # Старый вариант
     @sync_to_async
     def remove_user_from_room(self):
         from .models import game_rooms
@@ -149,6 +177,7 @@ class PeopleConsumer(AsyncWebsocketConsumer):
 
         except Exception as e:
             print(f"Error removing user: {e}")
+
 
     async def notify_all_about_users(self):
         users_data = await self.get_room_users_data()
@@ -168,6 +197,8 @@ class PeopleConsumer(AsyncWebsocketConsumer):
 
         try:
             room = game_rooms.objects.get(ID=self.room_id)
+
+            # Старый вариант
             users_ids = room.people_on_page.get("users", [])
             users = Users.objects.filter(ID__in=users_ids)
 
@@ -197,8 +228,6 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             room.people_on_page["users"].append(self.user_id)
             room.save()
             # if len(room.people_on_page["users"]) == room.room_limit:
-
-
 
 
 
@@ -257,7 +286,8 @@ class StartConsumer(AsyncWebsocketConsumer):
             action_info = {
                 'start': ('start', f"Пользователь {user.login} начал игру"),
                 'pause': ('pause', f"Пользователь {user.login} поставил на паузу"),
-                'play': ('play', f"Пользователь {user.login} возобновил игру")
+                'play': ('play', f"Пользователь {user.login} возобновил игру"),
+                'cancellation': ('cancellation', f"Пользователь {user.login} отменил игру")
             }
 
             # Ищем первое совпадение действия

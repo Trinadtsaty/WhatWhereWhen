@@ -265,6 +265,7 @@ def Room(request, room_number):
         if not request.session.get(f'access_{room_number}'):
             return redirect(reverse('Room_passwoed') + f'?pas={room_number}')
     user_on_page = request.user
+
     array = room.people_on_page['users']
 
     if len(array) < room.room_limit and user_on_page.ID not in array:
@@ -274,12 +275,11 @@ def Room(request, room_number):
         pass
     else:
         return redirect(reverse('Game_Room') + f'?err=Комната заполнена')
-
     # Получаем последние 50 сообщений из БД
     messages = ChatMessage.objects.filter(room=game_rooms.objects.get(ID=room_number)).order_by('-timestamp')[:50]
 
     return render(request, "main/room.html", {
-        "room_number" : room_number,
+        "user": user_on_page,
         "room" : room,
         'messages': messages,
     })
