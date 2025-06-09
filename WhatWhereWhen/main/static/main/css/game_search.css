@@ -150,7 +150,7 @@ body {
 #room_scroll_box {
     overflow-y: auto;
     overflow-x: hidden;
-    height: 100%
+    height: 100%;
     scrollbar-width: thin;
     scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
 }

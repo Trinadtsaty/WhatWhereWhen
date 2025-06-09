@@ -50,6 +50,16 @@
             'ws://' + window.location.host +
             '/ws/chat/' + room_number + '/'
         );
+        const activeSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/active/' + room_number + '/'
+        );
+        const peopleSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/people/' + room_number + '/'
+        );
+
+
 
         // Обработчик получения сообщений
         chatSocket.onmessage = function(e) {
@@ -73,10 +83,6 @@
             messageInputDom.value = '';
         };
 
-        const activeSocket = new WebSocket(
-            'ws://' + window.location.host +
-            '/ws/active/' + room_number + '/'
-        );
         activeSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             if (data.type === 'users_list') {
@@ -101,6 +107,11 @@
         };
 
         activeSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                console.log(data);
+            };
+
+        peopleSocket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
                 console.log(data);
             };

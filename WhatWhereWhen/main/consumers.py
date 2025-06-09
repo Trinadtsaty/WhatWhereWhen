@@ -1,10 +1,8 @@
 from datetime import datetime
-import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from registration.models import Users
 from .models import ChatMessage, game_rooms
 from channels.db import database_sync_to_async
-
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -116,8 +114,10 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+
         await self.accept()
         await self.notify_all_about_users()
+
 
     async def disconnect(self, close_code):
         if hasattr(self, 'room_group_name'):
@@ -141,7 +141,7 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             if self.user_id in room.people_on_page.get("users", []):
                 room.people_on_page["users"].remove(self.user_id)
                 room.save()
-                print(len(room.people_on_page["users"]))
+                # print("Пользователей на странице выход",len(room.people_on_page["users"]))
 
                 #Раскомитить когда завершу отладку
                 # if len(room.people_on_page["users"]) ==0:
@@ -189,12 +189,17 @@ class PeopleConsumer(AsyncWebsocketConsumer):
         from .models import game_rooms
 
         room = game_rooms.objects.get(ID=self.room_id)
+
         if "users" not in room.people_on_page:
             room.people_on_page = {"users": []}
 
         if self.user_id not in room.people_on_page["users"]:
             room.people_on_page["users"].append(self.user_id)
             room.save()
+            # if len(room.people_on_page["users"]) == room.room_limit:
+
+
+
 
 
 class StartConsumer(AsyncWebsocketConsumer):
@@ -209,6 +214,9 @@ class StartConsumer(AsyncWebsocketConsumer):
         )
         await self.accept()
 
+        # Проверяем, заполнилась ли комната
+        await self.check_room_and_start()
+
     # Вызывается при закрытии WebSocket соединения.
     async def disconnect(self, close_code):
         # Покидаем группу комнаты
@@ -216,6 +224,26 @@ class StartConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+
+    async def check_room_and_start(self):
+        """Проверяет, заполнена ли комната, и отправляет 'start' если да"""
+        room = await self.get_room(self.room_id)
+        if len(room.people_on_page["users"]) == room.room_limit:
+            user = await self.get_user(self.user_id)
+
+            group_message = {
+                'type': 'handle_action_event',
+                'action_type': 'start',
+                'message': 'Game is starting automatically!',
+                'username': 'System',
+                'user_id': 0,  # System user
+                'timestamp': str(datetime.now())
+            }
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                group_message
+            )
 
     async def receive(self, text_data):
         try:
@@ -297,3 +325,7 @@ class StartConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_user(self, user_id):
         return Users.objects.get(ID=user_id)
+
+    @database_sync_to_async
+    def get_room(self, room_id):
+        return game_rooms.objects.get(ID=room_id)
