@@ -282,7 +282,7 @@ def Room(request, room_number):
     selection = room.selections
     questions = Question.objects.filter(Question_Select__selection_id=selection)
 
-    print(questions)
+    # print(questions)
 
     if request.method == 'POST':
         early_answer = escape(request.POST.get('room_early_answer'))

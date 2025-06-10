@@ -1,84 +1,10 @@
 
 // Подключаемся к WebSocket
 document.addEventListener('DOMContentLoaded', function() {
-    const chatSocket = new WebSocket(
-        'ws://' + window.location.host +
-        '/ws/chat/' + room_number + '/'
-    );
-    const activeSocket = new WebSocket(
-        'ws://' + window.location.host +
-        '/ws/active/' + room_number + '/'
-    );
     const peopleSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/people/' + room_number + '/'
     );
-    // Обработчик получения сообщений
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        const chatLog = document.querySelector('#chat-log');
-        chatLog.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;
-        chatLog.scrollTop = chatLog.scrollHeight;
-    };
-
-    // Обработчик отправки сообщений
-    document.querySelector('#chat-message-submit').onclick = function(e) {
-        const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
-
-        chatSocket.send(JSON.stringify({
-            'room_ID': room_number,
-            'message': message,
-            'user_id': user_id,
-        }));
-
-        messageInputDom.value = '';
-    };
-
-    activeSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        if (data.type === 'users_list') {
-            // Обработка списка пользователей
-            console.log('Users in room:', data.users);
-        }
-    };
-    if (document.querySelector('#start')) {
-        document.querySelector('#start').onclick = function(e) {
-            activeSocket.send(JSON.stringify({
-                'start': "start",
-            }));
-        };
-    };
-    if (document.querySelector('#pause')) {
-        document.querySelector('#pause').onclick = function(e) {
-            activeSocket.send(JSON.stringify({
-                'pause': "pause",
-            }));
-        };
-    };
-
-    if (document.querySelector('#play')) {
-        document.querySelector('#play').onclick = function(e) {
-            activeSocket.send(JSON.stringify({
-                'play': "play",
-            }));
-        };
-    };
-    if (document.querySelector('#cancellation')) {
-        document.querySelector('#cancellation').onclick = function(e) {
-            activeSocket.send(JSON.stringify({
-                'cancellation': "cancellation",
-            }));
-        };
-    };
-
-
-    activeSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            console.log(data);
-        };
-
-
 
     peopleSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
@@ -128,15 +54,21 @@ document.addEventListener('DOMContentLoaded', function() {
             text_box.appendChild(player_name);
             text_box.appendChild(player_role);
 
-            const button_players = document.createElement('div');
-            button_players.className = 'button players';
+
+
 
             const player = document.createElement('div');
             player.className = 'player';
 
             player.appendChild(image_box);
             player.appendChild(text_box);
-            player.appendChild(button_players);
+
+            if (user_id === host_id) {
+                const button_players = document.createElement('div');
+                button_players.className = 'button players';
+                player.appendChild(button_players);
+            };
+
 
             document.getElementById("players_page").appendChild(player);
         };

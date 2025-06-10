@@ -1,0 +1,48 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const activeSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/active/' + room_number + '/'
+    );
+    activeSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.type === 'users_list') {
+            // Обработка списка пользователей
+            console.log('Users in room:', data.users);
+        }
+    };
+    if (document.querySelector('#start')) {
+        document.querySelector('#start').onclick = function(e) {
+            activeSocket.send(JSON.stringify({
+                'start': "start",
+            }));
+        };
+    };
+    if (document.querySelector('#pause')) {
+        document.querySelector('#pause').onclick = function(e) {
+            activeSocket.send(JSON.stringify({
+                'pause': "pause",
+            }));
+        };
+    };
+
+    if (document.querySelector('#play')) {
+        document.querySelector('#play').onclick = function(e) {
+            activeSocket.send(JSON.stringify({
+                'play': "play",
+            }));
+        };
+    };
+    if (document.querySelector('#cancellation')) {
+        document.querySelector('#cancellation').onclick = function(e) {
+            activeSocket.send(JSON.stringify({
+                'cancellation': "cancellation",
+            }));
+        };
+    };
+
+
+    activeSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log(data);
+        };
+});
