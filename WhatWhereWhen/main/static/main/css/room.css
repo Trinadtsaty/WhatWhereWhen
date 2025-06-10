@@ -186,7 +186,7 @@ body {
 }
 .button:hover {
     background-color: #524F52;
-    border: 2px solid #C0A610;
+    border: 3px solid #C0A610;
 }
 #start {
     margin-top: 100px;
