@@ -278,13 +278,110 @@ def Room(request, room_number):
     # Получаем последние 50 сообщений из БД
     messages = ChatMessage.objects.filter(room=game_rooms.objects.get(ID=room_number)).order_by('-timestamp')[:50]
 
+
+    selection = room.selections
+    questions = Question.objects.filter(Question_Select__selection_id=selection)
+
+    print(questions)
+
+    if request.method == 'POST':
+        early_answer = escape(request.POST.get('room_early_answer'))
+        time_early_answer = escape(request.POST.get('room_time_early_answer'))
+        chat_clean = escape(request.POST.get('room_chat_clean'))
+        time_question = escape(request.POST.get('room_time_question'))
+        show_question = escape(request.POST.get('room_show_question'))
+        reading_speed = escape(request.POST.get('room_reading_speed'))
+        random_order = escape(request.POST.get('room_random_order'))
+        break_questions = escape(request.POST.get('room_break_questions'))
+
+
+
+        output = {
+            "early_answer":True_False(early_answer),
+            "time_early_answer":time_early_answer,
+            "chat_clean":True_False(chat_clean),
+            "time_question":time_question,
+            "show_question":True_False(show_question),
+            "reading_speed":reading_speed,
+            "random_order":True_False(random_order),
+            "break_questions":break_questions,
+
+            "user": user_on_page,
+            "room" : room,
+            'messages': messages,
+            'questions':questions,
+        }
+
+        try:
+
+            if output["early_answer"]:
+                if output["time_early_answer"]:
+                    try:
+                        int(output["time_early_answer"])
+                    except:
+                        raise ValidationError('Время досрочного ответа должно быть числом')
+                    if int(output["time_early_answer"]) < 5 or int(output["time_early_answer"]) > 600:
+                        raise ValidationError('Время досрочного ответа должно быть от 5 до 600 секунд')
+                else:
+                    raise ValidationError('Укажите время на досрочный ответ')
+
+            if output["time_question"]:
+                try:
+                    int(output["time_question"])
+                except:
+                    raise ValidationError('Время на вопрос должно быть числом')
+                if int(output["time_question"]) < 10 or int(output["time_question"]) > 600:
+                    raise ValidationError('Время на вопрос должно быть от 10 до 600 секунд')
+            else:
+                raise ValidationError('Укажите время на вопрос')
+
+            if output["reading_speed"]:
+                try:
+                    int(output["reading_speed"])
+                except:
+                    raise ValidationError('Скорость чтения должна быть числом')
+                if int(output["reading_speed"]) < 1 or int(output["reading_speed"]) > 60:
+                    raise ValidationError('Скорость чтения должна быть от 1 до 60 символов в секунду')
+            else:
+                raise ValidationError('УКажите скорость чтения')
+
+            if output["break_questions"]:
+                try:
+                    int(output["break_questions"])
+                except:
+                    raise ValidationError('Перерыв между вопросами должен быть числом')
+                if int(output["break_questions"]) < 0 or int(output["break_questions"]) > 600:
+                    raise ValidationError('Перерыв между вопросами должен быть от 0 до 600 секунд')
+            else:
+                raise ValidationError('Укажите время перерыва между вопросами')
+
+        except ValidationError as e:
+            output["error"] = str(e)[2:-2]
+            return render(request, "main/room.html", output)
+
+        room = game_rooms.objects.get(ID=room_number)
+        room.early_answer = output["early_answer"]
+        room.time_answer = output["time_early_answer"]
+        room.clear_chat = output["chat_clean"]
+        room.question_time = output["time_question"]
+        room.show_question = output["show_question"]
+        room.reading_speed = output["reading_speed"]
+        room.random_order = output["random_order"]
+        room.break_between_questions = output["break_questions"]
+        room.save()
+
+        return render(request, "main/room.html", output)
+
     return render(request, "main/room.html", {
         "user": user_on_page,
         "room" : room,
         'messages': messages,
+        'questions':questions,
+        "early_answer": True,
+        "chat_clean": True,
+        "show_question": True,
+        "random_order": True,
     })
-
-
 
 
 @login_required()

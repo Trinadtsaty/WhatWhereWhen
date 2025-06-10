@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Комната</title>
     <link rel="stylesheet" href="{% static 'main/css/room.css' %}">
+<!--    <link rel="stylesheet" href="{% static 'main/css/add.css' %}">-->
 </head>
 <body>
 
@@ -34,106 +35,248 @@
 <!--            <div id="log_out_info" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Game_Room' %}">Выйти со страници</a></div>-->
 <!--            {% endif %}-->
         </div>
-        <div id="players_page" class="page_element">
-            <input id="chat-message-input" type="text" size="100"/>
-            <input id="chat-message-submit" type="button" value="Send"/>
+        <div id="players_page" class="page_element center">
+
+            <div class="player">
+                <div class="image_box">
+                    <div class="player_host">H</div>
+                    <img class="img" alt="фото профиля" src="{% static 'registration/img/Avatar.png' %}">
+                </div>
+                <!--/static/registration/img/Avatar.png-->
+                <div class="text_box">
+                    <div class="player_name">Ник пользователя</div>
+                    <div class="player_role">Роль</div>
+                </div>
+                <div class="button players"></div>
+            </div>
+
         </div>
+
+        {% if user.ID == room.host.ID %}
+        <div id="settings_page" class="page_element center" style="display: none;">
+            <form class="forms" id="reg" method="post">
+                {% csrf_token %}
+                <input id="room_early_answer"   style="display: none;" name="room_early_answer"  type="checkbox" class="checkbox" {% if early_answer %}checked{% endif %}>
+                <input id="room_chat_clean"     style="display: none;" name="room_chat_clean"    type="checkbox" class="checkbox" {% if chat_clean %}checked{% endif %}>
+                <input id="room_show_question"  style="display: none;" name="room_show_question" type="checkbox" class="checkbox" {% if show_question %}checked{% endif %}>
+                <input id="room_random_order"   style="display: none;" name="room_random_order"  type="checkbox" class="checkbox" {% if random_order %}checked{% endif %}>
+
+                <div class="block check">
+                    Досрочный ответ
+                    <img {% if early_answer %}      style="display: none;" {% endif %} id="room_early_answer_false"     alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"    data-type="early_answer">
+                    <img {% if not early_answer %}  style="display: none;" {% endif %} id="room_early_answer_true"      alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="early_answer">
+                </div>
+                <div class="block text_right" id="room_time_early_answer_box">Время на ответ<input id="room_time_early_answer" name="room_time_early_answer" type="text" class="input_text_number" value="{{ time_early_answer|default:'5' }}"></div>
+                <div class="block check">
+                    Очистка чата после вопроса
+                    <img {% if chat_clean %}        style="display: none;" {% endif %} id="room_chat_clean_false"       alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"    data-type="chat_clean">
+                    <img {% if not chat_clean %}    style="display: none;" {% endif %} id="room_chat_clean_true"        alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="chat_clean">
+                </div>
+                <div class="block text_right">Время на вопрос (сек)<input id="room_time_question" name="room_time_question" type="text" class="input_text_number" value="{{ time_question|default:'60' }}"></div>
+                <div class="block check">
+                    Показывать вопрос игрокам
+                    <img {% if show_question %}     style="display: none;" {% endif %} id="room_show_question_false"    alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"    data-type="show_question">
+                    <img {% if not show_question %} style="display: none;" {% endif %} id="room_show_question_true"     alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="show_question">
+                </div>
+                <div class="block text_right">Скорость чтения (знак/сек)<input id="room_reading_speed" name="room_reading_speed" type="text" class="input_text_number" value="{{ reading_speed|default:'10' }}"></div>
+                <div class="block check">
+                    Случайный порядок вопросов
+                    <img {% if random_order %}      style="display: none;" {% endif %} id="room_random_order_false"     alt="check" src="{% static 'main/img/check_False.png' %}" class="img_check False" data-value="False"    data-type="random_order">
+                    <img {% if not random_order %}  style="display: none;" {% endif %} id="room_random_order_true"      alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="random_order">
+                </div>
+                <div class="block text_right" id="room_break_questions_box">Перерыв между вопросами (сек)<input id="room_break_questions" name="room_break_questions" type="text" class="input_text_number" value="{{ break_questions|default:'30' }}"></div>
+                <input type="submit" value="Принять" class="button" id="accept_additional_settings">
+            </form>
+        </div>
+        {% endif %}
+
+        {% if user == room.leader %}
+        <div id="question_page" class="page_element center" style="display: none;">
+            {% for question in questions %}
+
+            <div class="question_on_page" data-status="0">
+                <div class="info_line">
+                    <div class="question_number">Вопрос №{{ forloop.counter }}</div>
+                    <div class="button question">|||</div>
+                </div>
+
+                <div class="question_name question_element_hidden"> Название: {{ question.question_name }}</div>
+                <div class="question_description question_element_hidden">Текст вопроса: {{ question.text_question }}</div>
+                {% if question.note %}
+                <div class="question_note question_element_hidden">Примичание: {{ question.note }}</div>
+                {% endif %}
+                <div class="question_answer question_element_hidden">Ответ: {{ question.answer }}</div>
+                {% if question.answer_description %}
+                <div class="question_answer_description question_element_hidden">Примичание к ответу: {{ question.answer_description }}</div>
+                {% endif %}
+
+
+                <div class="question_name question_element_displayed">Название: {% if question.question_name|length > 20 %}{{ question.question_name|slice:":40" }}...{% else %}{{ question.question_name }}{% endif %}</div>
+                <div class="question_description question_element_displayed">Текст вопроса:
+                    {% if question.text_question|length > 40 %}
+                        {{ question.text_question|slice:":37" }}...
+                    {% else %}
+                        {{ question.text_question }}
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="question_on_page">В коллекции отсутсвуют вопросы</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <div id="button_page" class="page_element">
             <div id="chat_page">
                 <div id="chat-log">
                     {% for message in messages %}
                     <div><strong>{{ message.user.login }}:</strong> {{ message.message }}</div>
                     {% endfor %}
+                    <input id="chat-message-input" type="text" />
+                    <input id="chat-message-submit" type="button" value="Send"/>
                 </div>
             </div>
-            <div id="question" class="button"></div>
-            {% if user.ID = room.host %}
+
+            {% if user == room.leader %}
+            <div id="question_button" class="button">Вопросы</div>
+            {% endif %}
+            {% if user.ID == room.host.ID %}
+            <div id="settings" class="button">Параметры</div>
             <div id="start" class="button">Старт</div>
             <div id="cancellation" class="button">Отмена</div>
             {% endif %}
 <!--            <div id="send_ready" class="button">готов</div>-->
 <!--            <div id="send_not_ready" class="button">Не готов</div>-->
         </div>
-
     </div>
-    <script src="{% static 'main/js/WebSocket.js' %}"></script>
+
+<!--    {% if user == room.leader %}-->
+<!--    <div id="popup_question" class="popup">-->
+<!--        <div id="popup_buttons">-->
+<!--            <div>Вопрос</div>-->
+<!--            <div>Заметки</div>-->
+<!--            <div>Ответ</div>-->
+<!--        </div>-->
+<!--        <div id="popup_text">-->
+<!--            -->
+<!--        </div>-->
+<!--    </div>-->
+<!--    {% endif %}-->
+
+    {% if error %}
+        <div id="claim_error" class="error">{{ error }}</div>
+    {% endif %}
+    <script src="{% static 'main/js/WebSocket_player.js' %}"></script>
+    <script src="{% static 'main/js/room_parameters.js' %}"></script>
+    <script src="{% static 'main/js/room_functions.js' %}"></script>
+    {% if user == room.leader %}
+    <script src="{% static 'main/js/question_open.js' %}"></script>
+    {% endif %}
     <script>
+        function showError() {
+            var errorDiv = document.getElementById("claim_error");
+            errorDiv.style.display = "block"; // Показываем окно
+
+            // Скрываем окно через 10 секунд
+            setTimeout(function() {
+                errorDiv.style.display = "none";
+            }, 5000); // 10000 миллисекунд = 10 секунд
+        }
+        {% if error %}
+            showError()
+        {% endif %}
+
         // Подключаемся к WebSocket
         const room_number = '{{ room.ID }}';
-        const chatSocket = new WebSocket(
-            'ws://' + window.location.host +
-            '/ws/chat/' + room_number + '/'
-        );
-        const activeSocket = new WebSocket(
-            'ws://' + window.location.host +
-            '/ws/active/' + room_number + '/'
-        );
-        const peopleSocket = new WebSocket(
-            'ws://' + window.location.host +
-            '/ws/people/' + room_number + '/'
-        );
+        const user_id = '{{ request.user.ID }}';
 
-
-
-        // Обработчик получения сообщений
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            const chatLog = document.querySelector('#chat-log');
-            chatLog.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;
-            chatLog.scrollTop = chatLog.scrollHeight;
-        };
-
-        // Обработчик отправки сообщений
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-
-            chatSocket.send(JSON.stringify({
-                'room_ID': room_number,
-                'message': message,
-                'user_id': '{{ request.user.ID }}'
-            }));
-
-            messageInputDom.value = '';
-        };
-
-        activeSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            if (data.type === 'users_list') {
-                // Обработка списка пользователей
-                console.log('Users in room:', data.users);
-            }
-        };
-        document.querySelector('#start').onclick = function(e) {
-            activeSocket.send(JSON.stringify({
-                'start': "start",
-            }));
-        };
-        document.querySelector('#pause').onclick = function(e) {
-            activeSocket.send(JSON.stringify({
-                'pause': "pause",
-            }));
-        };
-        document.querySelector('#play').onclick = function(e) {
-            activeSocket.send(JSON.stringify({
-                'play': "play",
-            }));
-        };
-        document.querySelector('#cancellation').onclick = function(e) {
-            activeSocket.send(JSON.stringify({
-                'cancellation': "cancellation",
-            }));
-        };
-
-        activeSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                console.log(data);
-            };
-
-        peopleSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                console.log(data);
-            };
+        const host_id = {{ room.host.ID }};
+        const leader_id = {{ room.leader.ID }};
+        const captain_id = {{ room.captain.ID }};
+//        const chatSocket = new WebSocket(
+//            'ws://' + window.location.host +
+//            '/ws/chat/' + room_number + '/'
+//        );
+//        const activeSocket = new WebSocket(
+//            'ws://' + window.location.host +
+//            '/ws/active/' + room_number + '/'
+//        );
+//        const peopleSocket = new WebSocket(
+//            'ws://' + window.location.host +
+//            '/ws/people/' + room_number + '/'
+//        );
+//
+//
+//
+//        // Обработчик получения сообщений
+//        chatSocket.onmessage = function(e) {
+//            const data = JSON.parse(e.data);
+//            const chatLog = document.querySelector('#chat-log');
+//            chatLog.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;
+//            chatLog.scrollTop = chatLog.scrollHeight;
+//        };
+//
+//        // Обработчик отправки сообщений
+//        document.querySelector('#chat-message-submit').onclick = function(e) {
+//            const messageInputDom = document.querySelector('#chat-message-input');
+//            const message = messageInputDom.value;
+//
+//            chatSocket.send(JSON.stringify({
+//                'room_ID': room_number,
+//                'message': message,
+//                'user_id': '{{ request.user.ID }}'
+//            }));
+//
+//            messageInputDom.value = '';
+//        };
+//
+//        activeSocket.onmessage = function(e) {
+//            const data = JSON.parse(e.data);
+//            if (data.type === 'users_list') {
+//                // Обработка списка пользователей
+//                console.log('Users in room:', data.users);
+//            }
+//        };
+//        if (document.querySelector('#start')) {
+//            document.querySelector('#start').onclick = function(e) {
+//            activeSocket.send(JSON.stringify({
+//                'start': "start",
+//            }));
+//        };
+//        };
+//        if (document.querySelector('#pause')) {
+//            document.querySelector('#pause').onclick = function(e) {
+//                activeSocket.send(JSON.stringify({
+//                    'pause': "pause",
+//                }));
+//            };
+//        };
+//
+//        if (document.querySelector('#play')) {
+//            document.querySelector('#play').onclick = function(e) {
+//                activeSocket.send(JSON.stringify({
+//                    'play': "play",
+//                }));
+//            };
+//        };
+//        if (document.querySelector('#cancellation')) {
+//            document.querySelector('#cancellation').onclick = function(e) {
+//                activeSocket.send(JSON.stringify({
+//                    'cancellation': "cancellation",
+//                }));
+//            };
+//        };
+//
+//
+//        activeSocket.onmessage = function(e) {
+//                const data = JSON.parse(e.data);
+//                console.log(data);
+//            };
+//
+//        peopleSocket.onmessage = function(e) {
+//                const data = JSON.parse(e.data);
+//                console.log(data);
+//            };
 
 //        document.querySelector('#send_ready').onclick = function(e) {
 //            activeSocket.send(JSON.stringify({

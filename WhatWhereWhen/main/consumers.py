@@ -207,7 +207,7 @@ class PeopleConsumer(AsyncWebsocketConsumer):
                     'id': user.ID,
                     'login': user.login,
                     'picture': settings.MEDIA_URL + str(
-                        user.picture) if user.picture else settings.STATIC_URL + 'default-avatar.png'
+                        user.picture) if user.picture else "/static/registration/img/Avatar.png"
                 }
                 for user in users
             ]
