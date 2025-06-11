@@ -20,8 +20,11 @@ class game_rooms(models.Model):
     password_room = models.CharField(max_length=50, null=True, blank=True)
     selections = models.ForeignKey(Selections, on_delete=models.PROTECT, related_name='Selection_Room')
     game_mode = models.IntegerField(choices=Game_mode, default=0)
+    # previous_host = models.ForeignKey(Users, on_delete=models.PROTECT, related_name='_previous_host_game_rooms')
+    # previous_captain = models.ForeignKey(Users, on_delete=models.PROTECT, related_name='previous_captain_game_rooms', null=True, blank=True)
+    # previous_leader = models.ForeignKey(Users, on_delete=models.PROTECT, related_name='previous_leader_game_rooms', null=True, blank=True)
     host = models.ForeignKey(Users, on_delete=models.PROTECT, related_name='host_game_rooms')
-    captain =models.ForeignKey(Users, on_delete=models.PROTECT, related_name='captain_game_rooms', null=True, blank=True)
+    captain = models.ForeignKey(Users, on_delete=models.PROTECT, related_name='captain_game_rooms', null=True, blank=True)
     leader = models.ForeignKey(Users, on_delete=models.PROTECT, related_name='leader_game_rooms', null=True, blank=True)
     room_limit = models.IntegerField(
         validators=[
@@ -64,6 +67,13 @@ class game_rooms(models.Model):
         super().clean()
         if self.clos_room and not self.password_room:
             raise ValidationError({'password_room': 'Это поле обязательно, если clos_room установлено в True.'})
+
+        # Проверка, что captain и leader не совпадают
+        if self.captain and self.leader and self.captain == self.leader:
+            raise ValidationError({
+                'leader': 'Captain и Leader не могут быть одним и тем же пользователем.',
+                'captain': 'Captain и Leader не могут быть одним и тем же пользователем.'
+            })
 
     def save(self, *args, **kwargs):
         self.full_clean()  # Вызываем clean перед сохранением

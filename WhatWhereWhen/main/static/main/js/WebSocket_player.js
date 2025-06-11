@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const image_box = document.createElement('div');
             image_box.className = 'image_box';
 //            console.log(host_id, user.id)
-            if (user.id === host_id) {
+            if (user.host) {
                 const player_host = document.createElement('div');
                 player_host.textContent = 'H'
                 player_host.className = 'player_host'
@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const player_role = document.createElement('div');
             player_role.className = 'player_role';
-            if (user.id === captain_id) {
+            if (user.captain) {
                 player_role.textContent = 'Капитан'
-            } else if (user.id === leader_id) {
+            } else if (user.leader) {
                 player_role.textContent = 'Ведущий'
             } else {
                 player_role.textContent = 'Игрок'
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             player.appendChild(image_box);
             player.appendChild(text_box);
 
-            if (user_id === host_id) {
+            if (user_id === user.id && user.host) {
                 const button_players = document.createElement('div');
                 button_players.className = 'button players';
                 player.appendChild(button_players);

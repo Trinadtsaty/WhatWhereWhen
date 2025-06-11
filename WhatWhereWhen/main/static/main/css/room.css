@@ -150,6 +150,20 @@ body {
 #button_page {
     min-width: 530px;
     background-color: red;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    align-items: center;
+
+
+}
+
+.button_page_element {
+    font-size: 48px;
+    height: 125px;
+    width: 350px;
+    border-radius: 30px;
+    margin-bottom: 20px;
 }
 .log_out {
     background-color: #C0A610;
@@ -182,13 +196,14 @@ body {
     color: white;
     cursor: pointer;
     text-align: center;
+
+    display: flex;
+    justify-content: center;  /* Горизонтальное центрирование */
+    align-items: center;      /* Вертикальное центрирование */
 }
 .button:hover {
     background-color: #524F52;
     border: 3px solid #C0A610;
-}
-#start {
-    margin-top: 100px;
 }
 .Background_text {
     background-color: rgba(82, 79, 82, 1);
@@ -605,3 +620,5 @@ body {
     color: inherit;
     word-break: break-word;
 }
+
+

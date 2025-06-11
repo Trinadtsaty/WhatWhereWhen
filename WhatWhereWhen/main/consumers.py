@@ -3,6 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from registration.models import Users
 from .models import ChatMessage, game_rooms
 from channels.db import database_sync_to_async
+import asyncio
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -113,10 +114,17 @@ import json
 
 
 class PeopleConsumer(AsyncWebsocketConsumer):
+    # Нововедение
+    disconnect_tasks = {}
     async def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f'people_{self.room_id}'
         self.user_id = self.scope['user'].ID
+
+        # Новый элемент
+        task = self.disconnect_tasks.pop(self.user_id, None)
+        if task:
+            task.cancel()
 
         await self.add_user_to_room()
         await self.channel_layer.group_add(
@@ -126,40 +134,35 @@ class PeopleConsumer(AsyncWebsocketConsumer):
         await self.accept()
         await self.notify_all_about_users()
 
+    # Старая версия без задержки
+    # async def disconnect(self, close_code):
+    #     if hasattr(self, 'room_group_name'):
+    #         await self.remove_user_from_room()
+    #         await self.notify_all_about_users()
+    #         await self.channel_layer.group_discard(
+    #             self.room_group_name,
+    #             self.channel_name
+    #         )
 
+    # Новый вариант
     async def disconnect(self, close_code):
-        if hasattr(self, 'room_group_name'):
-            await self.remove_user_from_room()
-            await self.notify_all_about_users()
-            await self.channel_layer.group_discard(
-                self.room_group_name,
-                self.channel_name
-            )
+        # Запускаем задачу с задержкой удаления пользователя
+        async def delayed_remove():
+            try:
+                await asyncio.sleep(10)  # ждем 10 секунд
+                await self.remove_user_from_room()
+                await self.notify_all_about_users()
+            except asyncio.CancelledError:
+                # Задача была отменена, значит пользователь переподключился
+                pass
 
-    # # Нововедение
-    # async def receive(self, text_data):
-    #     try:
-    #         # Получаем данные пользователя
-    #         user = await self.get_user(self.user_id)
-    #         data = json.loads(text_data)
-    #
-    #         print(f"Получены данные от {user.login}:", data, type(data))
+        task = asyncio.create_task(delayed_remove())
+        self.disconnect_tasks[self.user_id] = task
 
-
-        # except json.JSONDecodeError:
-        #     error_msg = "Ошибка декодирования JSON"
-        #     print(error_msg)
-        #     await self.send(text_data=json.dumps({
-        #         'error': error_msg,
-        #         'received_data': text_data
-        #     }))
-        # except Exception as e:
-        #     error_msg = f"Ошибка обработки сообщения: {str(e)}"
-        #     print(error_msg)
-        #     await self.send(text_data=json.dumps({
-        #         'error': error_msg,
-        #         'details': str(e)
-        #     }))
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
 
     async def send_users_list(self, event):
         await self.send(text_data=json.dumps({
@@ -167,10 +170,11 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             'users': event['users']
         }))
 
-    # Старый вариант
+
     @sync_to_async
     def remove_user_from_room(self):
         from .models import game_rooms
+        from registration.models import Users
         try:
             room = game_rooms.objects.get(ID=self.room_id)
             if self.user_id in room.people_on_page.get("users", []):
@@ -179,8 +183,17 @@ class PeopleConsumer(AsyncWebsocketConsumer):
                 # print("Пользователей на странице выход",len(room.people_on_page["users"]))
 
                 #Раскомитить когда завершу отладку
-                # if len(room.people_on_page["users"]) ==0:
-                #     room.delete()
+                if len(room.people_on_page["users"]) ==0:
+                    room.delete()
+                else:
+                    first_player = Users.objects.get(ID=room.people_on_page["users"][0])
+                    if room.host.ID == self.user_id:
+                        room.host = first_player
+                        room.save()
+                    if room.leader.ID == self.user_id:
+                        pass
+                    if room.captain.ID == self.user_id:
+                        pass
 
         except Exception as e:
             print(f"Error removing user: {e}")
@@ -208,16 +221,32 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             # Старый вариант
             users_ids = room.people_on_page.get("users", [])
             users = Users.objects.filter(ID__in=users_ids)
+            arr_users = []
+            for user in users:
+                if room.host == user:
+                    host = True
+                else:
+                    host = False
+                if room.captain == user:
+                    captain = True
+                else:
+                    captain = False
+                if room.leader == user:
+                    leader = True
+                else:
+                    leader = False
 
-            return [
-                {
+                arr_users.append({
                     'id': user.ID,
                     'login': user.login,
+                    'host': host,
+                    'captain': captain,
+                    'leader': leader,
                     'picture': settings.MEDIA_URL + str(
                         user.picture) if user.picture else "/static/registration/img/Avatar.png"
-                }
-                for user in users
-            ]
+                })
+
+            return arr_users
         except Exception as e:
             print(f"Error getting room users data: {e}")
             return []
