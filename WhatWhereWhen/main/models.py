@@ -70,10 +70,11 @@ class game_rooms(models.Model):
 
         # Проверка, что captain и leader не совпадают
         if self.captain and self.leader and self.captain == self.leader:
-            raise ValidationError({
-                'leader': 'Captain и Leader не могут быть одним и тем же пользователем.',
-                'captain': 'Captain и Leader не могут быть одним и тем же пользователем.'
-            })
+            # raise ValidationError({
+            #     'leader': 'Captain и Leader не могут быть одним и тем же пользователем.',
+            #     'captain': 'Captain и Leader не могут быть одним и тем же пользователем.'
+            # })
+            raise ValidationError('Captain и Leader не могут быть одним и тем же пользователем.')
 
     def save(self, *args, **kwargs):
         self.full_clean()  # Вызываем clean перед сохранением

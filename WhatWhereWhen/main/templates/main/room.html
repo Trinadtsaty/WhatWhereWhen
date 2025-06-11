@@ -79,7 +79,7 @@
 
         </div>
 
-        {% if user.ID == room.host.ID %}
+
         <div id="settings_page" class="page_element center" style="display: none;">
             <form class="forms" id="reg" method="post">
                 {% csrf_token %}
@@ -115,9 +115,9 @@
                 <input type="submit" value="Принять" class="button" id="accept_additional_settings">
             </form>
         </div>
-        {% endif %}
 
-        {% if user == room.leader %}
+
+
         <div id="question_page" class="page_element center" style="display: none;">
             {% for question in questions %}
 
@@ -151,34 +151,26 @@
             <div class="question_on_page">В коллекции отсутсвуют вопросы</div>
             {% endfor %}
         </div>
-        {% endif %}
+
 
         <div id="button_page" class="page_element">
-
-            {% if user == room.leader %}
-            <div id="question_button" class="button button_page_element">Вопросы</div>
-            {% endif %}
-            {% if user.ID == room.host.ID %}
-            <div id="settings" class="button button_page_element">Параметры</div>
-            <div id="start" class="button button_page_element">Старт</div>
-            <div id="cancellation" class="button button_page_element">Отмена</div>
-            {% endif %}
+<!--            {% if user == room.leader %}-->
+<!--            <div id="question_button" class="button button_page_element" onclick="cleakQuestion()">Вопросы</div>-->
+<!--            {% endif %}-->
+<!--            {% if user == room.host %}-->
+<!--            <div id="settings" class="button button_page_element" onclick="cleaksettings()">Параметры</div>-->
+<!--            <div id="start" class="button button_page_element">Старт</div>-->
+<!--            <div id="cancellation" class="button button_page_element">Отмена</div>-->
+<!--            {% endif %}-->
+<!--        </div>-->
         </div>
-    </div>
 
 
     {% if error %}
         <div id="claim_error" class="error">{{ error }}</div>
     {% endif %}
-    <script src="{% static 'main/js/WebSocket_player.js' %}"></script>
-    <script src="{% static 'main/js/WebSocket_chat.js' %}"></script>
-    <script src="{% static 'main/js/WebSocket_active.js' %}"></script>
-    <script src="{% static 'main/js/room_parameters.js' %}"></script>
-    <script src="{% static 'main/js/room_functions.js' %}"></script>
-<!--    <script src="{% static 'main/js/popup.js' %}"></script>-->
-    {% if user == room.leader %}
-    <script src="{% static 'main/js/question_open.js' %}"></script>
-    {% endif %}
+
+
     <script>
         function showError() {
             var errorDiv = document.getElementById("claim_error");
@@ -201,5 +193,12 @@
 //        const leader_id = {{ room.leader.ID }};
 //        const captain_id = {{ room.captain.ID }};
     </script>
+    <script src="{% static 'main/js/WebSocket_player.js' %}"></script>
+    <script src="{% static 'main/js/WebSocket_chat.js' %}"></script>
+    <script src="{% static 'main/js/WebSocket_active.js' %}"></script>
+    <script src="{% static 'main/js/room_parameters.js' %}"></script>
+    <script src="{% static 'main/js/room_functions.js' %}"></script>
+<!--    <script src="{% static 'main/js/popup.js' %}"></script>-->
+    <script src="{% static 'main/js/question_open.js' %}"></script>
 </body>
 </html>

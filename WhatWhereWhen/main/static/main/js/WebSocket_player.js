@@ -15,11 +15,35 @@ document.addEventListener('DOMContentLoaded', function() {
         // Очистка
         while (document.getElementById("players_page").firstChild) {
             document.getElementById("players_page").removeChild(document.getElementById("players_page").firstChild);
+        };
+        let user_host = false;
+        let user_leader = false;
+        let user_captain = false;
+
+        for (let i = 0; i < usersArray.length; i++) {
+            const user = usersArray[i];
+            if (user_id === user.id && user.host) {
+                user_host = true;
+            };
+            if (user_id === user.id && user.captain) {
+                user_captain = true;
+            };
+            if (user_id === user.id && user.leader) {
+                user_leader = true;
+            };
+        };
+        while (document.getElementById('button_page').firstChild) {
+            document.getElementById('button_page').removeChild(document.getElementById('button_page').firstChild);
         }
+        console.log("user_leader=",user_leader)
+        console.log("user_captain=",user_captain)
+        console.log("user_host=",user_host)
+
 
         for (let i = 0; i < usersArray.length; i++) {
             const user = usersArray[i];
             console.log(user);
+
             const img = document.createElement('img');
             img.className = 'img';
             img.alt = 'Фото профиля';
@@ -54,24 +78,117 @@ document.addEventListener('DOMContentLoaded', function() {
             text_box.appendChild(player_name);
             text_box.appendChild(player_role);
 
-
-
-
             const player = document.createElement('div');
             player.className = 'player';
 
             player.appendChild(image_box);
             player.appendChild(text_box);
 
-            if (user_id === user.id && user.host) {
+            if (user_host) {
                 const button_players = document.createElement('div');
                 button_players.className = 'button players';
+//                button_players.onclick = () => sendCaptain(user.id);
                 player.appendChild(button_players);
-            };
 
+                const spis_buttons = document.createElement('ul');
+                spis_buttons.className = 'tools_menu';
+
+//                let user_host = false;
+//                let user_leader = false;
+//                let user_captain = false;
+
+                if (!user_leader && !user_captain) {
+                    const buttons_leader = document.createElement('li');
+                    buttons_leader.className = 'tools_element';
+                    buttons_leader.textContent = 'Назначить ведущим';
+                    buttons_leader.onclick = () => sendLeader(user.id);
+                    spis_buttons.appendChild(buttons_leader);
+
+                    const buttons_captain = document.createElement('li');
+                    buttons_captain.className = 'tools_element';
+                    buttons_captain.textContent = 'Назначить Капитаном';
+                    buttons_captain.onclick = () => sendCaptain(user.id);
+                    spis_buttons.appendChild(buttons_captain);
+                };
+
+                if (user_leader || user_captain) {
+                    const buttons_player = document.createElement('li');
+                    buttons_player.className = 'tools_element';
+                    buttons_player.textContent = 'Назначить игроком';
+                    buttons_player.onclick = () => sendPlayer(user.id);
+                    spis_buttons.appendChild(buttons_player);
+                };
+
+                if (!user_host) {
+                    const buttons_host = document.createElement('li');
+                    buttons_host.className = 'tools_element';
+                    buttons_host.textContent = 'Назначить Хостом';
+                    buttons_host.onclick = () => sendHost(user.id);
+                    spis_buttons.appendChild(buttons_host);
+                };
+
+                player.appendChild(spis_buttons);
+            };
 
             document.getElementById("players_page").appendChild(player);
         };
+        const button_page = document.getElementById("button_page")
+        if (user_leader) {
+            const question_button = document.createElement('div');
+            question_button.className = 'button button_page_element';
+            question_button.textContent = 'Вопросы';
+            question_button.id = 'question_button';
+            question_button.onclick = cleakQuestion;
+
+            button_page.appendChild(question_button);
+        };
+        if (user_host) {
+            const settings = document.createElement('div');
+            settings.className = 'button button_page_element';
+            settings.id = 'settings';
+            settings.textContent = 'Параметры';
+            settings.onclick = cleaksettings;
+
+            const start = document.createElement('div');
+            start.className = 'button button_page_element';
+            start.id = 'start';
+            start.textContent = 'Старт';
+            start.onclick = sendStart;
+
+            const cancellation = document.createElement('div');
+            cancellation.className = 'button button_page_element';
+            cancellation.id = 'cancellation';
+            cancellation.textContent = 'Отмена';
+            cancellation.onclick = sendCancellation;
+
+            button_page.appendChild(settings);
+            button_page.appendChild(start);
+            button_page.appendChild(cancellation);
+        };
     };
 
+    function sendHost (user_id) {
+        peopleSocket.send(JSON.stringify({
+            'comands' : "host",
+            'user' :user_id,
+        }));
+    };
+    function sendLeader(user_id) {
+        peopleSocket.send(JSON.stringify({
+            'comands' : "leader",
+            'user' :user_id,
+        }));
+    };
+    function sendCaptain (user_id) {
+        peopleSocket.send(JSON.stringify({
+            'comands' : "captain",
+            'user' : user_id,
+        }));
+    };
+    function sendPlayer (user_id) {
+        peopleSocket.send(JSON.stringify({
+            'comands' : "player",
+            'user' : user_id,
+        }));
+    };
 });

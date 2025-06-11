@@ -4,6 +4,7 @@ from registration.models import Users
 from .models import ChatMessage, game_rooms
 from channels.db import database_sync_to_async
 import asyncio
+from django.core.exceptions import ValidationError
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -134,6 +135,32 @@ class PeopleConsumer(AsyncWebsocketConsumer):
         await self.accept()
         await self.notify_all_about_users()
 
+
+    # Принимаем значение
+    async def receive(self, text_data):
+        try:
+            # Получаем данные пользователя
+            # user = await self.get_user(self.user_id)
+            data = json.loads(text_data)
+
+            await self.change_role(data)
+            await self.notify_all_about_users()
+
+        except json.JSONDecodeError:
+            error_msg = "Ошибка декодирования JSON"
+            print(error_msg)
+            await self.send(text_data=json.dumps({
+                'error': error_msg,
+                'received_data': text_data
+            }))
+        except Exception as e:
+            error_msg = f"Ошибка обработки сообщения: {str(e)}"
+            print(error_msg)
+            await self.send(text_data=json.dumps({
+                'error': error_msg,
+                'details': str(e)
+            }))
+
     # Старая версия без задержки
     # async def disconnect(self, close_code):
     #     if hasattr(self, 'room_group_name'):
@@ -170,6 +197,30 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             'users': event['users']
         }))
 
+    @sync_to_async
+    def change_role(self, data):
+        from registration.models import Users
+        from .models import game_rooms
+        # print(f"Получены данные:", data['comands'])
+        # print(f"Получены данные:", data['user'])
+        try:
+            room = game_rooms.objects.get(ID=self.room_id)
+            user = Users.objects.get(ID=data['user'])
+
+            if data['comands'] == "host":
+                if self.user_id == room.host.ID:
+                    room.host = user
+                    room.save()
+            if data['comands'] == "leader":
+                room.leader = user
+                room.save()
+            if data['comands'] == "captain":
+                room.captain = user
+                room.save()
+
+
+        except Exception as e:
+            print(f"Error removing role: {e}")
 
     @sync_to_async
     def remove_user_from_room(self):
@@ -183,20 +234,24 @@ class PeopleConsumer(AsyncWebsocketConsumer):
                 # print("Пользователей на странице выход",len(room.people_on_page["users"]))
 
                 #Раскомитить когда завершу отладку
-                if len(room.people_on_page["users"]) ==0:
-                    room.delete()
-                else:
-                    first_player = Users.objects.get(ID=room.people_on_page["users"][0])
-                    if room.host.ID == self.user_id:
-                        room.host = first_player
-                        room.save()
-                    if room.leader.ID == self.user_id:
-                        pass
-                    if room.captain.ID == self.user_id:
-                        pass
+                # if len(room.people_on_page["users"]) ==0:
+                #     room.delete()
+
+                first_player = Users.objects.get(ID=room.people_on_page["users"][0])
+                if room.host.ID == self.user_id:
+                    room.host = first_player
+                    room.save()
+                if room.leader.ID == self.user_id:
+                    room.leader = None
+                    room.save()
+                if room.captain.ID == self.user_id:
+                    room.captain = None
+                    room.save()
 
         except Exception as e:
             print(f"Error removing user: {e}")
+
+
 
 
     async def notify_all_about_users(self):
@@ -265,6 +320,13 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             room.save()
             # if len(room.people_on_page["users"]) == room.room_limit:
 
+    # @database_sync_to_async
+    # def get_user(self, user_id):
+    #     return Users.objects.get(ID=user_id)
+    #
+    # @database_sync_to_async
+    # def get_room(self, room_id):
+    #     return game_rooms.objects.get(ID=room_id)
 
 
 class StartConsumer(AsyncWebsocketConsumer):
