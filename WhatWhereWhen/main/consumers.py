@@ -33,6 +33,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     # Вызывается при получении сообщения от WebSocket.
     async def receive(self, text_data):
+        from django.conf import settings
         # print("мы в receive")
         # Парсим JSON данные
         try:
@@ -63,7 +64,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'username': user.login
+                'username': user.login,
+                'user_id': user.ID,
+                "picture_url": settings.MEDIA_URL + str(
+                        user.picture) if user.picture else "/static/registration/img/Avatar.png",
             }
         )
 
@@ -71,11 +75,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         username = event['username']
-
+        picture = event['picture_url']
+        user_id = event['user_id']
         # Отправляем сообщение WebSocket клиенту
         await self.send(text_data=json.dumps({
             'message': message,
-            'username': username
+            'username': username,
+            'picture':picture,
+            'user_id':user_id,
         }))
 
 

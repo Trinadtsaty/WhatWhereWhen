@@ -8,7 +8,6 @@
 <!--    <link rel="stylesheet" href="{% static 'main/css/add.css' %}">-->
 </head>
 <body>
-
     <div id="popup_chat" class="popup">
 
         <div id="chat_open_box">
@@ -18,7 +17,19 @@
 
         <div id="chat_box">
             <div id="chat">
-
+                {% for message in messages %}
+                <div {% if request.user == message.user %} class="messege_box_my" {% else %} class="messege_box_not_my" {% endif %}>
+                        <div class="sender_box">
+                            {% if message.user.picture %}
+                            <div class="sender_image"><img src="{{message.user.picture.url}}" alt="фото профиля" class="sender_img"></div>
+                            {% else %}
+                            <div class="sender_image"><img src="{% static 'registration/img/Avatar.png' %}" alt="фото профиля" class="sender_img"></div>
+                            {% endif %}
+                            <strong class="sender_nick">{{ message.user.login }}:</strong>
+                        </div>
+                        <div class="text_messege">{{ message.message }}</div>
+                </div>
+                {% endfor %}
             </div>
             <div id="send_box">
                 <textarea id="messege" placeholder="Введите сообщение" rows="1"></textarea>
@@ -51,11 +62,6 @@
 
             <div id="pause" class="button">Пауза</div>
             <div id="play" class="button">Продолжить</div>
-<!--            {% if room.clos_room %}-->
-<!--            <div id="log_out_info" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Logout_Secret' room_number=room_number  %}">Выйти со страници</a></div>-->
-<!--            {% else %}-->
-<!--            <div id="log_out_info" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Game_Room' %}">Выйти со страници</a></div>-->
-<!--            {% endif %}-->
         </div>
         <div id="players_page" class="page_element center">
 
@@ -64,7 +70,6 @@
                     <div class="player_host">H</div>
                     <img class="img" alt="фото профиля" src="{% static 'registration/img/Avatar.png' %}">
                 </div>
-                <!--/static/registration/img/Avatar.png-->
                 <div class="text_box">
                     <div class="player_name">Ник пользователя</div>
                     <div class="player_role">Роль</div>
@@ -149,15 +154,6 @@
         {% endif %}
 
         <div id="button_page" class="page_element">
-            <div id="chat_page">
-                <div id="chat-log">
-                    {% for message in messages %}
-                    <div><strong>{{ message.user.login }}:</strong> {{ message.message }}</div>
-                    {% endfor %}
-                    <input id="chat-message-input" type="text" />
-                    <input id="chat-message-submit" type="button" value="Send"/>
-                </div>
-            </div>
 
             {% if user == room.leader %}
             <div id="question_button" class="button">Вопросы</div>
@@ -167,23 +163,9 @@
             <div id="start" class="button">Старт</div>
             <div id="cancellation" class="button">Отмена</div>
             {% endif %}
-<!--            <div id="send_ready" class="button">готов</div>-->
-<!--            <div id="send_not_ready" class="button">Не готов</div>-->
         </div>
     </div>
 
-<!--    {% if user == room.leader %}-->
-<!--    <div id="popup_question" class="popup">-->
-<!--        <div id="popup_buttons">-->
-<!--            <div>Вопрос</div>-->
-<!--            <div>Заметки</div>-->
-<!--            <div>Ответ</div>-->
-<!--        </div>-->
-<!--        <div id="popup_text">-->
-<!--            -->
-<!--        </div>-->
-<!--    </div>-->
-<!--    {% endif %}-->
 
     {% if error %}
         <div id="claim_error" class="error">{{ error }}</div>
@@ -193,6 +175,7 @@
     <script src="{% static 'main/js/WebSocket_active.js' %}"></script>
     <script src="{% static 'main/js/room_parameters.js' %}"></script>
     <script src="{% static 'main/js/room_functions.js' %}"></script>
+<!--    <script src="{% static 'main/js/popup.js' %}"></script>-->
     {% if user == room.leader %}
     <script src="{% static 'main/js/question_open.js' %}"></script>
     {% endif %}
