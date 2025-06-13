@@ -13,7 +13,11 @@ activeSocket.onmessage = function(e) {
 activeSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     console.log(data);
+    console.log(data.type)
+    console.log(data.message)
 };
+
+
 
 //    function sendStart() {
 //        document.querySelector('#start').onclick = function(e) {

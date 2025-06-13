@@ -1,3 +1,4 @@
+import time
 from dbm import error
 from idlelib.rpc import request_queue
 from django.db.models import Q
@@ -182,9 +183,7 @@ def Create_Room(request):
                 password_room=output["password"],
                 selections=Selections.objects.get(ID=output["selection"]),
                 game_mode=game_mode,
-                previous_host=user_creator,
                 host=user_creator,
-                previous_leader=user_creator,
                 leader=user_creator,
                 room_limit=output["people_limit"],
                 people_on_page={"users":[user_creator.ID]},
@@ -205,9 +204,7 @@ def Create_Room(request):
                 password_room=output["password"],
                 selections=Selections.objects.get(ID=output["selection"]),
                 game_mode=game_mode,
-                previous_host=user_creator,
                 host=user_creator,
-                previous_captain=user_creator,
                 captain=user_creator,
                 room_limit=output["people_limit"],
                 people_on_page={"users":[user_creator.ID]},
@@ -228,7 +225,6 @@ def Create_Room(request):
                 password_room=output["password"],
                 selections=Selections.objects.get(ID=output["selection"]),
                 game_mode=game_mode,
-                previous_host=user_creator,
                 host=user_creator,
                 room_limit=output["people_limit"],
                 people_on_page={"users":[user_creator.ID]},
@@ -290,6 +286,7 @@ def Room(request, room_number):
     # print(questions)
 
     if request.method == 'POST':
+        print("вы тут")
         early_answer = escape(request.POST.get('room_early_answer'))
         time_early_answer = escape(request.POST.get('room_time_early_answer'))
         chat_clean = escape(request.POST.get('room_chat_clean'))
@@ -362,6 +359,7 @@ def Room(request, room_number):
 
         except ValidationError as e:
             output["error"] = str(e)[2:-2]
+            print(output["error"])
             return render(request, "main/room.html", output)
 
         room = game_rooms.objects.get(ID=room_number)
@@ -375,18 +373,28 @@ def Room(request, room_number):
         room.break_between_questions = output["break_questions"]
         room.save()
 
-        return render(request, "main/room.html", output)
+        time.sleep(1)
+        return redirect(request.path)
+        # return render(request, "main/room.html", output)
 
-    return render(request, "main/room.html", {
+
+    output = {
+        "early_answer": room.early_answer,
+        "time_early_answer": room.time_answer,
+        "chat_clean": room.clear_chat,
+        "time_question": room.question_time,
+        "show_question": room.show_question,
+        "reading_speed": room.reading_speed,
+        "random_order": room.random_order,
+        "break_questions": room.break_between_questions,
+
         "user": user_on_page,
-        "room" : room,
+        "room": room,
         'messages': messages,
-        'questions':questions,
-        "early_answer": True,
-        "chat_clean": True,
-        "show_question": True,
-        "random_order": True,
-    })
+        'questions': questions,
+    }
+
+    return render(request, "main/room.html", output)
 
 
 @login_required()

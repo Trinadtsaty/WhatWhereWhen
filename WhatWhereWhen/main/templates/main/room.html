@@ -112,7 +112,8 @@
                     <img {% if not random_order %}  style="display: none;" {% endif %} id="room_random_order_true"      alt="check" src="{% static 'main/img/check_True.png' %}"  class="img_check True"  data-value="True"     data-type="random_order">
                 </div>
                 <div class="block text_right" id="room_break_questions_box">Перерыв между вопросами (сек)<input id="room_break_questions" name="room_break_questions" type="text" class="input_text_number" value="{{ break_questions|default:'30' }}"></div>
-                <input type="submit" value="Принять" class="button" id="accept_additional_settings">
+                <input type="submit" value="Принять" class="button" id="accept_additional_settings" style="display: none;">
+                <div onclick="submitForm()" id="submit_form" class="button">Принять</div>
             </form>
         </div>
 
@@ -124,7 +125,7 @@
             <div class="question_on_page" data-status="0">
                 <div class="info_line">
                     <div class="question_number">Вопрос №{{ forloop.counter }}</div>
-                    <div class="button question">|||</div>
+                    <div class="button question" onclick="deleteQuestion({{question.ID}})">|||</div>
                 </div>
 
                 <div class="question_name question_element_hidden"> Название: {{ question.question_name }}</div>

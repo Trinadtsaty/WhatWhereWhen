@@ -171,3 +171,4 @@ class Complaints_Selections(models.Model):
     class Meta:
         verbose_name = 'Жалоба на подборку'
         verbose_name_plural = 'Жалобы на Подборки'
+

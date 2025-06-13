@@ -42,28 +42,45 @@ function cleaksettings() {
 function sendStart() {
 //    document.querySelector('#start').onclick = function(e) {
     activeSocket.send(JSON.stringify({
-        'start': "start",
+        'status_game': "start",
     }));
 //    };
 };
 function sendPause() {
 //    document.querySelector('#pause').onclick = function(e) {
     activeSocket.send(JSON.stringify({
-        'pause': "pause",
+        'status_game': "pause",
     }));
 //    };
 };
 function sendPlay() {
 //    document.querySelector('#play').onclick = function(e) {
     activeSocket.send(JSON.stringify({
-        'play': "play",
+        'status_game': "play",
     }));
 //    };
 };
 function sendCancellation() {
 //    document.querySelector('#cancellation').onclick = function(e) {
     activeSocket.send(JSON.stringify({
-        'cancellation': "cancellation",
+        'status_game': "cancellation",
     }));
 //    };
 };
+function submitForm() {
+    document.getElementById("accept_additional_settings").click();
+    if (window.history.replaceState) {
+//        setTimeout(windowReplace(), 3000);
+//        window.history.replaceState(null, null, window.location.href);
+    }
+}
+function deleteQuestion(question_ID) {
+    activeSocket.send(JSON.stringify({
+        'question': question_ID,
+    }));
+}
+//function windowReplace() {
+////    window.location.href = window.location.href;
+//    location.reload();
+//
+//}

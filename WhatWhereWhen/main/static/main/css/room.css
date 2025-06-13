@@ -149,7 +149,7 @@ body {
 }
 #button_page {
     min-width: 530px;
-    background-color: red;
+/*    background-color: red;*/
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
@@ -622,3 +622,39 @@ body {
 }
 
 
+.tools_menu {
+    list-style-type: none;
+    padding: 0;
+
+    display: none;
+    position: absolute;
+
+    background-color: #888088;
+    border: 3px solid black;
+
+    border-radius: 5px;
+    z-index: 10;
+
+/*    top: -20%;*/
+    left: 54%;
+
+    padding: 10px;
+}
+
+.tools_element {
+    margin-top: 5px;
+
+    border: 3px solid rgba(82, 79, 82, 1);
+    background-color: rgba(192, 166, 16, 1);
+    padding: 10px;
+    cursor: pointer;
+}
+
+.tools_element:hover {
+    background-color: rgba(217, 217, 217, 0.7);
+}
+
+.button.players:hover + .tools_menu,
+.tools_menu:hover {
+    display: block; /* Показывает меню при наведении на button_tools или на само меню */
+}

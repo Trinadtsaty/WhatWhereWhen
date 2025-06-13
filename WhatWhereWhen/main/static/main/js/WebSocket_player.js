@@ -35,14 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
         while (document.getElementById('button_page').firstChild) {
             document.getElementById('button_page').removeChild(document.getElementById('button_page').firstChild);
         }
-        console.log("user_leader=",user_leader)
-        console.log("user_captain=",user_captain)
-        console.log("user_host=",user_host)
+//        console.log("user_leader=",user_leader)
+//        console.log("user_captain=",user_captain)
+//        console.log("user_host=",user_host)
 
 
         for (let i = 0; i < usersArray.length; i++) {
             const user = usersArray[i];
-            console.log(user);
+//            console.log(user);
+
 
             const img = document.createElement('img');
             img.className = 'img';
@@ -96,8 +97,13 @@ document.addEventListener('DOMContentLoaded', function() {
 //                let user_host = false;
 //                let user_leader = false;
 //                let user_captain = false;
+//                console.log("!data.leader && !data.captain", !user.leader && !user.captain)
+//                console.log("data.leader || data.captain", user.leader || user.captain)
+//                console.log("!data.host", !user.host)
+//                console.log(user_host)
 
-                if (!user_leader && !user_captain) {
+
+                if (!user.leader && !user.captain) {
                     const buttons_leader = document.createElement('li');
                     buttons_leader.className = 'tools_element';
                     buttons_leader.textContent = 'Назначить ведущим';
@@ -111,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     spis_buttons.appendChild(buttons_captain);
                 };
 
-                if (user_leader || user_captain) {
+                if (user.leader || user.captain) {
                     const buttons_player = document.createElement('li');
                     buttons_player.className = 'tools_element';
                     buttons_player.textContent = 'Назначить игроком';
@@ -119,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     spis_buttons.appendChild(buttons_player);
                 };
 
-                if (!user_host) {
+                if (!user.host) {
                     const buttons_host = document.createElement('li');
                     buttons_host.className = 'tools_element';
                     buttons_host.textContent = 'Назначить Хостом';

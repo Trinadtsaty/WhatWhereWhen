@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="${class_add}">
             <div class="sender_box">
                 <div class="sender_image"><img src="${data.picture}" alt="фото профиля" class="sender_img"></div>
-                <strong class="sender_nick">${data.username}:</strong>
+                <strong class="sender_nick">${data.username}</strong>
             </div>
             <div class="text_messege">${data.message}</div>
         </div>
