@@ -5,6 +5,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 
 # Create your models here.
+#pip install daphne
+#pip install channels
 #admin@example.com
 
 class game_rooms(models.Model):
