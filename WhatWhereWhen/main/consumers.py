@@ -146,7 +146,17 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             data = json.loads(text_data)
 
             await self.change_role(data)
+
+            if data['comands'] == "out":
+                    await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        "type": "redirect_user",
+                        "target_user_id": data['user'],
+                    }
+                )
             await self.notify_all_about_users()
+
 
         except json.JSONDecodeError:
             error_msg = "Ошибка декодирования JSON"
@@ -199,6 +209,13 @@ class PeopleConsumer(AsyncWebsocketConsumer):
             'users': event['users']
         }))
 
+    async def redirect_user(self, event):
+        if event["target_user_id"] == self.user_id:
+            await self.send(text_data=json.dumps({
+                "type": "redirect",
+            }))
+
+
     @sync_to_async
     def change_role(self, data):
         from registration.models import Users
@@ -226,8 +243,25 @@ class PeopleConsumer(AsyncWebsocketConsumer):
                 elif room.leader == user:
                     room.leader = None
                     room.save()
+            if data['comands'] == "out":
+                try:
+                    if data["user"] in room.people_on_page.get("users", []):
+                        room.people_on_page["users"].remove(data["user"])
+                        room.save()
 
+                        first_player = Users.objects.get(ID=room.people_on_page["users"][0])
+                        if room.host.ID == data["user"]:
+                            room.host = first_player
+                            room.save()
+                        if room.leader.ID == data["user"]:
+                            room.leader = None
+                            room.save()
+                        if room.captain.ID == data["user"]:
+                            room.captain = None
+                            room.save()
 
+                except Exception as e:
+                    print(f"Error removing user: {e}")
 
         except Exception as e:
             print(f"Error removing role: {e}")
@@ -258,10 +292,10 @@ class PeopleConsumer(AsyncWebsocketConsumer):
                     room.captain = None
                     room.save()
 
+
+
         except Exception as e:
             print(f"Error removing user: {e}")
-
-
 
 
     async def notify_all_about_users(self):

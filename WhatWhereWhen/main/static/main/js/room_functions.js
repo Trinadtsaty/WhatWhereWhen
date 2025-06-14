@@ -72,15 +72,16 @@ function submitForm() {
     if (window.history.replaceState) {
 //        setTimeout(windowReplace(), 3000);
 //        window.history.replaceState(null, null, window.location.href);
-    }
-}
+    };
+};
 function deleteQuestion(question_ID) {
     activeSocket.send(JSON.stringify({
         'question': question_ID,
     }));
-}
+};
+
 //function windowReplace() {
 ////    window.location.href = window.location.href;
 //    location.reload();
 //
-//}
+//}href="1/"
