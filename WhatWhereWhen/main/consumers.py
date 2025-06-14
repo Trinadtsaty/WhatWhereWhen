@@ -412,7 +412,6 @@ class StartConsumer(AsyncWebsocketConsumer):
             room = await self.get_room(self.room_id)
             await self.filling_question(room)
 
-
         await self.notify_stage()
 
         # Проверяем, заполнилась ли комната
@@ -526,6 +525,16 @@ class StartConsumer(AsyncWebsocketConsumer):
                     questions_number =  int(data["question"])
                     question = cache.get(self.cache_key).pop(questions_number, None)
 
+                    self.stage["stage"] = "get_question"
+                    self.stage["message"] = {
+                        'question_name': question["question_name"],
+                        'text_question': question["text_question"],
+                        'note': question["note"],
+                        'answer': question["answer"],
+                        'answer_description': question["answer_description"],
+                    }
+                    self.stage["user_id"] = leader_id
+
                     group_message = {
                         'type': 'sending_question',
                         'question_name': question["question_name"],
@@ -533,7 +542,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'note': question["note"],
                         'answer': question["answer"],
                         'answer_description': question["answer_description"],
-                        'license_id': question["license_id"],
                         'lider_id': leader_id,
                     }
 
@@ -545,7 +553,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                         # Сохраняем обновленные вопросы обратно в кеш
                         cache.set(self.cache_key, questions, timeout=3600)
                         # await self.cache_set(self.cache_key, questions, timeout=3600)
-
 
                     group_message = {
                         'type': 'handle_action_question',  # Важно: должно соответствовать имени метода
@@ -586,7 +593,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                 elif data[action_type] == "pause":
                     self.stage["condition"] = "pause"
 
-
             # Отправляем в группу
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -607,7 +613,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'error': error_msg,
                 'details': str(e)
             }))
-
 
     @sync_to_async
     def filling_question(self, room):
@@ -631,7 +636,6 @@ class StartConsumer(AsyncWebsocketConsumer):
         cache.set(self.cache_key, questions_dict, timeout=3600)
         # self.cache_set(self.cache_key, questions_dict, timeout=3600)
 
-
     async def notify_stage(self):
         await self.send(text_data=json.dumps({
             'type': 'status_room',
@@ -644,7 +648,6 @@ class StartConsumer(AsyncWebsocketConsumer):
     async def sending_question(self,event):
         room = await self.get_room(self.room_id)
         try:
-
             if event["lider_id"] == self.user_id:
                 response = {
                     'type': "get_question",
@@ -653,7 +656,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'note': event.get('note'),
                     'answer': event.get('answer'),
                     'answer_description': event.get('answer_description'),
-                    'license_id': event.get('license_id'),
                 }
             elif room.show_question:
                 response = {
@@ -663,7 +665,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'note': None,
                     'answer': None,
                     'answer_description': None,
-                    'license_id': event.get('license_id'),
                 }
             else:
                 response = {
@@ -673,14 +674,12 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'note': None,
                     'answer': None,
                     'answer_description': None,
-                    'license_id': event.get('license_id'),
                 }
             await self.send(text_data=json.dumps(response))
         except Exception as e:
             print(f"Ошибка отправки сообщения: {e}")
             print("Произошла ошибка:")
             traceback.print_exc()
-
 
     async def handle_action_question(self, event):
         """Обработчик для action-сообщений"""

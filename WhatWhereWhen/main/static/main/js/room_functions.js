@@ -141,3 +141,16 @@ function sendQuestion(number) {
 //    'answer_description': question["answer_description"],
 //    'license_id': question["license_id"],
 //}
+
+//stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None}
+
+//self.stage["stage"] = "get_question"
+//self.stage["message"] = {
+//        'question_name': event.get('question_name'),
+//        'text_question': event.get('text_question'),
+//        'note': event.get('note'),
+//        'answer': event.get('answer'),
+//        'answer_description': event.get('answer_description'),
+//        'license_id': event.get('license_id'),
+//    }
+//self.stage["user_id"] = event["lider_id"]
