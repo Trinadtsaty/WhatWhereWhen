@@ -478,7 +478,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'timestamp': str(datetime.now())
                     }
 
-
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     group_message
