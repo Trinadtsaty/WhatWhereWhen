@@ -1,4 +1,6 @@
 from datetime import datetime
+from http.client import responses
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 from registration.models import Users
 from .models import ChatMessage, game_rooms
@@ -188,7 +190,7 @@ class PeopleConsumer(AsyncWebsocketConsumer):
         # Запускаем задачу с задержкой удаления пользователя
         async def delayed_remove():
             try:
-                await asyncio.sleep(10)  # ждем 10 секунд
+                await asyncio.sleep(1)  # ждем 10 секунд
                 await self.remove_user_from_room()
                 await self.notify_all_about_users()
             except asyncio.CancelledError:
@@ -373,15 +375,15 @@ class PeopleConsumer(AsyncWebsocketConsumer):
     #     return game_rooms.objects.get(ID=room_id)
 
 
-
-
-
+from django.core.cache import cache
+import traceback
 
 
 class StartConsumer(AsyncWebsocketConsumer):
-    time = 5
-    question = {}
-    stage = {"stage":"collecting", "condition":"expectation"}
+    time = 2
+    # переношу в кэш
+    # question = {}
+    stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None}
     room_tasks = {}
 
     async def connect(self):
@@ -389,39 +391,32 @@ class StartConsumer(AsyncWebsocketConsumer):
         self.user_id = self.scope['user'].ID
         self.room_group_name = f'action_{self.room_id}'
 
+        # Генерируем ключ для кеша
+        self.cache_key = f'room_{self.room_id}_questions'
+
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
         await self.accept()
 
-        print(self.question)
+        # print(self.question)
 
-        if self.question == {}:
+        # Получаем вопросы из кеша
+        questions = cache.get(self.cache_key)
+        print(questions)
+        # Используем асинхронную версию cache.get()
+        # questions = await self.cache_get(self.cache_key)
+
+        if questions is None:
             room = await self.get_room(self.room_id)
             await self.filling_question(room)
 
-        await self.notify_stage()
 
+        await self.notify_stage()
 
         # Проверяем, заполнилась ли комната
         # await self.check_room_and_start()
-
-    @sync_to_async
-    def filling_question(self, room):
-        from questions.models import Question
-        questions = Question.objects.filter(Question_Select__selection_id=room.selections.ID)
-        print(questions)
-        for question in questions:
-            self.question[question.ID] = {}
-            self.question[question.ID]["question_name"] = question.question_name
-            self.question[question.ID]["text_question"] = question.text_question
-            self.question[question.ID]["note"] = question.note
-            self.question[question.ID]["answer"] = question.answer
-            self.question[question.ID]["answer_description"] = question.answer_description
-            self.question[question.ID]["license_id"] = question.license_id.ID
-            self.question[question.ID]["frostbite"] = True
-
 
     # Вызывается при закрытии WebSocket соединения.
     async def disconnect(self, close_code):
@@ -431,39 +426,70 @@ class StartConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    # async def check_room_and_start(self):
-    #     """Проверяет, заполнена ли комната, и отправляет 'start' если да"""
-    #     room = await self.get_room(self.room_id)
-    #     if len(room.people_on_page["users"]) == room.room_limit:
-    #         user = await self.get_user(self.user_id)
-    #
-    #         group_message = {
-    #             'type': 'handle_action_event',
-    #             'action_type': 'start',
-    #             'message': 'Game is starting automatically!',
-    #             'username': 'System',
-    #             'user_id': 0,  # System user
-    #             'timestamp': str(datetime.now())
-    #         }
-    #
-    #         await self.channel_layer.group_send(
-    #             self.room_group_name,
-    #             group_message
-    #         )
-
     async def receive(self, text_data):
         room = await self.get_room(self.room_id)
-        async def timer_5_sec():
+        leader_id = await self.get_your_id(room, "leader")
+        # Получаем вопросы из кеша
+        questions = cache.get(self.cache_key)
+        # Используем асинхронную версию cache.get()
+        # questions = await self.cache_get(self.cache_key)
+
+        if questions is None:
+            room = await self.get_room(self.room_id)
+            await self.filling_question(room)
+            #
+
+            questions = cache.get(self.cache_key)
+
+        async def timer_5_sec(leader_id):
             try:
                 # await self.send_start_timer(self.time)
                 for i in range(self.time,0,-1):
-                    await asyncio.sleep(1)
                     print(f"Обратный отсчет {i} секунда")
+                    await asyncio.sleep(1)
                 print("0 секунд")
                 print("start")
 
+                print("room.random_order", room.random_order)
+                if room.random_order:
+                    group_message = {
+                        'type': 'handle_action_game',
+                        'action_type': "question",
+                        'message': self.time,
+                        # 'username': user.login,
+                        'user_id': leader_id,
+                        'timestamp': str(datetime.now())
+                    }
+                else:
+                    arr=[]
+                    for question_id, question_data in questions.items():
+                        if question_data["frostbite"]:
+                            arr.append(question_id)
+
+                    self.stage["stage"] = "question_menu"
+                    self.stage["message"] = arr
+                    self.stage["user_id"] = leader_id
+                    print("self.stage",self.stage)
+
+                    group_message = {
+                        'type': 'handle_action_game',
+                        'action_type': "question_menu",
+                        'message': arr,
+                        'user_id': leader_id,
+                        'timestamp': str(datetime.now())
+                    }
+
+
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    group_message
+                )
+
             except asyncio.CancelledError:
                 pass
+            except Exception as e:
+                print("Произошла ошибка:")
+                traceback.print_exc()
         try:
             # Получаем данные пользователя
             user = await self.get_user(self.user_id)
@@ -480,12 +506,11 @@ class StartConsumer(AsyncWebsocketConsumer):
 
             # Ищем первое совпадение действия
             for key in action_info:
-                print(key)
                 if key in data.keys():
                     action_type, log_message = action_info[key]
                     # log_message = action_info[key]
                     message = data[key]
-                    print(log_message + " " + str(message))
+                    # print(log_message + " " + str(message))
                     break
             else:
                 print("Неизвестный тип действия")
@@ -497,22 +522,38 @@ class StartConsumer(AsyncWebsocketConsumer):
 
             # Если на вход поступил вопрос:
             if action_type == "question":
-                if self.question[data[action_type]]:
-                    self.question[data[action_type]]["frostbite"] = False
+                if data["type"] == "open_question":
+                    questions_number =  int(data["question"])
+                    question = cache.get(self.cache_key).pop(questions_number, None)
+
+                    group_message = {
+                        'type': 'sending_question',
+                        'question_name': question["question_name"],
+                        'text_question': question["text_question"],
+                        'note': question["note"],
+                        'answer': question["answer"],
+                        'answer_description': question["answer_description"],
+                        'license_id': question["license_id"],
+                        'lider_id': leader_id,
+                    }
+
                 else:
-                    self.question[data[action_type]]["frostbite"] = True
-                print(self.question)
+                    question_id = data[action_type]
+                    if question_id in questions:
+                        questions[question_id]["frostbite"] = not questions[question_id]["frostbite"]
+
+                        # Сохраняем обновленные вопросы обратно в кеш
+                        cache.set(self.cache_key, questions, timeout=3600)
+                        # await self.cache_set(self.cache_key, questions, timeout=3600)
 
 
-                group_message = {
-                    'type': 'handle_action_question',  # Важно: должно соответствовать имени метода
-                    'action_type': action_type,
-                    'message': message,
-                    'username': user.login,
-                    'user_id': self.user_id,
-                    'timestamp': str(datetime.now())
-                }
-
+                    group_message = {
+                        'type': 'handle_action_question',  # Важно: должно соответствовать имени метода
+                        'action_type': action_type,
+                        'message': message,
+                        'user_id': self.user_id,
+                        'timestamp': str(datetime.now())
+                    }
 
             elif action_type == "status_game":
                 # question_tasks = {"stage": "collecting", "condition": "expectation"}
@@ -521,33 +562,29 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'type': 'handle_action_game',  # Важно: должно соответствовать имени метода
                         'action_type': "start_timer",
                         'message': self.time,
-                        'username': user.login,
                         'user_id': self.user_id,
                         'timestamp': str(datetime.now())
                     }
-                    task = asyncio.create_task(timer_5_sec())
+                    task = asyncio.create_task(timer_5_sec(leader_id))
                     self.room_tasks[self.room_id] = task
-
 
                 elif data[action_type] == "cancellation":
                     task = self.room_tasks.pop(self.room_id, None)
                     if task:
                         task.cancel()
+
+                    group_message = {
+                        'type': 'handle_action_game',  # Важно: должно соответствовать имени метода
+                        'action_type': "cancellation",
+                        'message': None,
+                        'user_id': self.user_id,
+                        'timestamp': str(datetime.now())
+                    }
+
                 elif data[action_type] == "play":
                     self.stage["condition"] = "play"
                 elif data[action_type] == "pause":
                     self.stage["condition"] = "pause"
-
-
-                # Формируем сообщение для рассылки
-                # group_message = {
-                #     'type': 'handle_action_game',  # Важно: должно соответствовать имени метода
-                #     'action_type': action_type,
-                #     'message': message,
-                #     'username': user.login,
-                #     'user_id': self.user_id,
-                #     'timestamp': str(datetime.now())
-                # }
 
 
             # Отправляем в группу
@@ -572,37 +609,77 @@ class StartConsumer(AsyncWebsocketConsumer):
             }))
 
 
+    @sync_to_async
+    def filling_question(self, room):
+        from questions.models import Question
+        questions_bd = Question.objects.filter(Question_Select__selection_id=room.selections.ID)
+        # print(questions)
+
+        questions_dict = {}
+        for question in questions_bd:
+            questions_dict[question.ID] = {
+                "question_name": question.question_name,
+                "text_question": question.text_question,
+                "note": question.note,
+                "answer": question.answer,
+                "answer_description": question.answer_description,
+                "license_id": question.license_id.ID,
+                "frostbite": True
+            }
+
+        # Сохраняем вопросы в кеш
+        cache.set(self.cache_key, questions_dict, timeout=3600)
+        # self.cache_set(self.cache_key, questions_dict, timeout=3600)
+
+
     async def notify_stage(self):
         await self.send(text_data=json.dumps({
             'type': 'status_room',
             'stage': self.stage["stage"],
             'condition': self.stage["condition"],
+            'message': self.stage["message"],
+            'user_id': self.stage["user_id"],
         }))
 
-    # async def send_start_timer(self,n):
-    #     await self.send(text_data=json.dumps({
-    #         'type' : 'status_room',
-    #         'status' : "start_timer",
-    #         'time' : n,
-    #     }))
+    async def sending_question(self,event):
+        room = await self.get_room(self.room_id)
+        try:
 
-    # stage = {"stage":"collecting", "condition":"expectation"}
-    # async def notify_stage(self):
-    #     await self.channel_layer.group_send(
-    #         self.room_group_name,
-    #         {
-    #             'type': 'send_status_room',
-    #             'stage': self.stage["stage"],
-    #             'condition': self.stage["condition"],
-    #         }
-    #     )
-    #
-    # async def send_status_room(self, event):
-    #     await self.send(text_data=json.dumps({
-    #         'type': 'status_room',
-    #         'stage': event['stage'],
-    #         'condition': event["condition"],
-    #     }))
+            if event["lider_id"] == self.user_id:
+                response = {
+                    'type': "get_question",
+                    'question_name': event.get('question_name'),
+                    'text_question': event.get('text_question'),
+                    'note': event.get('note'),
+                    'answer': event.get('answer'),
+                    'answer_description': event.get('answer_description'),
+                    'license_id': event.get('license_id'),
+                }
+            elif room.show_question:
+                response = {
+                    'type': "get_question",
+                    'question_name': event.get('question_name'),
+                    'text_question': event.get('text_question'),
+                    'note': None,
+                    'answer': None,
+                    'answer_description': None,
+                    'license_id': event.get('license_id'),
+                }
+            else:
+                response = {
+                    'type': "get_question",
+                    'question_name': None,
+                    'text_question': None,
+                    'note': None,
+                    'answer': None,
+                    'answer_description': None,
+                    'license_id': event.get('license_id'),
+                }
+            await self.send(text_data=json.dumps(response))
+        except Exception as e:
+            print(f"Ошибка отправки сообщения: {e}")
+            print("Произошла ошибка:")
+            traceback.print_exc()
 
 
     async def handle_action_question(self, event):
@@ -611,7 +688,6 @@ class StartConsumer(AsyncWebsocketConsumer):
             response = {
                 'type': event.get('action_type', 'unknown_action'),
                 'message': event.get('message', ''),
-                'username': event.get('username', 'unknown'),
                 'user_id': event.get('user_id', 0),
                 'timestamp': event.get('timestamp', str(datetime.now()))
             }
@@ -626,7 +702,6 @@ class StartConsumer(AsyncWebsocketConsumer):
             response = {
                 'type': event.get('action_type'),
                 'message': event.get('message'),
-                'username': event.get('username', 'unknown'),
                 'user_id': event.get('user_id', 0),
                 'timestamp': event.get('timestamp', str(datetime.now()))
             }
@@ -644,4 +719,14 @@ class StartConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_room(self, room_id):
         return game_rooms.objects.get(ID=room_id)
+
+    @sync_to_async
+    def get_your_id(self, room, type):
+        if type == "host":
+            return room.host.ID
+        elif type == "captain":
+            return room.captain.ID
+        elif type == "leader":
+            return room.leader.ID
+
 

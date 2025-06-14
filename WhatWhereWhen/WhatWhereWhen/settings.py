@@ -184,3 +184,11 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     }
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',  # любое уникальное имя
+    }
+}
+CACHE_TTL = 60 * 60  # 1 час

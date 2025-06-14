@@ -166,11 +166,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     start.textContent = 'Старт';
                     start.onclick = sendStart;
 
+
+
                     const cancellation = document.createElement('div');
                     cancellation.className = 'button button_page_element';
                     cancellation.id = 'cancellation';
                     cancellation.textContent = 'Отмена';
                     cancellation.onclick = sendCancellation;
+                    cancellation.style.display = "none";
 
                     button_page.appendChild(settings);
                     button_page.appendChild(start);

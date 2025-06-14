@@ -658,3 +658,45 @@ body {
 .tools_menu:hover {
     display: block; /* Показывает меню при наведении на button_tools или на само меню */
 }
+#timer {
+    position: absolute;
+    background-color: red;
+    color: black;
+    font-size: 70px;
+}
+#QuestionMenu {
+    position: absolute;
+    z-index: 500;
+    margin-top: 2.5%;
+    margin-left: 2.5%;
+    background-color: rgba(136, 128, 136, 1);
+    border: 3px solid rgba(82, 79, 82, 1);
+    width: 90%;
+    height: 90%;
+
+    display: flex;              /* Включаем Flexbox */
+    flex-wrap: wrap;            /* Разрешаем перенос на новую строку */
+    align-content: flex-start;  /* Выравнивание строк по верхнему краю */
+    padding: 20px;              /* Отступ внутри контейнера (по желанию) */
+    overflow-y: auto;           /* Добавим прокрутку, если кнопок много */
+}
+.question_button {
+    margin-left: 40px;
+    margin-top: 40px;
+    width: 200px;
+    height: 200px;
+    background-color: rgba(192, 166, 16, 1);
+    border: 3px solid rgba(82, 79, 82, 1);
+    border-radius: 20px;
+    font-size: 150px;
+    box-shadow: -7px -8px 4px 0px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;  /* Горизонтальное центрирование */
+    align-items: center;      /* Вертикальное центрирование */
+}
+.question_button:hover {
+    background-color: rgba(82, 79, 82, 1);
+    border: 3px solid rgba(192, 166, 16, 1);
+}

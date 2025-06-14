@@ -41,6 +41,8 @@ function cleaksettings() {
 };
 function sendStart() {
 //    document.querySelector('#start').onclick = function(e) {
+    document.getElementById("start").style.display = "none";
+    document.getElementById("cancellation").style.display = "";
     activeSocket.send(JSON.stringify({
         'status_game': "start",
     }));
@@ -61,6 +63,8 @@ function sendPlay() {
 //    };
 };
 function sendCancellation() {
+    document.getElementById("cancellation").style.display = "none";
+    document.getElementById("start").style.display = "";
 //    document.querySelector('#cancellation').onclick = function(e) {
     activeSocket.send(JSON.stringify({
         'status_game': "cancellation",
@@ -79,9 +83,61 @@ function deleteQuestion(question_ID) {
         'question': question_ID,
     }));
 };
+function createQuestionMenu(arr) {
+    document.getElementById("QuestionMenu").style.display = ""
+    const menu = document.getElementById("QuestionMenu")
+    var i=0
+    console.log(arr)
+    for (item in arr) {
+        i++
+        console.log(i)
+        const button_div = document.createElement('div');
+        button_div.className = 'question_button';
+        button_div.textContent = i;
+        button_div.onclick = () => sendQuestion(item);
+        menu.appendChild(button_div);
+    };
+};
+function closeButtonMenu() {
+    document.getElementById("QuestionMenu").style.display = "none"
+};
+function sendQuestion(number) {
+    closeButtonMenu();
+    activeSocket.send(JSON.stringify({
+        'question': number,
+        'type' : "open_question",
+    }));
+};
 
 //function windowReplace() {
 ////    window.location.href = window.location.href;
 //    location.reload();
 //
 //}href="1/"
+
+
+//if data['comands'] == "out":
+//        await self.channel_layer.group_send(
+//        self.room_group_name,
+//        {
+//            "type": "redirect_user",
+//            "target_user_id": data['user'],
+//        }
+//    )
+//await self.notify_all_about_users()
+
+//async def redirect_user(self, event):
+//   if event["target_user_id"] == self.user_id:
+//       await self.send(text_data=json.dumps({
+//           "type": "redirect",
+//       }))
+
+//group_message = {
+//    'type': 'sending_question',
+//    'question_name': question["question_name"],
+//    'text_question': question["text_question"],
+//    'note': question["note"],
+//    'answer': question["answer"],
+//    'answer_description': question["answer_description"],
+//    'license_id': question["license_id"],
+//}

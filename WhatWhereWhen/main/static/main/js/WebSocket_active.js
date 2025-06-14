@@ -5,79 +5,84 @@ const activeSocket = new WebSocket(
 );
 activeSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    if (data.type === 'users_list') {
-        // Обработка списка пользователей
-        console.log('Users in room:', data.users);
-    }
-};
-activeSocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
     console.log(data);
-    console.log(data.type)
-    console.log(data.message)
+
+    if (data.type === "start_timer") {
+        startCountdown(data.message);
+    };
+    if (data.type === "cancellation") {
+        cancelCountdown()
+    };
+    if (data.type === "question_menu") {
+//        createQuestionMenu(data.message)
+        if (user_id === data.user_id) {
+            createQuestionMenu(data.message)
+        };
+    };
+    if (data.type === "status_room") {
+        if (data.stage === "collecting") {
+            // Вышел за хлебом
+            console.log("Вышел за хлебом")
+        } else if (data.stage === "question_menu") {
+//            createQuestionMenu(data.message)
+            console.log(data.message)
+            if (user_id === data.user_id) {
+                createQuestionMenu(data.message)
+            };
+        };
+    };
+
+//    console.log(data);
 };
 
+const timerElement = document.getElementById('timer');
+timerElement.style.display = "none";
+let countdownInterval = null; // Переменная для хранения интервала
 
+function startCountdown(timer_value) {
+    console.log("таймер запущен");
 
-//    function sendStart() {
-//        document.querySelector('#start').onclick = function(e) {
-//            activeSocket.send(JSON.stringify({
-//                'start': "start",
-//            }));
-//        };
-//    };
-//    function sendPause() {
-//        document.querySelector('#pause').onclick = function(e) {
-//            activeSocket.send(JSON.stringify({
-//                'pause': "pause",
-//            }));
-//        };
-//    };
-//    function sendPlay() {
-//        document.querySelector('#play').onclick = function(e) {
-//            activeSocket.send(JSON.stringify({
-//                'play': "play",
-//            }));
-//        };
-//    };
-//    function sendCancellation() {
-//        document.querySelector('#cancellation').onclick = function(e) {
-//            activeSocket.send(JSON.stringify({
-//                'cancellation': "cancellation",
-//            }));
-//        };
-//    };
+    // Останавливаем предыдущий таймер, если он был
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
 
-//    if (document.querySelector('#start')) {
-//        document.querySelector('#start').onclick = function(e) {
-//            activeSocket.send(JSON.stringify({
-//                'start': "start",
-//            }));
-//        };
-//    };
-//    if (document.querySelector('#pause')) {
-//        document.querySelector('#pause').onclick = function(e) {
-//            activeSocket.send(JSON.stringify({
-//                'pause': "pause",
-//            }));
-//        };
-//    };
-//
-//    if (document.querySelector('#play')) {
-//        document.querySelector('#play').onclick = function(e) {
-//            activeSocket.send(JSON.stringify({
-//                'play': "play",
-//            }));
-//        };
-//    };
-//    if (document.querySelector('#cancellation')) {
-//        document.querySelector('#cancellation').onclick = function(e) {
-//            activeSocket.send(JSON.stringify({
-//                'cancellation': "cancellation",
-//            }));
-//        };
-//    };
+    timerElement.textContent = timer_value;
+    let value = parseInt(timerElement.textContent, 10);
+    checkScale();
+    timerElement.style.display = "";
 
+    countdownInterval = setInterval(() => {
+        if (value > 0) {
+            value -= 1;
+            timerElement.textContent = value;
+        } else {
+            clearInterval(countdownInterval);
+            timerElement.style.display = "none"; // Скрываем таймер по окончанию
+        }
+    }, 1000);
+};
 
+// Функция для отмены таймера
+function cancelCountdown() {
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        timerElement.style.display = "none";
+        console.log("Таймер отменен");
+    };
+};
 
-//});
+function checkScale() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const width_windiw = timerElement.offsetWidth;
+    const height_windiw = timerElement.offsetHeight;
+
+    timerElement.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`
+    timerElement.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`
+}
+// Запуск таймера
+
+window.addEventListener('resize', checkScale);
