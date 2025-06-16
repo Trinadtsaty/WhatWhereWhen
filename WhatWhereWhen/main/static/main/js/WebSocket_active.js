@@ -97,3 +97,7 @@ function checkScale() {
 // Запуск таймера
 
 window.addEventListener('resize', checkScale);
+
+document.querySelector('#answer_open_box').addEventListener('click', function() {
+    document.querySelector('#popup_answer').classList.toggle('show');
+});

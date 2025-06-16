@@ -526,12 +526,9 @@ body {
     margin: 0; /* Убираем предыдущие margin */
 }
 #popup_chat {
-    position: absolute; /* Делаем контейнер относительным для позиционирования */
     margin-left: 82.5px; /* Половина ширины chat_open_box (165px / 2) */
     display: flex;
-    align-items: flex-start;
-}
-#popup_chat {
+
     position: fixed; /* Используем fixed для позиционирования относительно окна */
     right: -600px; /* Сдвигаем за экран на ширину chat_box (600px) */
     top: 50%; /* Позиционируем по вертикали */
@@ -699,4 +696,87 @@ body {
 .question_button:hover {
     background-color: rgba(82, 79, 82, 1);
     border: 3px solid rgba(192, 166, 16, 1);
+}
+#page_question {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+
+
+
+#popup_answer {
+    margin-right: 82.5px;
+    display: flex;
+
+    position: fixed; /* Используем fixed для позиционирования относительно окна */
+    left: -600px; /* Сдвигаем за экран на ширину chat_box (600px) */
+    top: 50%; /* Позиционируем по вертикали */
+    transform: translateY(-50%); /* Точное центрирование по вертикали */
+    display: flex;
+    align-items: flex-start;
+    transition: left 0.3s ease; /* Плавное появление/скрытие */
+    z-index: 1000; /* Убедитесь, что элемент поверх других */
+
+}
+
+/* Когда нужно показать popup_chat (например, по клику) */
+#popup_answer.show {
+    left: 0; /* Возвращаем на экран */
+}
+#answer_box {
+    background-color: rgba(136, 128, 136, 1);
+    border: 3px solid white;
+    height: 780px;
+    width: 600px;
+    border-radius: 30px;
+    padding: 15px;
+    position: relative; /* Для позиционирования chat_open_box */
+    z-index: 2;
+}
+#answer {
+    background-color: rgba(217, 217, 217, 0.7);
+    height: 570px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+}
+#answer::-webkit-scrollbar {
+  width: 8px; /* тонкий скроллбар */
+}
+#answer::-webkit-scrollbar-thumb {
+  background-color: #C0A610; /* цвет ползунка */
+}
+#answer::-webkit-scrollbar-track {
+  background-color: rgba(217, 217, 217, 0.7); /* цвет дорожки */
+}
+#answer_open_box {
+    position: absolute;
+    height: 165px;
+    width: 165px;
+    border-radius: 50%;
+    border: 3px solid white;
+    background-color: rgba(136, 128, 136, 1);
+    left: 557.5px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+#answer_open {
+    font-size: 32px;
+    color: white;
+    position: relative;
+    left: 30%; /* Центрируем по горизонтали */
+    margin: 0; /* Убираем предыдущие margin */
 }
