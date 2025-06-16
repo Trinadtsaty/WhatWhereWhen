@@ -763,7 +763,7 @@ body {
     border-radius: 50%;
     border: 3px solid white;
     background-color: rgba(136, 128, 136, 1);
-    left: 557.5px;
+    right: -82.5px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
