@@ -14,9 +14,15 @@ activeSocket.onmessage = function(e) {
         cancelCountdown()
     };
     if (data.type === "question_menu") {
-//        createQuestionMenu(data.message)
         if (user_id === data.user_id) {
             createQuestionMenu(data.message)
+        };
+    };
+    if (data.type === "get_question") {
+        if (user_id === data.user_id) {
+            showQuestion_leader(data)
+        } else {
+            showQuestion_user(data)
         };
     };
     if (data.type === "status_room") {
@@ -24,15 +30,19 @@ activeSocket.onmessage = function(e) {
             // Вышел за хлебом
             console.log("Вышел за хлебом")
         } else if (data.stage === "question_menu") {
-//            createQuestionMenu(data.message)
-            console.log(data.message)
+            hide_element()
             if (user_id === data.user_id) {
                 createQuestionMenu(data.message)
             };
+        } else if (data.stage === "get_question") {
+            hide_element()
+            if (user_id === data.user_id) {
+                showQuestion_leader(data.message)
+            } else {
+                showQuestion_user(data.message)
+            };
         };
     };
-
-//    console.log(data);
 };
 
 const timerElement = document.getElementById('timer');
@@ -59,7 +69,8 @@ function startCountdown(timer_value) {
         } else {
             clearInterval(countdownInterval);
             timerElement.style.display = "none"; // Скрываем таймер по окончанию
-        }
+            hide_element()
+        };
     }, 1000);
 };
 

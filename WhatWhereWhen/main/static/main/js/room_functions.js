@@ -80,6 +80,7 @@ function submitForm() {
 };
 function deleteQuestion(question_ID) {
     activeSocket.send(JSON.stringify({
+        'type': "delete",
         'question': question_ID,
     }));
 };
@@ -87,10 +88,8 @@ function createQuestionMenu(arr) {
     document.getElementById("QuestionMenu").style.display = ""
     const menu = document.getElementById("QuestionMenu")
     var i=0
-    console.log(arr)
-    for (item in arr) {
+    for (const item of arr) {
         i++
-        console.log(i)
         const button_div = document.createElement('div');
         button_div.className = 'question_button';
         button_div.textContent = i;
@@ -102,6 +101,7 @@ function closeButtonMenu() {
     document.getElementById("QuestionMenu").style.display = "none"
 };
 function sendQuestion(number) {
+    console.log(number)
     closeButtonMenu();
     activeSocket.send(JSON.stringify({
         'question': number,
@@ -109,48 +109,14 @@ function sendQuestion(number) {
     }));
 };
 
-//function windowReplace() {
-////    window.location.href = window.location.href;
-//    location.reload();
-//
-//}href="1/"
+function showQuestion_user(data) {
+    console.log("showQuestion_user",data)
+};
+function showQuestion_leader(data) {
+    console.log("showQuestion_leader",data)
+};
 
+function hide_element() {
+    document.getElementById("page").style.display = "none";
+};
 
-//if data['comands'] == "out":
-//        await self.channel_layer.group_send(
-//        self.room_group_name,
-//        {
-//            "type": "redirect_user",
-//            "target_user_id": data['user'],
-//        }
-//    )
-//await self.notify_all_about_users()
-
-//async def redirect_user(self, event):
-//   if event["target_user_id"] == self.user_id:
-//       await self.send(text_data=json.dumps({
-//           "type": "redirect",
-//       }))
-
-//group_message = {
-//    'type': 'sending_question',
-//    'question_name': question["question_name"],
-//    'text_question': question["text_question"],
-//    'note': question["note"],
-//    'answer': question["answer"],
-//    'answer_description': question["answer_description"],
-//    'license_id': question["license_id"],
-//}
-
-//stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None}
-
-//self.stage["stage"] = "get_question"
-//self.stage["message"] = {
-//        'question_name': event.get('question_name'),
-//        'text_question': event.get('text_question'),
-//        'note': event.get('note'),
-//        'answer': event.get('answer'),
-//        'answer_description': event.get('answer_description'),
-//        'license_id': event.get('license_id'),
-//    }
-//self.stage["user_id"] = event["lider_id"]

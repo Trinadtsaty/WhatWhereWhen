@@ -380,7 +380,7 @@ import traceback
 
 
 class StartConsumer(AsyncWebsocketConsumer):
-    time = 2
+    time = 5
     # переношу в кэш
     # question = {}
     stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None}
@@ -412,10 +412,21 @@ class StartConsumer(AsyncWebsocketConsumer):
             room = await self.get_room(self.room_id)
             await self.filling_question(room)
 
-        await self.notify_stage()
+        print('self.stage["stage"]', self.stage["stage"])
+        print('self.stage["user_id"] == self.user_id', self.stage["user_id"] == self.user_id)
+
+        if self.stage["stage"] == "get_question":
+            if self.stage["user_id"] == self.user_id:
+                await self.notify_stage()
+            else:
+                room = await self.get_room(self.room_id)
+                await self.notify_stage_not_leader(room)
+        else:
+            await self.notify_stage()
 
         # Проверяем, заполнилась ли комната
         # await self.check_room_and_start()
+
 
     # Вызывается при закрытии WebSocket соединения.
     async def disconnect(self, close_code):
@@ -444,12 +455,13 @@ class StartConsumer(AsyncWebsocketConsumer):
             try:
                 # await self.send_start_timer(self.time)
                 for i in range(self.time,0,-1):
-                    print(f"Обратный отсчет {i} секунда")
                     await asyncio.sleep(1)
+                    print(f"Обратный отсчет {i} секунда")
+                await asyncio.sleep(1)
                 print("0 секунд")
                 print("start")
 
-                print("room.random_order", room.random_order)
+                # print("room.random_order", room.random_order)
                 if room.random_order:
                     group_message = {
                         'type': 'handle_action_game',
@@ -463,12 +475,13 @@ class StartConsumer(AsyncWebsocketConsumer):
                     arr=[]
                     for question_id, question_data in questions.items():
                         if question_data["frostbite"]:
+                            print(question_id)
                             arr.append(question_id)
 
                     self.stage["stage"] = "question_menu"
                     self.stage["message"] = arr
                     self.stage["user_id"] = leader_id
-                    print("self.stage",self.stage)
+                    # print("self.stage",self.stage)
 
                     group_message = {
                         'type': 'handle_action_game',
@@ -544,7 +557,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'lider_id': leader_id,
                     }
 
-                else:
+                elif data["type"] == "delete":
                     question_id = data[action_type]
                     if question_id in questions:
                         questions[question_id]["frostbite"] = not questions[question_id]["frostbite"]
@@ -606,6 +619,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'received_data': text_data
             }))
         except Exception as e:
+            print("Произошла ошибка:")
+            traceback.print_exc()
             error_msg = f"Ошибка обработки сообщения: {str(e)}"
             print(error_msg)
             await self.send(text_data=json.dumps({
@@ -644,6 +659,28 @@ class StartConsumer(AsyncWebsocketConsumer):
             'user_id': self.stage["user_id"],
         }))
 
+
+    async def notify_stage_not_leader(self,room):
+        question = {
+                'question_name': self.stage["message"]["question_name"],
+                'text_question': self.stage["message"]["text_question"],
+                'note': None,
+                'answer': None,
+                'answer_description': None,
+            }
+
+        if not room.show_question:
+            question['text_question'] = None
+
+
+        await self.send(text_data=json.dumps({
+            'type': 'status_room',
+            'stage': self.stage["stage"],
+            'condition': self.stage["condition"],
+            'message': question,
+            'user_id': self.stage["user_id"],
+        }))
+
     async def sending_question(self,event):
         room = await self.get_room(self.room_id)
         try:
@@ -655,6 +692,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'note': event.get('note'),
                     'answer': event.get('answer'),
                     'answer_description': event.get('answer_description'),
+                    'user_id': event["lider_id"],
                 }
             elif room.show_question:
                 response = {
@@ -664,6 +702,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'note': None,
                     'answer': None,
                     'answer_description': None,
+                    'user_id': event["lider_id"],
                 }
             else:
                 response = {
@@ -673,6 +712,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'note': None,
                     'answer': None,
                     'answer_description': None,
+                    'user_id': event["lider_id"],
                 }
             await self.send(text_data=json.dumps(response))
         except Exception as e:
@@ -708,8 +748,6 @@ class StartConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"Ошибка отправки сообщения: {e}")
 
-
-
     @database_sync_to_async
     def get_user(self, user_id):
         return Users.objects.get(ID=user_id)
@@ -726,5 +764,3 @@ class StartConsumer(AsyncWebsocketConsumer):
             return room.captain.ID
         elif type == "leader":
             return room.leader.ID
-
-
