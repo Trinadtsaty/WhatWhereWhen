@@ -697,18 +697,6 @@ body {
     background-color: rgba(82, 79, 82, 1);
     border: 3px solid rgba(192, 166, 16, 1);
 }
-#page_question {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    color: white;
-    overflow-y: hidden;
-    overflow-x: auto;
-}
-
-
-
-
 #popup_answer {
     margin-right: 82.5px;
     display: flex;
@@ -738,9 +726,15 @@ body {
     position: relative; /* Для позиционирования chat_open_box */
     z-index: 2;
 }
+#answer_description {
+    font-size: 30px;
+    color: white;
+}
 #answer {
+    font-size: 40px;
+    color: white;
     background-color: rgba(217, 217, 217, 0.7);
-    height: 570px;
+/*    height: 570px;*/
     overflow-y: auto;
     overflow-x: hidden;
 
@@ -780,3 +774,31 @@ body {
     left: 30%; /* Центрируем по горизонтали */
     margin: 0; /* Убираем предыдущие margin */
 }
+
+#page_question {
+    display: flex;
+    flex-direction: column; /* Позволяет размещать элементы в колонку */
+    justify-content: center; /* Центрируем по вертикали */
+    align-items: center; /* Центрируем по горизонтали */
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    overflow-y: hidden;
+    overflow-x: auto;
+    position: relative; /* Для абсолютного позиционирования дочерних элементов */
+}
+
+#question_screen {
+    width: 1200px;
+    height: 800px;
+    border-radius: 30px;
+    border: 3px solid white;
+    background-color: rgba(136, 128, 136, 1);
+}
+
+#log_out_info_page2 {
+    position: absolute; /* Позволяет позиционировать элемент относительно #page_question */
+    left: 10px; /* Отступ слева */
+    bottom: 10px; /* Отступ снизу */
+}
+

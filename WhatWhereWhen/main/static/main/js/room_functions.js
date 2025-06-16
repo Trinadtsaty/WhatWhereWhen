@@ -111,12 +111,29 @@ function sendQuestion(number) {
 
 function showQuestion_user(data) {
     console.log("showQuestion_user",data)
+
+
 };
 function showQuestion_leader(data) {
     console.log("showQuestion_leader",data)
+    if (!data.note) {
+        document.getElementById("description_button").style.display = "none";
+    }
+    document.getElementById("page_question").style.display = "";
+
+    document.getElementById("answer").textContent = "Ответ:" + data.answer
+    document.getElementById("answer_description").textContent = "Примичание" + data.answer_description
+
+    document.getElementById("question_name").textContent = data.question_name
+    document.getElementById("question_text").textContent = data.text_question
+
 };
 
 function hide_element() {
     document.getElementById("page").style.display = "none";
+    document.getElementById("page_question").style.display = "";
+};
+function open_answer() {
+    document.querySelector('#popup_answer').classList.toggle('show');
 };
 

@@ -8,16 +8,6 @@
 <!--    <link rel="stylesheet" href="{% static 'main/css/add.css' %}">-->
 </head>
 <body>
-    <div id="popup_answer" class="popup">
-        <div id="answer_box">
-            <div id="answer">
-
-            </div>
-        </div>
-        <div id="answer_open_box">
-            <div id="answer_open">|||</div>
-        </div>
-    </div>
 
     <div id="popup_chat" class="popup">
         <div id="chat_open_box">
@@ -175,13 +165,32 @@
         </div>
     </div>
     <div id="QuestionMenu" style="display:none;">
-<!--            <div id="close" class="button" onclick="closeButtonMenu()">close</div>-->
+
+    </div>
+    <div id="popup_answer" class="popup">
+        <div id="answer_box">
+            <div id="answer">
+            </div>
+            <div id="answer_description">
+            </div>
+            <div id="note" style="display: none;">
+            </div>
+        </div>
+        <div id="answer_open_box" onclick="open_answer()">
+            <div id="answer_open">|||</div>
+        </div>
+        <div id="description_button">
+            <div id="answer_button"></div>
+            <div id="note_button"></div>
+        </div>
     </div>
 
-
-
-    <div id="page_question">
-
+    <div id="page_question" style="display: none">
+        <div id="question_screen">
+            <div id="question_name"></div>
+            <div id="question_text"></div>
+        </div>
+        <div id="log_out_info_page2" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Logout_Secret' room_number=room.ID  %}">Выйти со страници</a></div>
     </div>
 
     {% if error %}
@@ -192,6 +201,11 @@
 
 
     <script>
+        document.getElementById("page").style.display = "none";
+        document.getElementById("popup_chat").style.display = "none";
+        document.getElementById("page_question").style.display = "";
+
+
         function showError() {
             var errorDiv = document.getElementById("claim_error");
             errorDiv.style.display = "block"; // Показываем окно
