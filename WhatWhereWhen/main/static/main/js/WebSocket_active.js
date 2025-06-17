@@ -29,6 +29,7 @@ activeSocket.onmessage = function(e) {
         if (data.stage === "collecting") {
             // Вышел за хлебом
             console.log("Вышел за хлебом")
+            showe_element()
         } else if (data.stage === "question_menu") {
             hide_element()
             if (user_id === data.user_id) {

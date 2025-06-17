@@ -404,7 +404,7 @@ class StartConsumer(AsyncWebsocketConsumer):
 
         # Получаем вопросы из кеша
         questions = cache.get(self.cache_key)
-        print(questions)
+        # print(questions)
         # Используем асинхронную версию cache.get()
         # questions = await self.cache_get(self.cache_key)
 
@@ -412,8 +412,8 @@ class StartConsumer(AsyncWebsocketConsumer):
             room = await self.get_room(self.room_id)
             await self.filling_question(room)
 
-        print('self.stage["stage"]', self.stage["stage"])
-        print('self.stage["user_id"] == self.user_id', self.stage["user_id"] == self.user_id)
+        # print('self.stage["stage"]', self.stage["stage"])
+        # print('self.stage["user_id"] == self.user_id', self.stage["user_id"] == self.user_id)
 
         if self.stage["stage"] == "get_question":
             if self.stage["user_id"] == self.user_id:
@@ -459,7 +459,7 @@ class StartConsumer(AsyncWebsocketConsumer):
 
             for question_id, question_data in questions.items():
                 if question_data["frostbite"]:
-                    print(question_id)
+                    # print(question_id)
                     arr["all"].append(question_id)
                     if question_data["use"]:
                         arr["use"].append(question_id)
@@ -478,7 +478,24 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'timestamp': str(datetime.now())
             }
             return group_message
+        async def time_question():
+            try:
+                for i in range(self.stage["message"]["time_read"], -1, -1):
+                    await asyncio.sleep(1)
+                    self.stage["message"]['time_read'] = i
+                    print(f"Обратный отсчет чтения вопроса: {i//60}:{i-i//60*60}")
 
+                for i in range(self.stage["message"]["time_question"], -1, -1):
+                    await asyncio.sleep(1)
+                    self.stage["message"]['time_question'] = i
+                    print(f"Обратный отсчет ответа на вопрос: {i//60}:{i-i//60*60}")
+
+                print("Вопрос закончился")
+            except asyncio.CancelledError:
+                pass
+            except Exception as e:
+                print("Произошла ошибка:")
+                traceback.print_exc()
 
         async def timer_5_sec(leader_id):
             try:
@@ -517,7 +534,7 @@ class StartConsumer(AsyncWebsocketConsumer):
             # Получаем данные пользователя
             user = await self.get_user(self.user_id)
             data = json.loads(text_data)
-            print(data)
+            # print(data)
 
             print(f"Получены данные от {user.login}:", data.keys())
 
@@ -572,6 +589,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                     # cache.set(self.cache_key, questions_dict, timeout=3600)
 
                     self.stage["stage"] = "get_question"
+
                     self.stage["message"] = {
                         'question_name': question["question_name"],
                         'text_question': question["text_question"],
@@ -579,6 +597,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'answer': question["answer"],
                         'answer_description': question["answer_description"],
                         'question_number': question["question_number"],
+                        'time_read': (len(question["text_question"]) // room.reading_speed) + 1,
+                        'time_question': room.question_time,
                     }
                     self.stage["user_id"] = leader_id
 
@@ -591,8 +611,28 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'answer_description': question["answer_description"],
                         'lider_id': leader_id,
                         'question_number': question["question_number"],
+                        'time_read': (len(question["text_question"]) // room.reading_speed) + 1,
+                        'time_question': room.question_time,
                     }
+                    task = asyncio.create_task(time_question())
+                    self.room_tasks[self.room_id] = task
+
                 elif data["type"] == "get_menu":
+                    # вернуться
+                    if self.room_tasks != {}:
+                        task = self.room_tasks.pop(self.room_id, None)
+                        if task:
+                            task.cancel()
+
+                        questions = cache.get(self.cache_key)
+                        for question_id, question_data in questions.items():
+                            if question_data["frostbite"]:
+                                question_data["time_read"] = (len(question_data["text_question"]) // room.reading_speed) + 1
+                                question_data["time_question"] = room.question_time
+                        cache.set(self.cache_key, questions, timeout=3600)
+
+
+
                     group_message = await send_question_meny()
 
                     await self.channel_layer.group_send(
@@ -629,6 +669,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                     task = asyncio.create_task(timer_5_sec(leader_id))
                     self.room_tasks[self.room_id] = task
 
+
                 elif data[action_type] == "cancellation":
                     task = self.room_tasks.pop(self.room_id, None)
                     if task:
@@ -642,16 +683,41 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'timestamp': str(datetime.now())
                     }
 
+                # Вернуться
                 elif data[action_type] == "play":
                     self.stage["condition"] = "play"
+                    task = asyncio.create_task(time_question())
+                    self.room_tasks[self.room_id] = task
+
                 elif data[action_type] == "pause":
                     self.stage["condition"] = "pause"
+                    task = self.room_tasks.pop(self.room_id, None)
+                    if task:
+                        task.cancel()
+
+                elif data[action_type] == "pluse":
+                    task = self.room_tasks.pop(self.room_id, None)
+                    if task:
+                        task.cancel()
+
+                    if self.stage["message"]["time_read"] > 0:
+                        self.stage["message"]["time_read"] += data["value"]
+                    elif self.stage["message"]["time_question"] > 0:
+                        self.stage["message"]["time_question"] += data["value"]
+
+                    task = asyncio.create_task(time_question())
+                    self.room_tasks[self.room_id] = task
+
 
             # Отправляем в группу
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                group_message
-            )
+            try:
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    group_message
+                )
+            except Exception as e:
+                if str(e) != "cannot access local variable 'group_message' where it is not associated with a value":
+                    print(e)
 
         except json.JSONDecodeError:
             error_msg = "Ошибка декодирования JSON"
@@ -690,6 +756,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                 "frostbite": True,
                 "question_number": i,
                 'use': False,
+                'time_read': (len(question.text_question) // room.reading_speed) +1,
+                'time_question': room.question_time,
             }
 
         # Сохраняем вопросы в кеш
@@ -697,9 +765,6 @@ class StartConsumer(AsyncWebsocketConsumer):
 
         # Преобразование обратно в словарь
         questions_dict = dict(sorted_questions)
-
-        # Вывод отсортированного результата
-        print(questions_dict)
 
         cache.set(self.cache_key, questions_dict, timeout=3600)
         # self.cache_set(self.cache_key, questions_dict, timeout=3600)
@@ -749,6 +814,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'answer_description': event.get('answer_description'),
                     'user_id': event["lider_id"],
                     'question_number': event.get('question_number'),
+                    'time_read': event.get('time_read'),
+                    'time_question': event.get('time_question'),
                 }
             elif room.show_question:
                 response = {
@@ -760,6 +827,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'answer_description': None,
                     'user_id': event["lider_id"],
                     'question_number': event.get('question_number'),
+                    'time_read': event.get('time_read'),
+                    'time_question': event.get('time_question'),
                 }
             else:
                 response = {
@@ -771,6 +840,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                     'answer_description': None,
                     'user_id': event["lider_id"],
                     'question_number': event.get('question_number'),
+                    'time_read': event.get('time_read'),
+                    'time_question': event.get('time_question'),
                 }
             await self.send(text_data=json.dumps(response))
         except Exception as e:

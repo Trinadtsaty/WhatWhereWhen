@@ -57,6 +57,7 @@ class game_rooms(models.Model):
             MaxValueValidator(60)
         ]
     )
+
     random_order = models.BooleanField(default=True)
     break_between_questions = models.IntegerField(
         validators=[
