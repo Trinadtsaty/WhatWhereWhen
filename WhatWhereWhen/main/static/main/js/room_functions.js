@@ -223,7 +223,9 @@ function start_question_read_time (time_reade, time_questions) {
 function start_question_time () {
     time_left = time_question;
     time_question = null;
-    startTimer(time_left);
+    if (time_left != 0) {
+        startTimer(time_left);
+    };
 };
 
 function pause_question_time () {

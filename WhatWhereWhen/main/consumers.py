@@ -412,9 +412,6 @@ class StartConsumer(AsyncWebsocketConsumer):
             room = await self.get_room(self.room_id)
             await self.filling_question(room)
 
-        # print('self.stage["stage"]', self.stage["stage"])
-        # print('self.stage["user_id"] == self.user_id', self.stage["user_id"] == self.user_id)
-
         if self.stage["stage"] == "get_question":
             if self.stage["user_id"] == self.user_id:
                 await self.notify_stage()
@@ -618,7 +615,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                     self.room_tasks[self.room_id] = task
 
                 elif data["type"] == "get_menu":
-                    # вернуться
                     if self.room_tasks != {}:
                         task = self.room_tasks.pop(self.room_id, None)
                         if task:
@@ -683,7 +679,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'timestamp': str(datetime.now())
                     }
 
-                # Вернуться
+
                 elif data[action_type] == "play":
                     self.stage["condition"] = "play"
                     task = asyncio.create_task(time_question())
@@ -778,7 +774,7 @@ class StartConsumer(AsyncWebsocketConsumer):
             'user_id': self.stage["user_id"],
         }))
 
-
+    # вернуться
     async def notify_stage_not_leader(self,room):
         question = {
                 'question_name': self.stage["message"]["question_name"],
@@ -787,6 +783,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'answer': None,
                 'answer_description': None,
                 'question_number': self.stage["message"]["question_number"],
+                'time_read' : self.stage["message"]["time_read"],
+                'time_question' : self.stage["message"]["time_question"],
             }
 
         if not room.show_question:
