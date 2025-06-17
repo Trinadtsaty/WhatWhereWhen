@@ -716,12 +716,15 @@ body {
 #popup_answer.show {
     left: 0; /* Возвращаем на экран */
 }
-#answer_box {
+.text_box_leader {
+/*#answer_box {*/
     background-color: rgba(136, 128, 136, 1);
     border: 3px solid white;
     height: 780px;
     width: 600px;
-    border-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+/*    border-radius: 30px;*/
     padding: 15px;
     position: relative; /* Для позиционирования chat_open_box */
     z-index: 2;
@@ -789,8 +792,11 @@ body {
 }
 
 #question_screen {
-    width: 1200px;
-    height: 800px;
+    padding: 15px;
+    box-sizing: border-box;
+
+    width: 1000px;
+    height: 600px;
     border-radius: 30px;
     border: 3px solid white;
     background-color: rgba(136, 128, 136, 1);
@@ -801,4 +807,39 @@ body {
     left: 10px; /* Отступ слева */
     bottom: 10px; /* Отступ снизу */
 }
-
+#description_button {
+    color: white;
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 2;
+    top: -45px;
+}
+.button_answer {
+    position: relative;
+    background-color: rgba(136, 128, 136, 1);
+    text-align: center;
+    font-size: 30px;
+    height: 45px;
+    width: 200px;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border: 3px solid white;
+    border-bottom: none;
+    cursor: pointer;
+}
+#note_button {
+    background-color: rgba(82, 79, 82, 1);
+    top: -3px;
+}
+#note {
+    color: white;
+    font-size: 32px;
+}
+#question_name {
+    font-size: 35px;
+}
+#question_text {
+    font-size: 27px;
+}

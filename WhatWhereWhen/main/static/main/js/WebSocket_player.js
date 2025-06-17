@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (!user.leader && !user.captain) {
                             const buttons_leader = document.createElement('li');
                             buttons_leader.className = 'tools_element';
-                            buttons_leader.textContent = 'Назначить ведущим';
+                            buttons_leader.textContent = 'Назначить Ведущим';
                             buttons_leader.onclick = () => sendLeader(user.id);
                             spis_buttons.appendChild(buttons_leader);
 
@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     start.id = 'start';
                     start.textContent = 'Старт';
                     start.onclick = sendStart;
-
 
 
                     const cancellation = document.createElement('div');
