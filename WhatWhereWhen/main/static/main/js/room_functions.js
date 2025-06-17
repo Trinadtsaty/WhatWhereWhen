@@ -85,6 +85,13 @@ function deleteQuestion(question_ID) {
     }));
 };
 function createQuestionMenu(arr) {
+
+    const questions_box = document.getElementById('QuestionMenu');
+    while (questions_box.firstChild) {
+        questions_box.removeChild(questions_box.firstChild);
+    }
+
+
     document.getElementById("QuestionMenu").style.display = ""
     const menu = document.getElementById("QuestionMenu")
 
@@ -97,7 +104,10 @@ function createQuestionMenu(arr) {
         button_div.className = 'question_button';
         button_div.textContent = i;
         button_div.onclick = () => sendQuestion(item);
-
+        console.log(arr.all)
+        console.log(arr.use)
+        console.log("item",item)
+        console.log("arr.use.includes(item)",arr.use.includes(item))
         if (arr.use.includes(item)) {
             button_div.style.backgroundColor = 'rgba(82, 79, 82, 1)';
             button_div.style.color = 'black';
@@ -130,7 +140,6 @@ function showQuestion_user(data) {
     document.querySelectorAll(".access_leader").forEach(item => {
         item.style.display = "none";
     });
-
 };
 function showQuestion_leader(data) {
     document.getElementById("popup_answer").style.display = "";
@@ -176,5 +185,11 @@ function click_note() {
 
     document.querySelector('#answer_button').style.top = "-3px";
     document.querySelector('#note_button').style.top = "0px";
+};
+function send_menu() {
+    activeSocket.send(JSON.stringify({
+        'question': "pass",
+        'type': "get_menu",
+    }));
 };
 

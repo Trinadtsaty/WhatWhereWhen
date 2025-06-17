@@ -427,7 +427,6 @@ class StartConsumer(AsyncWebsocketConsumer):
         # Проверяем, заполнилась ли комната
         # await self.check_room_and_start()
 
-
     # Вызывается при закрытии WebSocket соединения.
     async def disconnect(self, close_code):
         # Покидаем группу комнаты
@@ -457,6 +456,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                 "use": [],
                 "not_use": [],
             }
+
             for question_id, question_data in questions.items():
                 if question_data["frostbite"]:
                     print(question_id)
@@ -558,10 +558,17 @@ class StartConsumer(AsyncWebsocketConsumer):
 
                         # Добавляем вопрос обратно в список
                         questions[questions_number] = question
+
+                        sorted_questions = sorted(questions.items())
+
+                        # Преобразование обратно в словарь
+                        questions = dict(sorted_questions)
+
+                        # questions = sorted(questions)
                         # questions.insert(questions_number, question)
 
                         # Сохраняем обновленный список в кэш
-                        cache.set(self.cache_key, questions)
+                        cache.set(self.cache_key, questions, timeout=3600)
                     # cache.set(self.cache_key, questions_dict, timeout=3600)
 
                     self.stage["stage"] = "get_question"
@@ -585,7 +592,13 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'lider_id': leader_id,
                         'question_number': question["question_number"],
                     }
+                elif data["type"] == "get_menu":
+                    group_message = await send_question_meny()
 
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        group_message
+                    )
                 elif data["type"] == "delete":
                     question_id = data[action_type]
                     if question_id in questions:
@@ -680,6 +693,14 @@ class StartConsumer(AsyncWebsocketConsumer):
             }
 
         # Сохраняем вопросы в кеш
+        sorted_questions = sorted(questions_dict.items())
+
+        # Преобразование обратно в словарь
+        questions_dict = dict(sorted_questions)
+
+        # Вывод отсортированного результата
+        print(questions_dict)
+
         cache.set(self.cache_key, questions_dict, timeout=3600)
         # self.cache_set(self.cache_key, questions_dict, timeout=3600)
 
