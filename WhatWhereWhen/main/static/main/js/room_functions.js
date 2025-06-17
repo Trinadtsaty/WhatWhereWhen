@@ -127,6 +127,9 @@ function sendQuestion(number) {
 
 function showQuestion_user(data) {
     console.log("showQuestion_user",data)
+    document.querySelectorAll(".access_leader").forEach(item => {
+        item.style.display = "none";
+    });
 
 };
 function showQuestion_leader(data) {
