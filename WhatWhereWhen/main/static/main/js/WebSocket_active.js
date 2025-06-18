@@ -23,19 +23,21 @@ activeSocket.onmessage = function(e) {
     };
 
     if (data.type === "question_menu") {
-        console.log("мы перед скрытием элемента")
-        document.getElementById("question_page").style.display = "none"
-        document.getElementById("page").style.display = "none"
-        console.log("мы после скрытием элемента")
+        hide_all()
         if (user_id === data.user_id) {
+
             hide_element()
             createQuestionMenu(data.message)
         };
     };
 
     if (data.type === "get_question") {
+        if (clear_chat_check) {
+            clear_chat()
+        };
         hide_element()
         if (user_id === data.user_id) {
+            hide_access_user()
             showQuestion_leader(data)
         } else {
             hide_access_leader()
@@ -55,8 +57,12 @@ activeSocket.onmessage = function(e) {
                 hide_all()
             };
         } else if (data.stage === "get_question") {
+            if (clear_chat_check) {
+                clear_chat()
+            };
             hide_element()
             if (user_id === data.user_id) {
+                hide_access_user()
                 showQuestion_leader(data.message)
             } else {
                 hide_access_leader()
@@ -90,7 +96,6 @@ function startCountdown(timer_value) {
         } else {
             clearInterval(countdownInterval);
             timerElement.style.display = "none"; // Скрываем таймер по окончанию
-//            hide_element()
         };
     }, 1000);
 };
@@ -118,7 +123,3 @@ function checkScale() {
 // Запуск таймера
 
 window.addEventListener('resize', checkScale);
-
-//document.querySelector('#answer_open_box').addEventListener('click', function() {
-//    document.querySelector('#popup_answer').classList.toggle('show');
-//});

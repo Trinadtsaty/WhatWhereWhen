@@ -33,14 +33,17 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(data);
         const chatLog = document.querySelector('#chat');
 //        chatLog.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;
-        if (data.user_id === user_id) {
-            class_add = 'messege_box_my'
-        } else {
-            class_add = 'messege_box_not_my'
-        }
+
+//        if (data.user_id === user_id) {
+//            class_add = 'messege_box_my'
+//
+//        } else {
+//            class_add = 'messege_box_not_my'
+//        };
+
         chatLog.innerHTML +=
         `
-        <div class="${class_add}">
+        <div class="${data.class_add}">
             <div class="sender_box">
                 <div class="sender_image"><img src="${data.picture}" alt="фото профиля" class="sender_img"></div>
                 <strong class="sender_nick">${data.username}</strong>
@@ -64,6 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
         messageInputDom.value = '';
     });
+    document.querySelector('#answer_button').addEventListener('click', () => {
+        chatSocket.send(JSON.stringify({
+            'room_ID': room_number,
+            'message': "у меня есть ответ",
+            'user_id': user_id,
+        }));
+    });
+
+
 });
 
 //messageElement.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;

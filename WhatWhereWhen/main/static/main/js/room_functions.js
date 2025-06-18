@@ -85,8 +85,18 @@ function deleteQuestion(question_ID) {
     }));
 };
 function hide_all() {
-    document.getElementById("question_page").style.display = "none"
-    document.getElementById("page").style.display = "none"
+//    document.getElementById("question_page").style.display = "none"
+//    document.getElementById("page").style.display = "none"
+    const questionPage = document.getElementById("question_page");
+    const page = document.getElementById("page");
+
+    if (questionPage && page) {
+        questionPage.style.display = "none";
+        page.style.display = "none";
+        console.log("Элементы скрыты");
+    } else {
+        console.error("Элементы не найдены:", { questionPage, page });
+    }
 };
 
 function createQuestionMenu(arr) {
@@ -159,7 +169,13 @@ function hide_access_leader() {
         item.style.display = "none";
         console.log("вы тут")
     });
-}
+};
+function hide_access_user() {
+    document.querySelectorAll(".access_user").forEach(item => {
+        item.style.display = "none";
+        console.log("вы тут")
+    });
+};
 
 function showQuestion_leader(data) {
     document.getElementById("popup_answer").style.display = "";
@@ -209,20 +225,20 @@ function click_answer() {
     document.querySelector('#answer_box').style.display = "";
     document.querySelector('#note_box').style.display = "none";
 
-    document.querySelector('#answer_button').style.backgroundColor = "rgba(136, 128, 136, 1)";
+    document.querySelector('#answer_show_button').style.backgroundColor = "rgba(136, 128, 136, 1)";
     document.querySelector('#note_button').style.backgroundColor = "rgba(82, 79, 82, 1)";
 
-    document.querySelector('#answer_button').style.top = "0px";
+    document.querySelector('#answer_show_button').style.top = "0px";
     document.querySelector('#note_button').style.top = "-3px";
 };
 function click_note() {
     document.querySelector('#answer_box').style.display = "none";
     document.querySelector('#note_box').style.display = "";
 
-    document.querySelector('#answer_button').style.backgroundColor = "rgba(82, 79, 82, 1)";
+    document.querySelector('#answer_show_button').style.backgroundColor = "rgba(82, 79, 82, 1)";
     document.querySelector('#note_button').style.backgroundColor = "rgba(136, 128, 136, 1)";
 
-    document.querySelector('#answer_button').style.top = "-3px";
+    document.querySelector('#answer_show_button').style.top = "-3px";
     document.querySelector('#note_button').style.top = "0px";
 };
 function send_menu() {
@@ -293,6 +309,13 @@ function pluse_question_time (value) {
 //        }
 //    }, 1000);
 //};
+function clear_chat() {
+    const questions_box = document.getElementById('chat');
+    while (questions_box.firstChild) {
+        questions_box.removeChild(questions_box.firstChild);
+    }
+};
+
 function time_output (value) {
     console.log(value)
     const min = Math.floor(value / 60);
@@ -304,6 +327,7 @@ function formatNumber(num) {
     // Проверяем, является ли число однозначным
     if (num >= 0 && num < 10) {
         return '0' + num; // Добавляем ноль перед однозначным числом
-    }
+    };
     return num.toString(); // Возвращаем число как строку, если оно не однозначное
-}
+};
+

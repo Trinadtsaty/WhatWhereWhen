@@ -582,6 +582,12 @@ body {
     background-color: #f1f1f1;
     margin-right: auto;
 }
+.answer_in_text {
+    background-color: #9f3535;
+}
+.answer_with_button {
+    background-color: red;
+}
 
 /* Блок с аватаркой и ником */
 .sender_box {
@@ -885,6 +891,7 @@ body {
 }
 .element_question_buttons:hover {
      background-color: rgba(82, 79, 82, 1);
+    border: 3px solid rgba(192, 166, 16, 1);
 }
 #timer_panel {
     height: 80px;
@@ -902,5 +909,25 @@ body {
     justify-content: center;  /* Горизонтальное центрирование */
     align-items: center;      /* Вертикальное центрирование */
     font-size: 40px;
-
+}
+#gives_answer_button {
+    display: flex;
+    width: 200px;
+    justify-content: center;  /* Горизонтальное центрирование */
+    align-items: center;      /* Вертикальное центрирование */
+    font-size: 40px;
+}
+#answer_button {
+    display: flex;
+    width: 150px;
+    justify-content: center;  /* Горизонтальное центрирование */
+    align-items: center;      /* Вертикальное центрирование */
+    font-size: 40px;
+}
+#early_response_button {
+    display: flex;
+    width: 300px;
+    justify-content: center;  /* Горизонтальное центрирование */
+    align-items: center;      /* Вертикальное центрирование */
+    font-size: 40px;
 }

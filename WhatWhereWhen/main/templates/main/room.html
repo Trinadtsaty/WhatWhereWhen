@@ -182,7 +182,8 @@
             <div id="answer_open">|||</div>
         </div>
         <div id="description_button">
-            <div id="answer_button" class="button_answer" onclick="click_answer()">Ответ</div>
+<!--            Было изменено id тега ниже с answer_button на answer_show_button-->
+            <div id="answer_show_button" class="button_answer" onclick="click_answer()">Ответ</div>
             <div id="note_button" class="button_answer" onclick="click_note()">Примичание</div>
         </div>
     </div>
@@ -197,6 +198,10 @@
                 <div id="plus_button" class="access_leader element_question_buttons" onclick="pluse_question_time(10)"><img class="img_question_element" alt="Минус" title="прибавить 10 секунд таймеру" src="{% static 'main/img/plus.png' %}"></div>
                 <div id="pause_button" class="access_leader element_question_buttons" onclick="pause_question_time()"><img class="img_question_element" alt="Пауза" title="прервать отсчёт" src="{% static 'main/img/continue.png' %}"></div>
                 <div id="continue_button" class="access_leader element_question_buttons" onclick="play_question_time()"><img class="img_question_element" alt="Продолжить" title="продолжить отсчёт" src="{% static 'main/img/play.png' %}"></div>
+
+                <div id="gives_answer_button" class="access_user element_question_buttons" onclick="">Отвечает...</div>
+                <div id="answer_button" class="access_user element_question_buttons">Ответ</div>
+                <div id="early_response_button" class="access_user element_question_buttons" onclick="">Досрочный ответ</div>
                 <div id="timer_panel" ></div>
             </div>
 
@@ -233,6 +238,7 @@
         // Подключаемся к WebSocket
         const room_number = '{{ room.ID }}';
         const user_id = {{ request.user.ID }};
+        const clear_chat_check = {{ room.clear_chat|lower }};
 
 //        const host_id = {{ room.host.ID }};
 //        const leader_id = {{ room.leader.ID }};

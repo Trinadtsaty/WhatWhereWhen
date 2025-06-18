@@ -16,6 +16,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # Имя комнаты из URL (можно использовать для групповых чатов)
         self.room_id = self.scope['url_route']['kwargs']['room_id']
+        self.user_id = self.scope['user'].ID
         self.room_group_name = f'chat_{self.room_id}'
 
         # Присоединяемся к группе комнаты
@@ -55,6 +56,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Получаем объект пользователя (синхронный код в асинхронном окружении)
         user = await self.get_user(user_id)
         room = await  self.get_room(room_id)
+        Class_out = ""
+
+        if "у меня есть ответ" == message:
+            Class_out += "answer_with_button "
+        elif "ответ" in message.lower():
+            Class_out += "answer_in_text "
+
+
+
+
+
 
         # Сохраняем сообщение в MySQL (синхронный код)
         await self.save_message(room, user, message)
@@ -64,6 +76,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # print(f"Message saved with ID: {saved_msg.ID}")
 
         # Отправляем сообщение в группу комнаты
+
+
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -71,6 +85,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'message': message,
                 'username': user.login,
                 'user_id': user.ID,
+                'class':Class_out,
                 "picture_url": settings.MEDIA_URL + str(
                         user.picture) if user.picture else "/static/registration/img/Avatar.png",
             }
@@ -82,12 +97,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
         username = event['username']
         picture = event['picture_url']
         user_id = event['user_id']
+        Class_out = str(event['class'])
+
+        print(Class_out)
+
+        if user_id != self.user_id:
+            Class_out += "messege_box_not_my"
+        else:
+            Class_out += "messege_box_my"
+
         # Отправляем сообщение WebSocket клиенту
         await self.send(text_data=json.dumps({
             'message': message,
             'username': username,
             'picture':picture,
             'user_id':user_id,
+            'class_add': Class_out,
         }))
 
 
@@ -883,6 +908,8 @@ class StartConsumer(AsyncWebsocketConsumer):
 
     async def sending_question(self,event):
         room = await self.get_room(self.room_id)
+        await self.delete_all_messages_in_room(self.room_id)
+
         try:
             if event["lider_id"] == self.user_id:
                 response = {
@@ -964,6 +991,10 @@ class StartConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_room(self, room_id):
         return game_rooms.objects.get(ID=room_id)
+    @database_sync_to_async
+    def delete_all_messages_in_room(self, room_id):
+        from .models import ChatMessage
+        ChatMessage.objects.filter(room__ID=room_id).delete()
 
     @sync_to_async
     def get_your_id(self, room, type):
