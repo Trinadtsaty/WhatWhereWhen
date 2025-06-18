@@ -6,7 +6,7 @@
 }
 @font-face {
     font-family: 'DS-DIGI'; /* Второй шрифт */
-    src: url('../fonts/DS-DIGI.ttf') format('truetype'); /* Основной шрифт Roboto */
+    src: url('../fonts/dseg7.ttf') format('truetype'); /* Основной шрифт Roboto */
     font-weight: normal;
     font-style: normal;
 }
@@ -891,8 +891,10 @@ body {
     border: 3px solid rgba(82, 79, 82, 1);
     font-family: 'DS-DIGI', sans-serif;
     width: 200px;
-    text-align: center;
-    font-size: 80px;
+    display: flex;
+    justify-content: center;  /* Горизонтальное центрирование */
+    align-items: center;      /* Вертикальное центрирование */
+    font-size: 55px;
 }
 #choose_question {
     display: flex;

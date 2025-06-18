@@ -7,21 +7,38 @@ activeSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     console.log(data);
 
+    if (data.type === "time") {
+        time_output(data.time)
+        if (data.class === "time_question") {
+            console.log("время вопроса а не чтения")
+        };
+    };
+
     if (data.type === "start_timer") {
         startCountdown(data.message);
     };
+
     if (data.type === "cancellation") {
         cancelCountdown()
     };
+
     if (data.type === "question_menu") {
+        console.log("мы перед скрытием элемента")
+        document.getElementById("question_page").style.display = "none"
+        document.getElementById("page").style.display = "none"
+        console.log("мы после скрытием элемента")
         if (user_id === data.user_id) {
+            hide_element()
             createQuestionMenu(data.message)
         };
     };
+
     if (data.type === "get_question") {
+        hide_element()
         if (user_id === data.user_id) {
             showQuestion_leader(data)
         } else {
+            hide_access_leader()
             showQuestion_user(data)
         };
     };
@@ -31,15 +48,18 @@ activeSocket.onmessage = function(e) {
             console.log("Вышел за хлебом")
             showe_element()
         } else if (data.stage === "question_menu") {
-            hide_element()
             if (user_id === data.user_id) {
+                hide_element()
                 createQuestionMenu(data.message)
+            } else {
+                hide_all()
             };
         } else if (data.stage === "get_question") {
             hide_element()
             if (user_id === data.user_id) {
                 showQuestion_leader(data.message)
             } else {
+                hide_access_leader()
                 showQuestion_user(data.message)
             };
         };
@@ -70,7 +90,7 @@ function startCountdown(timer_value) {
         } else {
             clearInterval(countdownInterval);
             timerElement.style.display = "none"; // Скрываем таймер по окончанию
-            hide_element()
+//            hide_element()
         };
     }, 1000);
 };

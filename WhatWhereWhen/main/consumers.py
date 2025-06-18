@@ -43,7 +43,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # print("мы в receive")
         # Парсим JSON данные
         try:
-
             text_data_json = json.loads(text_data)
             # print(text_data_json)
             room_id = text_data_json['room_ID']
@@ -475,17 +474,46 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'timestamp': str(datetime.now())
             }
             return group_message
+
+
         async def time_question():
+            # Вернуться
+
+            def time_send(time,Class):
+                group_message = {
+                'type': 'time_send',
+                'time': time,
+                'class': Class,
+                }
+                return group_message
+
+
             try:
-                for i in range(self.stage["message"]["time_read"], -1, -1):
+
+                for i in range(self.stage["message"]["time_read"]-1, -1, -1):
                     await asyncio.sleep(1)
                     self.stage["message"]['time_read'] = i
+                    if i!=0:
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            time_send(self.stage["message"]['time_read'], "time_read")
+                        )
                     print(f"Обратный отсчет чтения вопроса: {i//60}:{i-i//60*60}")
+                if self.stage["message"]['time_read'] < 0:
+                    self.stage["message"]['time_read'] = 0
 
-                for i in range(self.stage["message"]["time_question"], -1, -1):
+                for i in range(self.stage["message"]["time_question"]-1, -1, -1):
                     await asyncio.sleep(1)
                     self.stage["message"]['time_question'] = i
+                    if i != 0:
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            time_send(self.stage["message"]['time_question'], "time_question")
+                        )
+
                     print(f"Обратный отсчет ответа на вопрос: {i//60}:{i-i//60*60}")
+                if self.stage["message"]['time_question'] < 0:
+                    self.stage["message"]['time_question'] = 0
 
                 print("Вопрос закончился")
             except asyncio.CancelledError:
@@ -693,16 +721,59 @@ class StartConsumer(AsyncWebsocketConsumer):
 
                 elif data[action_type] == "pluse":
                     task = self.room_tasks.pop(self.room_id, None)
+
+
                     if task:
                         task.cancel()
 
-                    if self.stage["message"]["time_read"] > 0:
-                        self.stage["message"]["time_read"] += data["value"]
-                    elif self.stage["message"]["time_question"] > 0:
-                        self.stage["message"]["time_question"] += data["value"]
+                        if self.stage["message"]["time_read"] > 0:
+                            if self.stage["message"]["time_read"] + data["value"] >=0:
+                                self.stage["message"]["time_read"] += data["value"]
+                            else:
+                                self.stage["message"]["time_read"] = 0
+                        elif self.stage["message"]["time_question"] > 0:
+                            if self.stage["message"]["time_question"] + data["value"] >=0:
+                                self.stage["message"]["time_question"] += data["value"]
+                            else:
+                                self.stage["message"]["time_question"] = 0
 
-                    task = asyncio.create_task(time_question())
-                    self.room_tasks[self.room_id] = task
+                        task = asyncio.create_task(time_question())
+                        self.room_tasks[self.room_id] = task
+
+                    else:
+
+                        if self.stage["message"]["time_read"] > 0:
+                            if self.stage["message"]["time_read"] + data["value"] >= 0:
+                                self.stage["message"]["time_read"] += data["value"]
+                            else:
+                                self.stage["message"]["time_read"] = 0
+
+                            await self.channel_layer.group_send(
+                                self.room_group_name,
+                                {
+                                    'type': 'time_send',
+                                    'time': self.stage["message"]["time_read"],
+                                    'class': "time_read",
+                                }
+                            )
+
+                        elif self.stage["message"]["time_question"] > 0:
+                            if self.stage["message"]["time_question"] + data["value"] >= 0:
+                                self.stage["message"]["time_question"] += data["value"]
+                            else:
+                                self.stage["message"]["time_question"] = 0
+
+                            await self.channel_layer.group_send(
+                                self.room_group_name,
+                                {
+                                    'type': 'time_send',
+                                    'time': self.stage["message"]["time_question"],
+                                    'class': "time_question",
+                                }
+                            )
+
+
+
 
 
             # Отправляем в группу
@@ -774,7 +845,18 @@ class StartConsumer(AsyncWebsocketConsumer):
             'user_id': self.stage["user_id"],
         }))
 
-    # вернуться
+    async def time_send(self, event):
+        try:
+            response = {
+                'type': "time",
+                'time': event.get('time'),
+                "class": event.get('class'),
+            }
+
+            await self.send(text_data=json.dumps(response))
+        except Exception as e:
+            print(f"Ошибка отправки сообщения: {e}")
+
     async def notify_stage_not_leader(self,room):
         question = {
                 'question_name': self.stage["message"]["question_name"],
@@ -891,4 +973,3 @@ class StartConsumer(AsyncWebsocketConsumer):
             return room.captain.ID
         elif type == "leader":
             return room.leader.ID
-        #

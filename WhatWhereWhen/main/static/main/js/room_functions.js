@@ -84,6 +84,11 @@ function deleteQuestion(question_ID) {
         'question': question_ID,
     }));
 };
+function hide_all() {
+    document.getElementById("question_page").style.display = "none"
+    document.getElementById("page").style.display = "none"
+};
+
 function createQuestionMenu(arr) {
 
     const questions_box = document.getElementById('QuestionMenu');
@@ -104,14 +109,14 @@ function createQuestionMenu(arr) {
         button_div.className = 'question_button';
         button_div.textContent = i;
         button_div.onclick = () => sendQuestion(item);
-        console.log(arr.all)
-        console.log(arr.use)
-        console.log("item",item)
-        console.log("arr.use.includes(item)",arr.use.includes(item))
+//        console.log(arr.all)
+//        console.log(arr.use)
+//        console.log("item",item)
+//        console.log("arr.use.includes(item)",arr.use.includes(item))
         if (arr.use.includes(item)) {
             button_div.style.backgroundColor = 'rgba(82, 79, 82, 1)';
             button_div.style.color = 'black';
-            button_div.style.border = '3px solid rgba(33, 32, 32, 1);';
+            button_div.style.border = '3px solid rgba(33, 32, 32, 1)';
 //            button_div.style.pointerEvents = 'none';
         };
         menu.appendChild(button_div);
@@ -137,17 +142,25 @@ function sendQuestion(number) {
 
 function showQuestion_user(data) {
     console.log("showQuestion_user",data)
-    document.querySelectorAll(".access_leader").forEach(item => {
-        item.style.display = "none";
-    });
     document.getElementById("question_name").textContent = `Вопрос №${data.question_number}: `+ data.question_name
     document.getElementById("question_text").textContent = data.text_question
 
-    time_output (data.time_read)
-    start_question_read_time(data.time_read, data.time_question)
+    if (data.time_read > 0) {
+        time_output(data.time_read)
+    } else {
+        time_output(data.time_question)
+    }
 
-
+//    time_output (data.time_read)
+//    start_question_read_time(data.time_read, data.time_question)
 };
+function hide_access_leader() {
+    document.querySelectorAll(".access_leader").forEach(item => {
+        item.style.display = "none";
+        console.log("вы тут")
+    });
+}
+
 function showQuestion_leader(data) {
     document.getElementById("popup_answer").style.display = "";
     console.log("showQuestion_leader",data)
@@ -156,6 +169,16 @@ function showQuestion_leader(data) {
     } else {
         document.getElementById("note").textContent = "Примичание: " + data.note;
     };
+
+    if (data.time_read > 0) {
+        console.log("мы в больше нуля")
+        time_output(data.time_read)
+    } else {
+        console.log("мы в меньше нуля")
+        console.log(data.time_question)
+        time_output(data.time_question)
+    }
+
     document.getElementById("page_question").style.display = "";
 
     document.getElementById("answer").textContent = "Ответ: " + data.answer
@@ -164,12 +187,13 @@ function showQuestion_leader(data) {
     document.getElementById("question_name").textContent = `Вопрос №${data.question_number}: `+ data.question_name
     document.getElementById("question_text").textContent = data.text_question
 
-    time_output (data.time_read)
-    start_question_read_time(data.time_read, data.time_question)
+//    time_output(data.time_read)
+//    start_question_read_time(data.time_read, data.time_question)
 
 };
 
 function hide_element() {
+//    hide_access_leader()
     document.getElementById("page").style.display = "none";
     document.getElementById("page_question").style.display = "";
 };
@@ -208,77 +232,69 @@ function send_menu() {
     }));
 };
 
-let timer;
-let time_left;
-let time_question;
-let isPaused = false;
+//let timer;
+//let time_left;
+//let time_question;
+//let isPaused = false;
 
 
-function start_question_read_time (time_reade, time_questions) {
-    time_left = time_reade;
-    time_question = time_questions;
-    startTimer(time_left);
-    play_question_time ()
-};
-function start_question_time () {
-    time_left = time_question;
-    time_question = null;
-    if (time_left != 0) {
-        startTimer(time_left);
-    };
-};
+//function start_question_read_time (time_reade, time_questions) {
+//    time_left = time_reade;
+//    time_question = time_questions;
+//    startTimer(time_left);
+//    play_question_time ()
+//};
+//function start_question_time () {
+//    time_left = time_question;
+//    time_question = null;
+//    if (time_left != 0) {
+//        startTimer(time_left);
+//    };
+//};
 
 function pause_question_time () {
-    if (!isPaused) { // Проверяем, не находится ли таймер уже на паузе
-        isPaused = true;
-        clearInterval(timer);
-        activeSocket.send(JSON.stringify({
-            'status_game': "pause",
-        }));
-        console.log("press_pause");
-    };
+
+    isPaused = true;
+    activeSocket.send(JSON.stringify({
+        'status_game': "pause",
+    }));
+    console.log("press_pause");
+
 };
 
 function play_question_time () {
-    if (isPaused) { // Проверяем, находится ли таймер на паузе
-        isPaused = false;
-        startTimer(time_left); // Передаем оставшееся время
-        activeSocket.send(JSON.stringify({
-            'status_game': "play",
-        }));
-        console.log("press_play");
-    };
+    isPaused = false;
+    activeSocket.send(JSON.stringify({
+        'status_game': "play",
+    }));
+    console.log("press_play");
 };
 
 function pluse_question_time (value) {
-    if (isPaused) {
-        time_left += value ;
-        time_output(time_left);
-    } else {
-        time_left += value +1;
-        time_output(time_left);
-    };
-
     activeSocket.send(JSON.stringify({
         'status_game': "pluse",
         'value' : value,
     }));
 };
-function startTimer (time_question) {
-    if (isPaused) return; // Если таймер на паузе, не запускаем его
-
-    timer = setInterval(() => {
-        if (time_left <= 0) {
-            clearInterval(timer);
-            start_question_time()
-            console.log("Время вышло!");
-        } else {
-            time_left--;
-            time_output(time_left)
-        }
-    }, 1000);
-};
+//function startTimer (time_question) {
+//    if (isPaused) return; // Если таймер на паузе, не запускаем его
+//
+//    timer = setInterval(() => {
+//        if (time_left <= 0) {
+//            clearInterval(timer);
+//            start_question_time()
+//            console.log("Время вышло!");
+//            if (time_left <0) {
+//                time_output(0)
+//            };
+//        } else {
+//            time_left--;
+//            time_output(time_left)
+//        }
+//    }, 1000);
+//};
 function time_output (value) {
+    console.log(value)
     const min = Math.floor(value / 60);
     const sec = value - (min * 60);
     document.getElementById('timer_panel').textContent = `${formatNumber(min)}:${formatNumber(sec)}`
