@@ -137,4 +137,3 @@ window.addEventListener('resize', () => checkScale(write_answer_box_popup));
 window.addEventListener('resize', () => checkScale(write_early_response_box_popup));
 
 
-

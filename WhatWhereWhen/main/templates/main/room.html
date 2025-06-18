@@ -218,17 +218,17 @@
         <div id="timer"></div>
         <div id="write_answer_box_popup" class="popup_answer_write">
             <div id="answer_title" class="answer_title_name">Ответ:</div>
-            <input id="answer_inpur_line" placeholder="Введите ваш ответ" class="input_line_answer">
+            <input id="answer_input_line" placeholder="Введите ваш ответ" class="input_line_answer">
             <div id="answer_description_title" class="description_title_text">Примичание:</div>
-            <textarea placeholder="Введите примичание к вопросу" class="description_input_text"></textarea>
-            <div id="send_answer" class="send_answer_button">Отправить</div>
+            <textarea id="description_answer_input_box" placeholder="Введите примичание к вопросу" class="description_input_text"></textarea>
+            <div id="send_answer" class="send_answer_button" onclick="send_answer()">Отправить</div>
         </div>
         <div id="write_early_response_box_popup" class="popup_answer_write">
             <div id="early_response_title" class="answer_title_name">Досрочный ответ:</div>
-            <input id="early_response_inpur_line" placeholder="Введите ваш ответ" class="input_line_answer">
+            <input id="early_response_input_line" placeholder="Введите ваш ответ" class="input_line_answer">
             <div id="early_response_description_title" class="description_title_text">Примичание:</div>
-            <textarea placeholder="Введите примичание к вопросу" class="description_input_text"></textarea>
-            <div id="send_early_response" class="send_answer_button">Отправить</div>
+            <textarea id="description_early_response_input_box" placeholder="Введите примичание к вопросу" class="description_input_text"></textarea>
+            <div id="send_early_response" class="send_answer_button" onclick="send_early_response()">Отправить</div>
         </div>
 
     <script>

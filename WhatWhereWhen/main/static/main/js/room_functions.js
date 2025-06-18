@@ -362,3 +362,42 @@ function checkScale(event) {
     event.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`;
     event.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`;
 };
+
+function send_answer() {
+    const answer = document.getElementById('answer_input_line').value;
+    const description = document.getElementById('description_answer_input_box').value;
+    document.getElementById('answer_input_line').value = "";
+    document.getElementById('description_answer_input_box').value = "";
+
+    console.log(answer,description);
+    activeSocket.send(JSON.stringify({
+        'question': "answer",
+        'answer': answer,
+        'description': description,
+    }));
+    closePopup(document.getElementById('write_answer_box_popup'))
+};
+function send_early_response() {
+    const answer = document.getElementById('answer_input_line').value;
+    const description = document.getElementById('description_early_response_input_box').value;
+
+
+
+    document.getElementById('answer_input_line').value = "";
+    document.getElementById('description_early_response_input_box').value = "";
+    console.log(answer,description);
+    activeSocket.send(JSON.stringify({
+        'question': "answer",
+        'answer': answer,
+        'description': description,
+    }));
+    closePopup(document.getElementById('write_early_response_box_popup'))
+};
+function check_answer(text) {
+//    Сделать ограничения до 500символов
+};
+function check_description(text) {
+//    Сделать ограничения до 500символов
+};
+
+//<script>console.log(123)<script>
