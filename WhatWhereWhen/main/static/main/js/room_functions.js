@@ -331,3 +331,34 @@ function formatNumber(num) {
     return num.toString(); // Возвращаем число как строку, если оно не однозначное
 };
 
+//function closeButtonAnswerBox() {
+//    document.getElementById("write_answer_box_popup").style.display = "none"
+//};
+function closePopup(event) {
+    document.getElementById('page_question').style.pointerEvents = ""
+    document.getElementById('page').style.pointerEvents = ""
+    event.style.display = "none"
+};
+
+function open_early_response_popup () {
+    document.getElementById('page_question').style.pointerEvents = "none"
+    document.getElementById('page').style.pointerEvents = "none"
+    document.getElementById('write_early_response_box_popup').style.display = "";
+    checkScale(document.getElementById('write_early_response_box_popup'))
+};
+function open_answer_popup () {
+    document.getElementById('page_question').style.pointerEvents = "none"
+    document.getElementById('page').style.pointerEvents = "none"
+    document.getElementById('write_answer_box_popup').style.display = "";
+    checkScale(document.getElementById('write_answer_box_popup'))
+};
+function checkScale(event) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const width_windiw = event.offsetWidth;
+    const height_windiw = event.offsetHeight;
+
+    event.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`;
+    event.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`;
+};

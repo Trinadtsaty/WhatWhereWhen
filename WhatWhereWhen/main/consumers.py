@@ -58,7 +58,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         room = await  self.get_room(room_id)
         Class_out = ""
 
-        if "у меня есть ответ" == message:
+        if "У меня есть ответ" == message:
             Class_out += "answer_with_button "
         elif "ответ" in message.lower():
             Class_out += "answer_in_text "
@@ -99,7 +99,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user_id = event['user_id']
         Class_out = str(event['class'])
 
-        print(Class_out)
+        # print(Class_out)
 
         if user_id != self.user_id:
             Class_out += "messege_box_not_my"

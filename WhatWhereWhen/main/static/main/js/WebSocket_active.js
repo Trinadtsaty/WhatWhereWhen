@@ -73,7 +73,12 @@ activeSocket.onmessage = function(e) {
 };
 
 const timerElement = document.getElementById('timer');
+const write_answer_box_popup = document.getElementById('write_answer_box_popup');
+const write_early_response_box_popup = document.getElementById('write_early_response_box_popup');
 timerElement.style.display = "none";
+write_answer_box_popup.style.display = "none";
+write_early_response_box_popup.style.display = "none";
+
 let countdownInterval = null; // Переменная для хранения интервала
 
 function startCountdown(timer_value) {
@@ -86,7 +91,7 @@ function startCountdown(timer_value) {
 
     timerElement.textContent = timer_value;
     let value = parseInt(timerElement.textContent, 10);
-    checkScale();
+    checkScale(timerElement);
     timerElement.style.display = "";
 
     countdownInterval = setInterval(() => {
@@ -110,16 +115,26 @@ function cancelCountdown() {
     };
 };
 
-function checkScale() {
+function checkScale(event) {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    const width_windiw = timerElement.offsetWidth;
-    const height_windiw = timerElement.offsetHeight;
+    const width_windiw = event.offsetWidth;
+    const height_windiw = event.offsetHeight;
 
-    timerElement.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`
-    timerElement.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`
-}
+    event.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`;
+    event.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`;
+};
+
 // Запуск таймера
+//window.addEventListener('resize', checkScale(timerElement));
+//window.addEventListener('resize', checkScale(write_answer_box_popup));
+//window.addEventListener('resize', checkScale(write_early_response_box_popup));
 
-window.addEventListener('resize', checkScale);
+// Запуск таймера
+window.addEventListener('resize', () => checkScale(timerElement));
+window.addEventListener('resize', () => checkScale(write_answer_box_popup));
+window.addEventListener('resize', () => checkScale(write_early_response_box_popup));
+
+
+

@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#answer_button').addEventListener('click', () => {
         chatSocket.send(JSON.stringify({
             'room_ID': room_number,
-            'message': "у меня есть ответ",
+            'message': "У меня есть ответ",
             'user_id': user_id,
         }));
     });
@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //messageElement.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const chatContainer = document.getElementById('chat');
@@ -100,3 +99,4 @@ document.addEventListener('DOMContentLoaded', function() {
         subtree: true     // и всех потомков
     });
 });
+
