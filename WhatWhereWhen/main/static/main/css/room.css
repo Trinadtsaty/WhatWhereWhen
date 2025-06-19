@@ -960,6 +960,7 @@ body {
 
     justify-content: center;  /* Горизонтальное центрирование */
     align-items: center;      /* Вертикальное центрирование */
+    cursor: pointer;
 }
 .send_answer_button:hover {
     background-color: rgba(82, 79, 82, 1);
@@ -969,6 +970,10 @@ body {
     border-bottom: 3px solid rgba(192, 166, 16, 1);
 }
 .input_line_answer{
+    padding-left: 5px;
+    padding-right: 5px;
+    box-sizing: border-box;
+
     font-size: 35px;
     width: 100%;
     height: 75px;
@@ -982,12 +987,17 @@ body {
     background-color: rgba(217, 217, 217, 0.7);
 }
 .input_line_answer:focus, .input_line_answer::placeholder{
+/*    margin-left: 5px;*/
     font-size: 35px;
     outline: none; /* Убирает стандартный контур при фокусе */
     font-family: "Oswald", sans-serif;
     background-color: rgba(217, 217, 217, 0.7);
 }
 .description_input_text{
+    padding-left: 5px;
+    padding-right: 5px;
+    box-sizing: border-box;
+
     font-size: 35px;
     width: 100%;
     height: 300px;
@@ -1005,4 +1015,170 @@ body {
     outline: none; /* Убирает стандартный контур при фокусе */
     font-family: "Oswald", sans-serif;
     background-color: rgba(217, 217, 217, 0.7);
+}
+
+
+#popup_accepting_answer {
+    margin-right: 82.5px;
+    display: flex;
+    position: fixed;
+    left: 50%;
+    bottom: -450px;
+    transform: translateX(-50%);
+    display: flex;
+    transition: bottom 0.3s ease;
+    z-index: 1000;
+}
+
+#popup_accepting_answer.show {
+    bottom: 0;
+}
+
+#accepting_answer_box {
+    background-color: rgba(136, 128, 136, 1);
+    border: 3px solid white;
+    height: 450px;
+    width: 650px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    padding: 15px;
+    position: relative; /* Это важно для позиционирования дочерних элементов */
+    z-index: 2;
+}
+
+#accepting_answer_open_box {
+    position: absolute;
+    height: 165px;
+    width: 165px;
+    border-radius: 50%;
+    border: 3px solid white;
+    background-color: rgba(136, 128, 136, 1);
+    top: -82.5px; /* Половина высоты элемента (165px/2) */
+    left: 50%; /* Центрируем по горизонтали */
+    transform: translateX(-50%); /* Точное центрирование */
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+#accepting_answer_open {
+    font-size: 32px;
+    color: white;
+    position: absolute;
+    top: 25%; /* Регулируйте это значение для точного позиционирования */
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+    margin: 0;
+    line-height: 1;
+}
+/*#accepting_answer {*/
+/*    font-size: 50px;*/
+/*    color: white;*/
+/*}*/
+#accepting_answer {
+    padding-left: 5px;
+    padding-right: 5px;
+    box-sizing: border-box;
+
+    font-size: 50px;
+    width: 100%;
+    height: 100px;
+    background-color: rgba(217, 217, 217, 0.7);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    white-space: normal;      /* разрешает перенос строк */
+    word-wrap: break-word;   /* переносит длинные слова */
+    overflow-wrap: break-word; /* современный аналог word-wrap */
+    word-break: break-word;  /* для переноса очень длинных слов */
+
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+}
+#accepting_answer::-webkit-scrollbar {
+  width: 8px; /* тонкий скроллбар */
+}
+#accepting_answer::-webkit-scrollbar-thumb {
+  background-color: #C0A610; /* цвет ползунка */
+}
+#accepting_answer::-webkit-scrollbar-track {
+  background-color: rgba(217, 217, 217, 0.7); /* цвет дорожки */
+}
+#accepting_answer_description {
+    padding-left: 5px;
+    padding-right: 5px;
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 250px;
+
+    font-size: 40px;
+/*    color: white;*/
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+
+    white-space: normal;      /* разрешает перенос строк */
+    word-wrap: break-word;   /* переносит длинные слова */
+    overflow-wrap: break-word; /* современный аналог word-wrap */
+    word-break: break-word;  /* для переноса очень длинных слов */
+}
+#accepting_answer_description::-webkit-scrollbar {
+  width: 8px; /* тонкий скроллбар */
+}
+#accepting_answer_description::-webkit-scrollbar-thumb {
+  background-color: #C0A610; /* цвет ползунка */
+}
+#accepting_answer_description::-webkit-scrollbar-track {
+  background-color: rgba(217, 217, 217, 0.7); /* цвет дорожки */
+}
+#buttons_acceptance {
+    width: 100%;
+    height: 65px;
+    display: flex;
+/*    justify-content: space-between;*/
+    justify-content: flex-start;
+/*    align-items: center;*/
+/*    margin-top: auto;*/
+    justify-content: flex-start;
+    align-items: center;
+}
+.buttons_accepting_answer_box {
+    width: 250px;
+    border: 3px solid rgba(82, 79, 82, 1);
+    background-color: rgba(192, 166, 16, 1);
+    display: flex;
+    justify-content: center; /* горизонтальное центрирование */
+    align-items: center;     /* вертикальное центрирование */
+    border-radius: 30px;
+    margin-left: 50px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.buttons_accepting_answer_box:hover {
+    display: flex;
+    border: 3px solid rgba(192, 166, 16, 1);
+    background-color: rgba(82, 79, 82, 1);
+}
+.buttons_accepting_answer_img {
+    height: 65px;
+}
+
+.user_not_provide_answer {
+    color: red;
+}
+.user_not_provide_description {
+    color: red;
+}
+.user_provide_description {
+    color: white;
+}
+.user_provide_answer {
+    color: white;
 }

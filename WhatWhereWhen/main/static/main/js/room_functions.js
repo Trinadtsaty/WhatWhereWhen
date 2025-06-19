@@ -152,14 +152,18 @@ function sendQuestion(number) {
 
 function showQuestion_user(data) {
     console.log("showQuestion_user",data)
+
     document.getElementById("question_name").textContent = `Вопрос №${data.question_number}: `+ data.question_name
     document.getElementById("question_text").textContent = data.text_question
+    document.getElementById("question_screen").dataset.value = data.question_id;
 
     if (data.time_read > 0) {
+        hide_access_user()
         time_output(data.time_read)
     } else {
+        show_access_user()
         time_output(data.time_question)
-    }
+    };
 
 //    time_output (data.time_read)
 //    start_question_read_time(data.time_read, data.time_question)
@@ -167,19 +171,27 @@ function showQuestion_user(data) {
 function hide_access_leader() {
     document.querySelectorAll(".access_leader").forEach(item => {
         item.style.display = "none";
-        console.log("вы тут")
+//        console.log("вы тут")
     });
 };
 function hide_access_user() {
     document.querySelectorAll(".access_user").forEach(item => {
         item.style.display = "none";
-        console.log("вы тут")
+//        console.log("вы тут")
+    });
+};
+function show_access_user() {
+    document.querySelectorAll(".access_user").forEach(item => {
+        item.style.display = "";
+//        console.log("вы тут")
     });
 };
 
 function showQuestion_leader(data) {
     document.getElementById("popup_answer").style.display = "";
-    console.log("showQuestion_leader",data)
+//    console.log("showQuestion_leader",data)
+    document.getElementById("question_screen").dataset.value = data.question_id;
+
     if (!data.note) {
         document.getElementById("description_button").style.display = "none";
     } else {
@@ -187,10 +199,10 @@ function showQuestion_leader(data) {
     };
 
     if (data.time_read > 0) {
-        console.log("мы в больше нуля")
+//        console.log("мы в больше нуля")
         time_output(data.time_read)
     } else {
-        console.log("мы в меньше нуля")
+//        console.log("мы в меньше нуля")
         console.log(data.time_question)
         time_output(data.time_question)
     }
@@ -218,8 +230,8 @@ function showe_element() {
     document.getElementById("page_question").style.display = "none";
 };
 
-function open_answer() {
-    document.querySelector('#popup_answer').classList.toggle('show');
+function open_answer(text) {
+    document.querySelector(text).classList.toggle('show');
 };
 function click_answer() {
     document.querySelector('#answer_box').style.display = "";
@@ -292,23 +304,6 @@ function pluse_question_time (value) {
         'value' : value,
     }));
 };
-//function startTimer (time_question) {
-//    if (isPaused) return; // Если таймер на паузе, не запускаем его
-//
-//    timer = setInterval(() => {
-//        if (time_left <= 0) {
-//            clearInterval(timer);
-//            start_question_time()
-//            console.log("Время вышло!");
-//            if (time_left <0) {
-//                time_output(0)
-//            };
-//        } else {
-//            time_left--;
-//            time_output(time_left)
-//        }
-//    }, 1000);
-//};
 function clear_chat() {
     const questions_box = document.getElementById('chat');
     while (questions_box.firstChild) {
@@ -366,38 +361,88 @@ function checkScale(event) {
 function send_answer() {
     const answer = document.getElementById('answer_input_line').value;
     const description = document.getElementById('description_answer_input_box').value;
-    document.getElementById('answer_input_line').value = "";
-    document.getElementById('description_answer_input_box').value = "";
 
-    console.log(answer,description);
-    activeSocket.send(JSON.stringify({
-        'question': "answer",
-        'answer': answer,
-        'description': description,
-    }));
-    closePopup(document.getElementById('write_answer_box_popup'))
+    const checking_answer = check_answer(answer);
+    if (checking_answer) {
+        const checking_description = check_description(description);
+        if (checking_description) {
+            document.getElementById('answer_input_line').value = "";
+            document.getElementById('description_answer_input_box').value = "";
+
+            activeSocket.send(JSON.stringify({
+                'question': document.getElementById("question_screen").dataset.value,
+                'type' : "answer",
+                'answer': answer,
+                'description': description,
+                'author_answer': user_id,
+            }));
+            closePopup(document.getElementById('write_answer_box_popup'))
+        };
+    };
 };
 function send_early_response() {
-    const answer = document.getElementById('answer_input_line').value;
+    const answer = document.getElementById('early_response_input_line').value;
     const description = document.getElementById('description_early_response_input_box').value;
 
+    const checking_answer = check_answer(answer);
+    if (checking_answer) {
+        const checking_description = check_description(description);
+        if (checking_description) {
+            document.getElementById('early_response_input_line').value = "";
+            document.getElementById('description_early_response_input_box').value = "";
 
-
-    document.getElementById('answer_input_line').value = "";
-    document.getElementById('description_early_response_input_box').value = "";
-    console.log(answer,description);
-    activeSocket.send(JSON.stringify({
-        'question': "answer",
-        'answer': answer,
-        'description': description,
-    }));
-    closePopup(document.getElementById('write_early_response_box_popup'))
+            activeSocket.send(JSON.stringify({
+                'question': document.getElementById("question_screen").dataset.value,
+                'type' : "early_response",
+                'answer': answer,
+                'description': description,
+                'author_answer': user_id,
+            }));
+            closePopup(document.getElementById('write_early_response_box_popup'))
+        };
+    };
 };
 function check_answer(text) {
-//    Сделать ограничения до 500символов
+    if (text.length > 100) {
+        document.getElementById('claim_error').textContent = "Ответ слишком длинный, уместите его в 100 символов";
+        showError();
+        return false;
+    } else {
+        return true;
+    };
 };
 function check_description(text) {
-//    Сделать ограничения до 500символов
+    if (text.length > 500) {
+        document.getElementById('claim_error').textContent = "Примичание слишком длинное, уместите его в 500 символов";
+        showError()
+        return false
+    } else {
+        return true
+    };
+};
+function create_answer(data) {
+//    author_answer
+    document.getElementById('popup_accepting_answer').dataset.value = data.author_answer
+
+    document.getElementById('popup_accepting_answer').style.display = ""
+    document.getElementById('accepting_answer').textContent = "Ответ: " + data.answer;
+    document.getElementById('accepting_answer').className = data.Class_answer;
+
+    document.getElementById('accepting_answer_description').textContent = "Примичание: " + data.description;
+    document.getElementById('accepting_answer_description').className = data.Class_answer;
 };
 
-//<script>console.log(123)<script>
+function send_like() {
+    activeSocket.send(JSON.stringify({
+        'status_game': "like",
+        'author_answer': document.getElementById('popup_accepting_answer').dataset.value,
+        "question": document.getElementById("question_screen").dataset.value,
+    }));
+};
+function send_dislike() {
+    activeSocket.send(JSON.stringify({
+        'status_game': "dislike",
+        'author_answer': document.getElementById('popup_accepting_answer').dataset.value,
+        "question": document.getElementById("question_screen").dataset.value,
+    }));
+};

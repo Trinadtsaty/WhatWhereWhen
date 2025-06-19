@@ -150,6 +150,7 @@
             {% empty %}
             <div class="question_on_page">В коллекции отсутсвуют вопросы</div>
             {% endfor %}
+
         </div>
 
         <div id="button_page" class="page_element">
@@ -178,7 +179,7 @@
             <div id="note">
             </div>
         </div>
-        <div id="answer_open_box" onclick="open_answer()">
+        <div id="answer_open_box" onclick="open_answer('#popup_answer')">
             <div id="answer_open">|||</div>
         </div>
         <div id="description_button">
@@ -188,6 +189,21 @@
         </div>
     </div>
 
+    <div id="popup_accepting_answer" class="popup" style="display: none">
+        <div id="accepting_answer_open_box" onclick="open_answer('#popup_accepting_answer')">
+            <div id="accepting_answer_open">|||</div>
+        </div>
+        <div id="accepting_answer_box">
+            <div id="accepting_answer">
+            </div>
+            <div id="accepting_answer_description">
+            </div>
+            <div id="buttons_acceptance">
+                <div id="buttons_like_box" class="buttons_accepting_answer_box" onclick="send_like()"><img class="buttons_accepting_answer_img" id="buttons_like_img" alt="Принять" src="{% static 'main/img/like.png' %}"></div>
+                <div id="buttons_dislike_box" class="buttons_accepting_answer_box" onclick="send_dislike()"><img class="buttons_accepting_answer_img" id="buttons_dislike_img" alt="Не принять" src="{% static 'main/img/dislike.png' %}"></div>
+            </div>
+        </div>
+    </div>
 
 
     <div id="page_question" style="display: none">
@@ -201,9 +217,9 @@
                 <div id="pause_button" class="access_leader element_question_buttons" onclick="pause_question_time()"><img class="img_question_element" alt="Пауза" title="прервать отсчёт" src="{% static 'main/img/continue.png' %}"></div>
                 <div id="continue_button" class="access_leader element_question_buttons" onclick="play_question_time()"><img class="img_question_element" alt="Продолжить" title="продолжить отсчёт" src="{% static 'main/img/play.png' %}"></div>
 
-                <div id="gives_answer_button" class="access_user element_question_buttons" onclick="open_answer_popup()">Отвечает...</div>
-                <div id="answer_button" class="access_user element_question_buttons">Ответ</div>
-                <div id="early_response_button" class="access_user element_question_buttons" onclick="open_early_response_popup()">Досрочный ответ</div>
+                <div id="gives_answer_button" class="access_user element_question_buttons" style="display: none" onclick="open_answer_popup()">Отвечает...</div>
+                <div id="answer_button" class="access_user element_question_buttons" style="display: none">Ответ</div>
+                <div id="early_response_button" class="access_user element_question_buttons" style="display: none" onclick="open_early_response_popup()">Досрочный ответ</div>
                 <div id="timer_panel" ></div>
             </div>
 
@@ -211,25 +227,26 @@
         <div id="log_out_info_page2" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Logout_Secret' room_number=room.ID  %}">Выйти со страници</a></div>
     </div>
 
-    {% if error %}
-        <div id="claim_error" class="error">{{ error }}</div>
-    {% endif %}
+<!--    {% if error %}-->
+<!--        <div id="claim_error" class="error">{{ error }}</div>-->
+<!--    {% endif %}-->
+    <div id="claim_error" class="error"></div>
 
-        <div id="timer"></div>
-        <div id="write_answer_box_popup" class="popup_answer_write">
-            <div id="answer_title" class="answer_title_name">Ответ:</div>
-            <input id="answer_input_line" placeholder="Введите ваш ответ" class="input_line_answer">
-            <div id="answer_description_title" class="description_title_text">Примичание:</div>
-            <textarea id="description_answer_input_box" placeholder="Введите примичание к вопросу" class="description_input_text"></textarea>
-            <div id="send_answer" class="send_answer_button" onclick="send_answer()">Отправить</div>
-        </div>
-        <div id="write_early_response_box_popup" class="popup_answer_write">
-            <div id="early_response_title" class="answer_title_name">Досрочный ответ:</div>
-            <input id="early_response_input_line" placeholder="Введите ваш ответ" class="input_line_answer">
-            <div id="early_response_description_title" class="description_title_text">Примичание:</div>
-            <textarea id="description_early_response_input_box" placeholder="Введите примичание к вопросу" class="description_input_text"></textarea>
-            <div id="send_early_response" class="send_answer_button" onclick="send_early_response()">Отправить</div>
-        </div>
+    <div id="timer"></div>
+    <div id="write_answer_box_popup" class="popup_answer_write">
+        <div id="answer_title" class="answer_title_name">Ответ:</div>
+        <input type="text" id="answer_input_line" placeholder="Введите ваш ответ" class="input_line_answer">
+        <div id="answer_description_title" class="description_title_text">Примичание:</div>
+        <textarea id="description_answer_input_box" placeholder="Введите примичание к вопросу" class="description_input_text"></textarea>
+        <div id="send_answer" class="send_answer_button" onclick="send_answer()">Отправить</div>
+    </div>
+    <div id="write_early_response_box_popup" class="popup_answer_write">
+        <div id="early_response_title" class="answer_title_name">Досрочный ответ:</div>
+        <input type="text" id="early_response_input_line" placeholder="Введите ваш ответ" class="input_line_answer">
+        <div id="early_response_description_title" class="description_title_text">Примичание:</div>
+        <textarea id="description_early_response_input_box" placeholder="Введите примичание к вопросу" class="description_input_text"></textarea>
+        <div id="send_early_response" class="send_answer_button" onclick="send_early_response()">Отправить</div>
+    </div>
 
     <script>
 //        document.getElementById("page").style.display = "none";

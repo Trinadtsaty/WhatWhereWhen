@@ -407,13 +407,31 @@ class StartConsumer(AsyncWebsocketConsumer):
     time = 1
     # переношу в кэш
     # question = {}
-    stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None}
+    stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None, "score": None}
     room_tasks = {}
 
     async def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.user_id = self.scope['user'].ID
         self.room_group_name = f'action_{self.room_id}'
+        room = await self.get_room(self.room_id)
+        self.leader_id = await self.get_your_id(room, "leader")
+        self.captain_id = await self.get_your_id(room, "captain")
+
+        # score
+        if self.stage["score"] == None:
+            if room.game_mode == 0:
+                self.stage["score"] ={
+                    "players": 0,
+                    "authors": 0,
+                    }
+            elif room.game_mode == 1:
+                pass
+            elif room.game_mode == 3:
+                self.stage["score"] ={
+                    "players": 0,
+                    "authors": 0,
+                    }
 
         # Генерируем ключ для кеша
         self.cache_key = f'room_{self.room_id}_questions'
@@ -433,14 +451,12 @@ class StartConsumer(AsyncWebsocketConsumer):
         # questions = await self.cache_get(self.cache_key)
 
         if questions is None:
-            room = await self.get_room(self.room_id)
             await self.filling_question(room)
 
         if self.stage["stage"] == "get_question":
             if self.stage["user_id"] == self.user_id:
                 await self.notify_stage()
             else:
-                room = await self.get_room(self.room_id)
                 await self.notify_stage_not_leader(room)
         else:
             await self.notify_stage()
@@ -458,7 +474,9 @@ class StartConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         room = await self.get_room(self.room_id)
-        leader_id = await self.get_your_id(room, "leader")
+        self.leader_id = await self.get_your_id(room, "leader")
+        self.captain_id = await self.get_your_id(room, "captain")
+        # self.leader_id = await self.get_your_id(room, "leader")
         # Получаем вопросы из кеша
         questions = cache.get(self.cache_key)
         # Используем асинхронную версию cache.get()
@@ -476,6 +494,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                 "all": [],
                 "use": [],
                 "not_use": [],
+                "right ": [],
             }
 
             for question_id, question_data in questions.items():
@@ -486,16 +505,19 @@ class StartConsumer(AsyncWebsocketConsumer):
                         arr["use"].append(question_id)
                     else:
                         arr["not_use"].append(question_id)
+                    if question_data["answer_status"]:
+                        arr["right"].append(question_id)
+
             self.stage["stage"] = "question_menu"
             self.stage["message"] = arr
-            self.stage["user_id"] = leader_id
+            self.stage["user_id"] = self.leader_id
             # print("self.stage",self.stage)
 
             group_message = {
                 'type': 'handle_action_game',
                 'action_type': "question_menu",
                 'message': arr,
-                'user_id': leader_id,
+                'user_id': self.leader_id,
                 'timestamp': str(datetime.now())
             }
             return group_message
@@ -503,12 +525,12 @@ class StartConsumer(AsyncWebsocketConsumer):
 
         async def time_question():
             # Вернуться
-
-            def time_send(time,Class):
+            def time_send(time, Class, leader_id):
                 group_message = {
-                'type': 'time_send',
+                'type': 'time_sender',
                 'time': time,
-                'class': Class,
+                'Class': Class,
+                'leader_id':leader_id,
                 }
                 return group_message
 
@@ -518,10 +540,10 @@ class StartConsumer(AsyncWebsocketConsumer):
                 for i in range(self.stage["message"]["time_read"]-1, -1, -1):
                     await asyncio.sleep(1)
                     self.stage["message"]['time_read'] = i
-                    if i!=0:
+                    if i>=0:
                         await self.channel_layer.group_send(
                             self.room_group_name,
-                            time_send(self.stage["message"]['time_read'], "time_read")
+                            time_send(self.stage["message"]['time_read'], "time_read", self.leader_id)
                         )
                     print(f"Обратный отсчет чтения вопроса: {i//60}:{i-i//60*60}")
                 if self.stage["message"]['time_read'] < 0:
@@ -530,10 +552,10 @@ class StartConsumer(AsyncWebsocketConsumer):
                 for i in range(self.stage["message"]["time_question"]-1, -1, -1):
                     await asyncio.sleep(1)
                     self.stage["message"]['time_question'] = i
-                    if i != 0:
+                    if i >= 0:
                         await self.channel_layer.group_send(
                             self.room_group_name,
-                            time_send(self.stage["message"]['time_question'], "time_question")
+                            time_send(self.stage["message"]['time_question'], "time_question", self.leader_id)
                         )
 
                     print(f"Обратный отсчет ответа на вопрос: {i//60}:{i-i//60*60}")
@@ -547,7 +569,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                 print("Произошла ошибка:")
                 traceback.print_exc()
 
-        async def timer_5_sec(leader_id):
+        async def timer_5_sec():
             try:
                 # await self.send_start_timer(self.time)
                 for i in range(self.time,0,-1):
@@ -564,7 +586,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'action_type': "question",
                         'message': self.time,
                         # 'username': user.login,
-                        'user_id': leader_id,
+                        'user_id': self.leader_id,
                         'timestamp': str(datetime.now())
                     }
                 else:
@@ -586,7 +608,7 @@ class StartConsumer(AsyncWebsocketConsumer):
             data = json.loads(text_data)
             # print(data)
 
-            print(f"Получены данные от {user.login}:", data.keys())
+            print(f"Получены данные от {user.login}:", data)
 
             # Определяем тип действия и сообщение
             action_info = {
@@ -615,8 +637,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                 if data["type"] == "open_question":
                     questions_number =  int(data["question"])
 
-                    # уже существуе
-                    # questions = cache.get(self.cache_key)
+                    questions = cache.get(self.cache_key)
                     question = questions.pop(questions_number, None)
                     # Проверяем, что вопрос существует
                     if question is not None:
@@ -641,6 +662,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                     self.stage["stage"] = "get_question"
 
                     self.stage["message"] = {
+                        'question_id': question["question_id"],
                         'question_name': question["question_name"],
                         'text_question': question["text_question"],
                         'note': question["note"],
@@ -650,22 +672,65 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'time_read': (len(question["text_question"]) // room.reading_speed) + 1,
                         'time_question': room.question_time,
                     }
-                    self.stage["user_id"] = leader_id
+                    self.stage["user_id"] = self.leader_id
 
                     group_message = {
                         'type': 'sending_question',
+                        'question_id': question["question_id"],
                         'question_name': question["question_name"],
                         'text_question': question["text_question"],
                         'note': question["note"],
                         'answer': question["answer"],
                         'answer_description': question["answer_description"],
-                        'lider_id': leader_id,
+                        'leader_id': self.leader_id,
                         'question_number': question["question_number"],
                         'time_read': (len(question["text_question"]) // room.reading_speed) + 1,
                         'time_question': room.question_time,
                     }
+
                     task = asyncio.create_task(time_question())
                     self.room_tasks[self.room_id] = task
+
+                elif data["type"] == "answer" or data["type"] == "early_response":
+                    early_response = False
+                    if data["type"] == "early_response":
+                        early_response = True
+                    # Вернуться
+                    author_answer = data["author_answer"]
+                    answer = data["answer"]
+                    description = data["description"]
+                    Class_answer = ""
+                    Class_description = ""
+
+                    if len(answer) !=0:
+                        Class_answer += "user_provide_answer"
+                    else:
+                        answer = "Пользователь не дал ответ"
+                        Class_answer += "user_not_provide_answer"
+
+                    if len(description) != 0:
+                        Class_description += "user_provide_description"
+                    else:
+                        description = "Пользователь не дал описания вопроса"
+                        Class_description += "user_not_provide_description"
+
+                    group_message = {
+                        'type': 'returned_answer',
+                        "leader_id" : self.leader_id,
+                        "author_answer": author_answer,
+                        "early_response" : early_response,
+                        'answer': answer,
+                        'description': description,
+                        'Class_answer': Class_answer,
+                        'Class_description': Class_description,
+                    }
+
+                    self.stage["message"]["get_answer"] = group_message
+
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        group_message
+                    )
 
                 elif data["type"] == "get_menu":
                     if self.room_tasks != {}:
@@ -715,7 +780,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                         'user_id': self.user_id,
                         'timestamp': str(datetime.now())
                     }
-                    task = asyncio.create_task(timer_5_sec(leader_id))
+                    task = asyncio.create_task(timer_5_sec())
                     self.room_tasks[self.room_id] = task
 
 
@@ -746,7 +811,6 @@ class StartConsumer(AsyncWebsocketConsumer):
 
                 elif data[action_type] == "pluse":
                     task = self.room_tasks.pop(self.room_id, None)
-
 
                     if task:
                         task.cancel()
@@ -796,8 +860,37 @@ class StartConsumer(AsyncWebsocketConsumer):
                                     'class': "time_question",
                                 }
                             )
+                elif data[action_type] == "like" or data[action_type] == "dislike":
+                    status = ""
+                    if data[action_type] == "like":
+                        self.stage["score"]["players"] += 1
+                        status = "Ответ верный"
 
+                    elif data[action_type] == "dislike":
+                        self.stage["score"]["authors"] += 1
+                        status = "Ответ не верный"
 
+                    group_message = {
+                        'type': 'score_send',
+                        "score_players" : self.stage["score"]["players"],
+                        "score_authors" : self.stage["score"]["authors"],
+                        "status" : status,
+                        "leader_id": self.leader_id,
+
+                    }
+                    questions = cache.get(self.cache_key)
+                    question = questions.pop(data["question"], None)
+                    # Проверяем, что вопрос существует
+                    if question is not None:
+                        # Обновляем значение
+                        question["answer_status"] = True
+                        # Добавляем вопрос обратно в список
+                        questions[data["question"]] = question
+                        sorted_questions = sorted(questions.items())
+                        # Преобразование обратно в словарь
+                        questions = dict(sorted_questions)
+                        # Сохраняем обновленный список в кэш
+                        cache.set(self.cache_key, questions, timeout=3600)
 
 
 
@@ -839,6 +932,7 @@ class StartConsumer(AsyncWebsocketConsumer):
         for question in questions_bd:
             i+=1
             questions_dict[question.ID] = {
+                "question_id": question.ID,
                 "question_name": question.question_name,
                 "text_question": question.text_question,
                 "note": question.note,
@@ -850,6 +944,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'use': False,
                 'time_read': (len(question.text_question) // room.reading_speed) +1,
                 'time_question': room.question_time,
+                'answer_status':False,
             }
 
         # Сохраняем вопросы в кеш
@@ -870,12 +965,13 @@ class StartConsumer(AsyncWebsocketConsumer):
             'user_id': self.stage["user_id"],
         }))
 
-    async def time_send(self, event):
+    async def time_sender(self, event):
         try:
             response = {
                 'type': "time",
                 'time': event.get('time'),
-                "class": event.get('class'),
+                "Class": event.get('Class'),
+                "leader_id": event.get('leader_id'),
             }
 
             await self.send(text_data=json.dumps(response))
@@ -884,6 +980,7 @@ class StartConsumer(AsyncWebsocketConsumer):
 
     async def notify_stage_not_leader(self,room):
         question = {
+                'question_id': self.stage["message"]["question_id"],
                 'question_name': self.stage["message"]["question_name"],
                 'text_question': self.stage["message"]["text_question"],
                 'note': None,
@@ -897,7 +994,6 @@ class StartConsumer(AsyncWebsocketConsumer):
         if not room.show_question:
             question['text_question'] = None
 
-
         await self.send(text_data=json.dumps({
             'type': 'status_room',
             'stage': self.stage["stage"],
@@ -906,20 +1002,34 @@ class StartConsumer(AsyncWebsocketConsumer):
             'user_id': self.stage["user_id"],
         }))
 
-    async def sending_question(self,event):
+    async def returned_answer(self, event):
+        if event["leader_id"] == self.user_id:
+            response = {
+                'type': "return_answer",
+                "early_response": event.get('early_response'),
+                "answer": event.get('answer'),
+                "description": event.get('description'),
+                "Class_answer": event.get('Class_answer'),
+                "Class_description": event.get('Class_description'),
+                "author_answer": event.get('author_answer'),
+            }
+            await self.send(text_data=json.dumps(response))
+
+    async def sending_question(self, event):
         room = await self.get_room(self.room_id)
         await self.delete_all_messages_in_room(self.room_id)
 
         try:
-            if event["lider_id"] == self.user_id:
+            if event["leader_id"] == self.user_id:
                 response = {
                     'type': "get_question",
+                    'question_id': event.get('question_id'),
                     'question_name': event.get('question_name'),
                     'text_question': event.get('text_question'),
                     'note': event.get('note'),
                     'answer': event.get('answer'),
                     'answer_description': event.get('answer_description'),
-                    'user_id': event["lider_id"],
+                    'user_id': event["leader_id"],
                     'question_number': event.get('question_number'),
                     'time_read': event.get('time_read'),
                     'time_question': event.get('time_question'),
@@ -927,12 +1037,13 @@ class StartConsumer(AsyncWebsocketConsumer):
             elif room.show_question:
                 response = {
                     'type': "get_question",
+                    'question_id': event.get('question_id'),
                     'question_name': event.get('question_name'),
                     'text_question': event.get('text_question'),
                     'note': None,
                     'answer': None,
                     'answer_description': None,
-                    'user_id': event["lider_id"],
+                    'user_id': event["leader_id"],
                     'question_number': event.get('question_number'),
                     'time_read': event.get('time_read'),
                     'time_question': event.get('time_question'),
@@ -940,12 +1051,13 @@ class StartConsumer(AsyncWebsocketConsumer):
             else:
                 response = {
                     'type': "get_question",
+                    'question_id': event.get('question_id'),
                     'question_name': None,
                     'text_question': None,
                     'note': None,
                     'answer': None,
                     'answer_description': None,
-                    'user_id': event["lider_id"],
+                    'user_id': event["leader_id"],
                     'question_number': event.get('question_number'),
                     'time_read': event.get('time_read'),
                     'time_question': event.get('time_question'),

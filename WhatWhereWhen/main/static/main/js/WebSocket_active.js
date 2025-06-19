@@ -9,8 +9,10 @@ activeSocket.onmessage = function(e) {
 
     if (data.type === "time") {
         time_output(data.time)
-        if (data.class === "time_question") {
-            console.log("время вопроса а не чтения")
+        if (data.Class === "time_question" && user_id != data.leader_id) {
+            show_access_user()
+        } else if (data.Class === "time_read") {
+//            hide_access_user()
         };
     };
 
@@ -29,6 +31,9 @@ activeSocket.onmessage = function(e) {
             hide_element()
             createQuestionMenu(data.message)
         };
+    };
+    if (data.type === "return_answer") {
+        create_answer(data)
     };
 
     if (data.type === "get_question") {
@@ -67,6 +72,12 @@ activeSocket.onmessage = function(e) {
             } else {
                 hide_access_leader()
                 showQuestion_user(data.message)
+            };
+            if (data.message.get_answer) {
+                create_answer(data.message.get_answer)
+                console.log(data.message.get_answer);
+            } else {
+                console.log("в статусе комнаты нет ответа");
             };
         };
     };
@@ -125,11 +136,6 @@ function checkScale(event) {
     event.style.left = `${Math.floor(width/2)-Math.floor(width_windiw/2)}px`;
     event.style.top = `${Math.floor(height/2)-Math.floor(height_windiw/2)}px`;
 };
-
-// Запуск таймера
-//window.addEventListener('resize', checkScale(timerElement));
-//window.addEventListener('resize', checkScale(write_answer_box_popup));
-//window.addEventListener('resize', checkScale(write_early_response_box_popup));
 
 // Запуск таймера
 window.addEventListener('resize', () => checkScale(timerElement));
