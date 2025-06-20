@@ -11,6 +11,9 @@ activeSocket.onmessage = function(e) {
         time_output(data.time)
         if (data.Class === "time_question" && user_id != data.leader_id) {
             show_access_user()
+            if (data.time === 0 && user_id === data.captain_id) {
+                open_answeing()
+            };
         } else if (data.Class === "time_read") {
 //            hide_access_user()
         };
@@ -80,10 +83,8 @@ activeSocket.onmessage = function(e) {
             // Вышел за хлебом
             console.log("Вышел за хлебом")
             showe_element()
-//            document.getElementById('page_question').style.pointerEvents = ""
-//            document.getElementById('page').style.pointerEvents = ""
-        } else if (data.message.your_response === user_id) {
-            open_answer_popup()
+            //            document.getElementById('page_question').style.pointerEvents = ""
+            //            document.getElementById('page').style.pointerEvents = ""
         } else if (data.stage === "question_menu") {
             if (user_id === data.user_id) {
                 hide_element()
@@ -97,6 +98,14 @@ activeSocket.onmessage = function(e) {
                 'type' : "open_question",
             }));
         } else if (data.stage === "get_question") {
+            let checking_popup = false;
+            if (data.message.your_response === user_id) {
+                open_answer_popup();
+                checking_popup = true;
+            };
+            if (data.message.time_question === 0 && data.captain_id === user_id && !checking_popup) {
+                open_answeing()
+            };
             if (clear_chat_check) {
                 clear_chat()
             };

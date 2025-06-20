@@ -407,7 +407,7 @@ class StartConsumer(AsyncWebsocketConsumer):
     time = 1
     # переношу в кэш
     # question = {}
-    stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None, "score": None}
+    stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None, "score": None, "captain_id": None}
     room_tasks = {}
 
     async def connect(self):
@@ -476,7 +476,7 @@ class StartConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         room = await self.get_room(self.room_id)
         self.leader_id = await self.get_your_id(room, "leader")
-        # self.captain_id = await self.get_your_id(room, "captain")
+        self.stage["captain_id"] = await self.get_your_id(room, "captain")
         # self.leader_id = await self.get_your_id(room, "leader")
         # Получаем вопросы из кеша
         questions = cache.get(self.cache_key)
@@ -577,6 +577,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                             self.room_group_name,
                             time_send(self.stage["message"]['time_question'], "time_question", self.leader_id)
                         )
+
 
                     print(f"Обратный отсчет ответа на вопрос: {i//60}:{i-i//60*60}")
                 if self.stage["message"]['time_question'] < 0:
@@ -720,7 +721,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                     # print(data)
                     # print(self.stage["message"])
                     self.stage["message"]["your_response"] = data["question"]
-                    # print("мы тут и делаем запись", self.stage["message"]["your_response"])
+                    print(self.stage)
 
                     group_message = {
                         'type': 'ready_respond_users',
@@ -732,10 +733,12 @@ class StartConsumer(AsyncWebsocketConsumer):
                     )
 
                 elif data["type"] == "answer" or data["type"] == "early_response":
+                    self.stage["message"]["your_response"] = None
+
                     early_response = False
                     if data["type"] == "early_response":
                         early_response = True
-                    # Вернуться
+                        # Вернуться
                     author_answer = data["author_answer"]
                     answer = data["answer"]
                     description = data["description"]
@@ -1093,6 +1096,7 @@ class StartConsumer(AsyncWebsocketConsumer):
             'condition': self.stage["condition"],
             'message': self.stage["message"],
             'user_id': self.stage["user_id"],
+            'captain_id': self.stage["captain_id"],
             'score' : self.stage["score"],
         }))
 
@@ -1103,6 +1107,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'time': event.get('time'),
                 "Class": event.get('Class'),
                 "leader_id": event.get('leader_id'),
+                "captain_id": self.stage["captain_id"]
             }
 
             await self.send(text_data=json.dumps(response))
@@ -1120,6 +1125,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'question_number': self.stage["message"]["question_number"],
                 'time_read' : self.stage["message"]["time_read"],
                 'time_question' : self.stage["message"]["time_question"],
+                'your_response' : self.stage["message"]["your_response"],
             }
 
         if not room.show_question:
@@ -1132,6 +1138,7 @@ class StartConsumer(AsyncWebsocketConsumer):
             'message': question,
             'user_id': self.stage["user_id"],
             'score': self.stage["score"],
+            'captain_id': self.stage["captain_id"],
         }))
 
     async def score_send(self, event):

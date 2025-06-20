@@ -499,7 +499,7 @@ function hide_after_answer() {
     document.getElementById("popup_accepting_answer").style.display = "none";
 };
 function send_captain_chose(number) {
-    console.log("ты кликнул сюда")
+//    console.log("ты кликнул сюда")
     document.getElementById("gives_answer_button").pointerEvents = "none";
     document.getElementById("satisfy").style.display = "none";
     activeSocket.send(JSON.stringify({
