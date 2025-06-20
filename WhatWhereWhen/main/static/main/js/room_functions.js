@@ -181,6 +181,7 @@ function hide_access_user() {
     });
 };
 function show_access_user() {
+    document.getElementById("gives_answer_button").pointerEvents = "";
     document.querySelectorAll(".access_user").forEach(item => {
         item.style.display = "";
 //        console.log("вы тут")
@@ -277,7 +278,7 @@ function send_menu() {
 //    time_left = time_question;
 //    time_question = null;
 //    if (time_left != 0) {
-//        startTimer(time_left);
+//        startTimer(time_left);pause_question_time()
 //    };
 //};
 
@@ -340,22 +341,20 @@ function formatNumber(num) {
 //    document.getElementById("write_answer_box_popup").style.display = "none"
 //};
 function closePopup(event) {
-//    document.getElementById('page_question').style.pointerEvents = ""
-//    document.getElementById('page').style.pointerEvents = ""
+    document.getElementById('page_question').style.pointerEvents = ""
+    document.getElementById('page').style.pointerEvents = ""
     event.style.display = "none"
 };
 
 function open_early_response_popup () {
     document.getElementById('page_question').style.pointerEvents = "none"
     document.getElementById('page').style.pointerEvents = "none"
-    document.getElementById('log_out_info_page2').style.pointerEvents = ""
     document.getElementById('write_early_response_box_popup').style.display = "";
     checkScale(document.getElementById('write_early_response_box_popup'))
 };
 function open_answer_popup () {
     document.getElementById('page_question').style.pointerEvents = "none"
     document.getElementById('page').style.pointerEvents = "none"
-    document.getElementById('log_out_info_page2').style.pointerEvents = ""
     document.getElementById('write_answer_box_popup').style.display = "";
     checkScale(document.getElementById('write_answer_box_popup'))
 };
@@ -445,6 +444,12 @@ function create_answer(data) {
 };
 
 function send_like() {
+    if (room_game_mode === "Спорт") {
+
+    } else {
+        const znach = document.getElementById('players_score').textContent.split(":");
+        document.getElementById('players_score').textContent = znach[0] + ": " + formatNumber(parseInt(znach[1], 10)+1);
+    };
     hide_after_answer()
     open_answer('#popup_accepting_answer')
     activeSocket.send(JSON.stringify({
@@ -454,6 +459,12 @@ function send_like() {
     }));
 };
 function send_dislike() {
+    if (room_game_mode === "Спорт") {
+
+    } else {
+        const znach = document.getElementById('authors_score').textContent.split(":");
+        document.getElementById('authors_score').textContent = znach[0] + ": " + formatNumber(parseInt(znach[1], 10)+1);
+    };
     hide_after_answer()
     open_answer('#popup_accepting_answer')
     activeSocket.send(JSON.stringify({
@@ -466,8 +477,7 @@ function showe_score(score) {
     const score_on_page = document.getElementById('score');
     while (score_on_page.firstChild) {
         score_on_page.removeChild(score_on_page.firstChild);
-    }
-
+    };
     if (room_game_mode === "Спорт") {
 
     } else {
@@ -488,3 +498,17 @@ function hide_after_answer() {
     document.getElementById("popup_answer").style.display = "none";
     document.getElementById("popup_accepting_answer").style.display = "none";
 };
+function send_captain_chose(number) {
+    console.log("ты кликнул сюда")
+    document.getElementById("gives_answer_button").pointerEvents = "none";
+    document.getElementById("satisfy").style.display = "none";
+    activeSocket.send(JSON.stringify({
+        'question': number,
+        'type': "captain_chose_your",
+    }));
+};
+function open_answeing() {
+//    satisfy
+    document.getElementById("satisfy").style.display = "";
+    pause_question_time()
+}

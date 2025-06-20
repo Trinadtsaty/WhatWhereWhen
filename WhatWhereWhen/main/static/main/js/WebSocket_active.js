@@ -28,10 +28,10 @@ activeSocket.onmessage = function(e) {
             document.getElementById('show_messege_people').className = data.Class;
             show("show_messege_people")
         };
-
-
     };
-
+    if (data.type === "return") {
+        open_answer_popup()
+    };
     if (data.type === "start_timer") {
         startCountdown(data.message);
     };
@@ -68,8 +68,8 @@ activeSocket.onmessage = function(e) {
             hide_access_user()
             showQuestion_leader(data)
         } else {
-            document.getElementById('page_question').style.pointerEvents = ""
-            document.getElementById('page').style.pointerEvents = ""
+//            document.getElementById('page_question').style.pointerEvents = ""
+//            document.getElementById('page').style.pointerEvents = ""
             hide_access_leader()
             showQuestion_user(data)
         };
@@ -80,8 +80,10 @@ activeSocket.onmessage = function(e) {
             // Вышел за хлебом
             console.log("Вышел за хлебом")
             showe_element()
-            document.getElementById('page_question').style.pointerEvents = ""
-            document.getElementById('page').style.pointerEvents = ""
+//            document.getElementById('page_question').style.pointerEvents = ""
+//            document.getElementById('page').style.pointerEvents = ""
+        } else if (data.message.your_response === user_id) {
+            open_answer_popup()
         } else if (data.stage === "question_menu") {
             if (user_id === data.user_id) {
                 hide_element()
@@ -103,8 +105,8 @@ activeSocket.onmessage = function(e) {
                 hide_access_user()
                 showQuestion_leader(data.message)
             } else {
-                document.getElementById('page_question').style.pointerEvents = ""
-                document.getElementById('page').style.pointerEvents = ""
+//                document.getElementById('page_question').style.pointerEvents = ""
+//                document.getElementById('page').style.pointerEvents = ""
                 hide_access_leader()
                 showQuestion_user(data.message)
             };

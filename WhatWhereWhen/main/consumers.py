@@ -716,6 +716,20 @@ class StartConsumer(AsyncWebsocketConsumer):
 
                     task = asyncio.create_task(time_question())
                     self.room_tasks[self.room_id] = task
+                elif data["type"] == "captain_chose_your":
+                    # print(data)
+                    # print(self.stage["message"])
+                    self.stage["message"]["your_response"] = data["question"]
+                    # print("мы тут и делаем запись", self.stage["message"]["your_response"])
+
+                    group_message = {
+                        'type': 'ready_respond_users',
+                        'user_id': data["question"]
+                    }
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        group_message
+                    )
 
                 elif data["type"] == "answer" or data["type"] == "early_response":
                     early_response = False
@@ -1119,6 +1133,7 @@ class StartConsumer(AsyncWebsocketConsumer):
             'user_id': self.stage["user_id"],
             'score': self.stage["score"],
         }))
+
     async def score_send(self, event):
         await self.send(text_data=json.dumps({
             'type': "score",
@@ -1139,6 +1154,13 @@ class StartConsumer(AsyncWebsocketConsumer):
                 "Class_answer": event.get('Class_answer'),
                 "Class_description": event.get('Class_description'),
                 "author_answer": event.get('author_answer'),
+            }
+            await self.send(text_data=json.dumps(response))
+
+    async def ready_respond_users(self, event):
+        if event["user_id"] == self.user_id:
+            response = {
+                'type': 'return'
             }
             await self.send(text_data=json.dumps(response))
 

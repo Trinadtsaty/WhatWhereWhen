@@ -38,9 +38,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 while (document.getElementById('button_page').firstChild) {
                     document.getElementById('button_page').removeChild(document.getElementById('button_page').firstChild);
                 };
+                while (document.getElementById('satisfy').firstChild) {
+                    document.getElementById('satisfy').removeChild(document.getElementById('satisfy').firstChild);
+                };
 
                 for (let i = 0; i < usersArray.length; i++) {
                     const user = usersArray[i];
+                    if (!user.leader) {
+                        createSatisfy(user)
+                    };
+//                    createSatisfy(user)
+
             //        console.log(user);
 
 
@@ -214,3 +222,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }));
     };
 });
+
+function createSatisfy(user) {
+    const login = document.createElement('div');
+    login.className = "player_satisfy_login"
+    login.textContent = user.login
+
+    const img = document.createElement('img');
+    img.alt = "фотопрофиля";
+    img.className = "player_satisfy_img";
+    img.src = user.picture;
+
+    const user_box = document.createElement('div');
+    user_box.className = "player_satisfy";
+    user_box.dataset.value = user.id;
+    user_box.appendChild(img);
+    user_box.appendChild(login);
+    user_box.onclick = function() {
+      send_captain_chose(user.id);
+    };
+
+//    user_box.onclick = send_captain_chose(user.id)
+
+    document.getElementById('satisfy').appendChild(user_box);
+};

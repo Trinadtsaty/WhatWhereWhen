@@ -65,17 +65,17 @@
         </div>
         <div id="players_page" class="page_element center">
 
-            <div class="player">
-                <div class="image_box">
-                    <div class="player_host">H</div>
-                    <img class="img" alt="фото профиля" src="{% static 'registration/img/Avatar.png' %}">
-                </div>
-                <div class="text_box">
-                    <div class="player_name">Ник пользователя</div>
-                    <div class="player_role">Роль</div>
-                </div>
-                <div class="button players"></div>
-            </div>
+<!--            <div class="player">-->
+<!--                <div class="image_box">-->
+<!--                    <div class="player_host">H</div>-->
+<!--                    <img class="img" alt="фото профиля" src="{% static 'registration/img/Avatar.png' %}">-->
+<!--                </div>-->
+<!--                <div class="text_box">-->
+<!--                    <div class="player_name">Ник пользователя</div>-->
+<!--                    <div class="player_role">Роль</div>-->
+<!--                </div>-->
+<!--                <div class="button players"></div>-->
+<!--            </div>-->
 
         </div>
 
@@ -169,6 +169,14 @@
     <div id="QuestionMenu" style="display:none;">
 
     </div>
+
+    <div id="satisfy" style="display: none">
+<!--        <div class="player_satisfy">-->
+<!--            <img alt="фотопрофиля" class="player_satisfy_img" src="{% static 'registration/img/Avatar.png' %}">-->
+<!--            <div class="player_satisfy_login">Ник пользователя</div>-->
+<!--        </div>-->
+    </div>
+
     <div id="popup_answer" class="popup" style="display: none">
         <div id="answer_box" class="text_box_leader">
             <div id="answer">
@@ -180,6 +188,7 @@
             <div id="note">
             </div>
         </div>
+
         <div id="answer_open_box" onclick="open_answer('#popup_answer')">
             <div id="answer_open">|||</div>
         </div>
@@ -218,7 +227,7 @@
                 <div id="pause_button" class="access_leader element_question_buttons" onclick="pause_question_time()"><img class="img_question_element" alt="Пауза" title="прервать отсчёт" src="{% static 'main/img/continue.png' %}"></div>
                 <div id="continue_button" class="access_leader element_question_buttons" onclick="play_question_time()"><img class="img_question_element" alt="Продолжить" title="продолжить отсчёт" src="{% static 'main/img/play.png' %}"></div>
 
-                <div id="gives_answer_button" class="access_user element_question_buttons" style="display: none" onclick="open_answer_popup()">Отвечает...</div>
+                <div id="gives_answer_button" class="access_user element_question_buttons" style="display: none" onclick="open_answeing()">Отвечает...</div>
                 <div id="answer_button" class="access_user element_question_buttons" style="display: none">Ответ</div>
                 <div id="early_response_button" class="access_user element_question_buttons" style="display: none" onclick="open_early_response_popup()">Досрочный ответ</div>
                 <div id="timer_panel"></div>
