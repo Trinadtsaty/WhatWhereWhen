@@ -964,8 +964,10 @@ class StartConsumer(AsyncWebsocketConsumer):
                             status = "Ответ верный"
                             Class = "correct"
                     else:
+                        login = await self.get_user(data["author_answer"])
+                        login = login.login
                         if data[action_type] == "like":
-                            self.stage["score"]["players"][data["author_answer"]] += 1
+                            self.stage["score"]["players"][login] += 1
                             status = "Ответ верный"
                             Class = "correct"
 

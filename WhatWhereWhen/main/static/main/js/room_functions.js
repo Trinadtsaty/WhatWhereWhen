@@ -530,6 +530,6 @@ function open_answeing() {
 };
 function create_answer_arr() {
 //    satisfy
-    document.getElementById("satisfy").style.display = "";
+//    document.getElementById("satisfy").style.display = "";
     pause_question_time();
 };
