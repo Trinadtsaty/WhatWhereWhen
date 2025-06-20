@@ -47,7 +47,8 @@
                 <div class="Background_text">{{room.room_name}}</div>
                 <div class="Background_text">Время на вопрос: {{room.question_time}}</div>
                 <div class="Background_text">Название пака: {{room.selections.selection_name}}</div>
-                <div class="Background_text">Режим: {{ room.get_game_mode_display }}</div>
+<!--                <div class="Background_text">Режим: {{ room.get_game_mode_display }}</div>-->
+                <div id="game_mode" class="Background_text"></div>
                 {% if room.room_description %}
                 <div id="room_description" class="Background_text">{{ room.room_description }}</div>
                 {% else %}
@@ -220,10 +221,11 @@
                 <div id="gives_answer_button" class="access_user element_question_buttons" style="display: none" onclick="open_answer_popup()">Отвечает...</div>
                 <div id="answer_button" class="access_user element_question_buttons" style="display: none">Ответ</div>
                 <div id="early_response_button" class="access_user element_question_buttons" style="display: none" onclick="open_early_response_popup()">Досрочный ответ</div>
-                <div id="timer_panel" ></div>
+                <div id="timer_panel"></div>
             </div>
 
         </div>
+        <div id="score"></div>
         <div id="log_out_info_page2" class="log_out"><a style="text-decoration: none; color: inherit;" href="{% url 'Logout_Secret' room_number=room.ID  %}">Выйти со страници</a></div>
     </div>
 
@@ -231,6 +233,7 @@
 <!--        <div id="claim_error" class="error">{{ error }}</div>-->
 <!--    {% endif %}-->
     <div id="claim_error" class="error"></div>
+    <div id="show_messege_people"></div>
 
     <div id="timer"></div>
     <div id="write_answer_box_popup" class="popup_answer_write">
@@ -253,21 +256,23 @@
 //        document.getElementById("popup_chat").style.display = "none";
 //        document.getElementById("page_question").style.display = "";
 
-
-        function showError() {
-            var errorDiv = document.getElementById("claim_error");
-            errorDiv.style.display = "block"; // Показываем окно
+        function show(text) {
+            var messege = document.getElementById(text);
+            messege.style.display = "block"; // Показываем окно
 
             // Скрываем окно через 10 секунд
             setTimeout(function() {
-                errorDiv.style.display = "none";
+                messege.style.display = "none";
             }, 5000); // 10000 миллисекунд = 10 секунд
-        }
+        };
         {% if error %}
-            showError()
+            show("claim_error");
         {% endif %}
 
         // Подключаемся к WebSocket
+        const room_game_mode = "{{ room.get_game_mode_display }}"
+        document.getElementById("game_mode").textContent = "Режим: " + room_game_mode;
+
         const room_number = '{{ room.ID }}';
         const user_id = {{ request.user.ID }};
         const clear_chat_check = {{ room.clear_chat|lower }};

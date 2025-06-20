@@ -94,6 +94,28 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000; /* Поверх всех элементов */
 }
+#show_messege_people {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000; /* Поверх всех элементов */
+    box-shadow: -33px 33px 21px 10px rgba(0, 0, 0, 0.25);
+
+
+    border: 3px solid white;
+    font-size: 30px;
+}
+.wrong {
+    background-color: rgba(159, 53, 53, 1);
+}
+.correct {
+    background-color: rgba(53, 74, 159, 1);
+}
 #page {
     display: flex;
     width: 100vw;
@@ -1181,4 +1203,20 @@ body {
 }
 .user_provide_answer {
     color: white;
+}
+#score {
+    position: absolute;
+    left: 100px;
+    top: 10px;
+/*    width: 200px;*/
+/*    height: 80px;*/
+
+    font-size: 50px;
+    color: white;
+    border: 3px solid rgba(82, 79, 82, 1);
+    background-color: rgba(136, 128, 136, 1);
+
+/*    display: flex;*/
+    justify-content: center; /* горизонтальное центрирование */
+    align-items: center;     /* вертикальное центрирование */
 }

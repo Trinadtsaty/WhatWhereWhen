@@ -15,11 +15,27 @@ activeSocket.onmessage = function(e) {
 //            hide_access_user()
         };
     };
+    if (data.type === 'score') {
+        const data_2 = {
+            "authors": data.score_authors,
+            "players": data.score_players,
+        };
+        showe_score(data_2)
+        if (user_id === data.leader_id) {
+
+        } else {
+            document.getElementById('show_messege_people').textContent = data.status;
+            document.getElementById('show_messege_people').className = data.Class;
+            show("show_messege_people")
+        };
+
+
+    };
 
     if (data.type === "start_timer") {
         startCountdown(data.message);
     };
-
+//    # Отмена стартового таймера
     if (data.type === "cancellation") {
         cancelCountdown()
     };
@@ -34,6 +50,13 @@ activeSocket.onmessage = function(e) {
     };
     if (data.type === "return_answer") {
         create_answer(data)
+        pause_question_time()
+    };
+    if (data.type === "random_question") {
+        activeSocket.send(JSON.stringify({
+            'question': data.question_number,
+            'type' : "open_question",
+        }));
     };
 
     if (data.type === "get_question") {
@@ -45,15 +68,20 @@ activeSocket.onmessage = function(e) {
             hide_access_user()
             showQuestion_leader(data)
         } else {
+            document.getElementById('page_question').style.pointerEvents = ""
+            document.getElementById('page').style.pointerEvents = ""
             hide_access_leader()
             showQuestion_user(data)
         };
     };
     if (data.type === "status_room") {
+        showe_score(data.score)
         if (data.stage === "collecting") {
             // Вышел за хлебом
             console.log("Вышел за хлебом")
             showe_element()
+            document.getElementById('page_question').style.pointerEvents = ""
+            document.getElementById('page').style.pointerEvents = ""
         } else if (data.stage === "question_menu") {
             if (user_id === data.user_id) {
                 hide_element()
@@ -61,6 +89,11 @@ activeSocket.onmessage = function(e) {
             } else {
                 hide_all()
             };
+        } else if (data.stage === "random_question") {
+            activeSocket.send(JSON.stringify({
+                'question': data.message,
+                'type' : "open_question",
+            }));
         } else if (data.stage === "get_question") {
             if (clear_chat_check) {
                 clear_chat()
@@ -70,10 +103,13 @@ activeSocket.onmessage = function(e) {
                 hide_access_user()
                 showQuestion_leader(data.message)
             } else {
+                document.getElementById('page_question').style.pointerEvents = ""
+                document.getElementById('page').style.pointerEvents = ""
                 hide_access_leader()
                 showQuestion_user(data.message)
             };
             if (data.message.get_answer) {
+                pause_question_time()
                 create_answer(data.message.get_answer)
                 console.log(data.message.get_answer);
             } else {

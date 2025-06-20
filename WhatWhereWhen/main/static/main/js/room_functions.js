@@ -195,6 +195,7 @@ function showQuestion_leader(data) {
     if (!data.note) {
         document.getElementById("description_button").style.display = "none";
     } else {
+        document.getElementById("description_button").style.display = "";
         document.getElementById("note").textContent = "Примичание: " + data.note;
     };
 
@@ -280,8 +281,7 @@ function send_menu() {
 //    };
 //};
 
-function pause_question_time () {
-
+function pause_question_time() {
     isPaused = true;
     activeSocket.send(JSON.stringify({
         'status_game': "pause",
@@ -297,12 +297,22 @@ function play_question_time () {
     }));
     console.log("press_play");
 };
-
+let canClick = true;
 function pluse_question_time (value) {
+    if (!canClick) return;
+    canClick = false;
     activeSocket.send(JSON.stringify({
         'status_game': "pluse",
         'value' : value,
     }));
+    const time = document.getElementById('timer_panel').textContent;
+    const parts = time.split(":"); // ["01", "12"]
+    const firstNumber = parseInt(parts[0], 10);  // 1
+    const secondNumber = parseInt(parts[1], 10); // 12
+    time_output((firstNumber*60+secondNumber)+value)
+    setTimeout(() => {
+        canClick = true; // Разрешаем следующий клик через 500 мс
+    }, 500);
 };
 function clear_chat() {
     const questions_box = document.getElementById('chat');
@@ -330,20 +340,22 @@ function formatNumber(num) {
 //    document.getElementById("write_answer_box_popup").style.display = "none"
 //};
 function closePopup(event) {
-    document.getElementById('page_question').style.pointerEvents = ""
-    document.getElementById('page').style.pointerEvents = ""
+//    document.getElementById('page_question').style.pointerEvents = ""
+//    document.getElementById('page').style.pointerEvents = ""
     event.style.display = "none"
 };
 
 function open_early_response_popup () {
     document.getElementById('page_question').style.pointerEvents = "none"
     document.getElementById('page').style.pointerEvents = "none"
+    document.getElementById('log_out_info_page2').style.pointerEvents = ""
     document.getElementById('write_early_response_box_popup').style.display = "";
     checkScale(document.getElementById('write_early_response_box_popup'))
 };
 function open_answer_popup () {
     document.getElementById('page_question').style.pointerEvents = "none"
     document.getElementById('page').style.pointerEvents = "none"
+    document.getElementById('log_out_info_page2').style.pointerEvents = ""
     document.getElementById('write_answer_box_popup').style.display = "";
     checkScale(document.getElementById('write_answer_box_popup'))
 };
@@ -405,7 +417,7 @@ function send_early_response() {
 function check_answer(text) {
     if (text.length > 100) {
         document.getElementById('claim_error').textContent = "Ответ слишком длинный, уместите его в 100 символов";
-        showError();
+        show("claim_error");
         return false;
     } else {
         return true;
@@ -414,7 +426,7 @@ function check_answer(text) {
 function check_description(text) {
     if (text.length > 500) {
         document.getElementById('claim_error').textContent = "Примичание слишком длинное, уместите его в 500 символов";
-        showError()
+        show("claim_error");
         return false
     } else {
         return true
@@ -433,6 +445,8 @@ function create_answer(data) {
 };
 
 function send_like() {
+    hide_after_answer()
+    open_answer('#popup_accepting_answer')
     activeSocket.send(JSON.stringify({
         'status_game': "like",
         'author_answer': document.getElementById('popup_accepting_answer').dataset.value,
@@ -440,9 +454,37 @@ function send_like() {
     }));
 };
 function send_dislike() {
+    hide_after_answer()
+    open_answer('#popup_accepting_answer')
     activeSocket.send(JSON.stringify({
         'status_game': "dislike",
         'author_answer': document.getElementById('popup_accepting_answer').dataset.value,
         "question": document.getElementById("question_screen").dataset.value,
     }));
+};
+function showe_score(score) {
+    const score_on_page = document.getElementById('score');
+    while (score_on_page.firstChild) {
+        score_on_page.removeChild(score_on_page.firstChild);
+    }
+
+    if (room_game_mode === "Спорт") {
+
+    } else {
+        const authors = document.createElement('div');
+        authors.className = "score_element";
+        authors.id = "authors_score";
+        authors.textContent = `Авторы: ${formatNumber(score.authors)}`;
+        score_on_page.appendChild(authors);
+        const player = document.createElement('div');
+        player.className = "score_element";
+        player.id = "players_score";
+        player.textContent = `Игроки: ${formatNumber(score.players)}`;
+        score_on_page.appendChild(player);
+    };
+//    document.getElementById('score').textContent = `${formatNumber(score.authors)}:${formatNumber(score.players)}`;
+};
+function hide_after_answer() {
+    document.getElementById("popup_answer").style.display = "none";
+    document.getElementById("popup_accepting_answer").style.display = "none";
 };

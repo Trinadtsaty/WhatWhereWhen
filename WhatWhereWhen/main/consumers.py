@@ -416,7 +416,7 @@ class StartConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'action_{self.room_id}'
         room = await self.get_room(self.room_id)
         self.leader_id = await self.get_your_id(room, "leader")
-        self.captain_id = await self.get_your_id(room, "captain")
+        # self.captain_id = await self.get_your_id(room, "captain")
 
         # score
         if self.stage["score"] == None:
@@ -426,8 +426,9 @@ class StartConsumer(AsyncWebsocketConsumer):
                     "authors": 0,
                     }
             elif room.game_mode == 1:
-                pass
-            elif room.game_mode == 3:
+                for i in range(len(room.people_on_page)):
+                    pass
+            elif room.game_mode == 2:
                 self.stage["score"] ={
                     "players": 0,
                     "authors": 0,
@@ -475,7 +476,7 @@ class StartConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         room = await self.get_room(self.room_id)
         self.leader_id = await self.get_your_id(room, "leader")
-        self.captain_id = await self.get_your_id(room, "captain")
+        # self.captain_id = await self.get_your_id(room, "captain")
         # self.leader_id = await self.get_your_id(room, "leader")
         # Получаем вопросы из кеша
         questions = cache.get(self.cache_key)
@@ -488,6 +489,25 @@ class StartConsumer(AsyncWebsocketConsumer):
             #
 
             questions = cache.get(self.cache_key)
+
+        # def get_random_unused_question(questions):
+        #     import random
+        #     # Фильтруем те вопросы, у которых "use" == False
+        #     unused = [q for q in questions.values() if not q.get("use", False)]
+        #     if not unused:
+        #         return False
+        #     return random.choice(unused)
+
+
+        def get_random_unused_question_key(questions):
+            import random
+            # Собираем ключи вопросов, у которых "use" == False
+            unused_keys = [key for key, q in questions.items() if not q.get("use", False)]
+            print(unused_keys)
+            if not unused_keys:
+                return False
+
+            return random.choice(unused_keys)
 
         async def send_question_meny():
             arr = {
@@ -579,23 +599,29 @@ class StartConsumer(AsyncWebsocketConsumer):
                 print("0 секунд")
                 print("start")
 
-                # print("room.random_order", room.random_order)
                 if room.random_order:
-                    group_message = {
-                        'type': 'handle_action_game',
-                        'action_type': "question",
-                        'message': self.time,
-                        # 'username': user.login,
-                        'user_id': self.leader_id,
-                        'timestamp': str(datetime.now())
-                    }
+
+                    questions = cache.get(self.cache_key)
+                    check_random = get_random_unused_question_key(questions)
+
+                    if check_random != False:
+                        await self.send(text_data=json.dumps({
+                            'type': 'random_question',
+                            'question_number': check_random,
+                        }))
+                        self.stage["stage"] = "random_question"
+                        self.stage["message"] = check_random
+                    else:
+                        # заглушка для конца игры конец вернуться
+                        pass
+
                 else:
                     group_message = await send_question_meny()
 
-                await self.channel_layer.group_send(
-                    self.room_group_name,
-                    group_message
-                )
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        group_message
+                    )
 
             except asyncio.CancelledError:
                 pass
@@ -714,23 +740,61 @@ class StartConsumer(AsyncWebsocketConsumer):
                         description = "Пользователь не дал описания вопроса"
                         Class_description += "user_not_provide_description"
 
-                    group_message = {
-                        'type': 'returned_answer',
-                        "leader_id" : self.leader_id,
-                        "author_answer": author_answer,
-                        "early_response" : early_response,
-                        'answer': answer,
-                        'description': description,
-                        'Class_answer': Class_answer,
-                        'Class_description': Class_description,
-                    }
+                    if room.game_mode == 0:
+                        group_message = {
+                            'type': 'returned_answer',
+                            "leader_id": self.leader_id,
+                            "author_answer": author_answer,
+                            "early_response": early_response,
+                            'answer': answer,
+                            'description': description,
+                            'Class_answer': Class_answer,
+                            'Class_description': Class_description,
+                        }
 
-                    self.stage["message"]["get_answer"] = group_message
+                        self.stage["message"]["get_answer"] = group_message
 
-                    await self.channel_layer.group_send(
-                        self.room_group_name,
-                        group_message
-                    )
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            group_message
+                        )
+                    elif room.game_mode == 1:
+                        group_message = {
+                            'type': 'returned_answer',
+                            "leader_id": self.leader_id,
+                            "author_answer": author_answer,
+                            "early_response": early_response,
+                            'answer': answer,
+                            'description': description,
+                            'Class_answer': Class_answer,
+                            'Class_description': Class_description,
+                        }
+                        try:
+                            self.stage["message"]["get_answer"].append(group_message)
+                        except:
+                            self.stage["message"]["get_answer"] = [group_message]
+
+                        # self.stage["message"]["get_answer"] = group_message
+                    elif room.game_mode == 2:
+                        pass
+
+                    # group_message = {
+                    #     'type': 'returned_answer',
+                    #     "leader_id" : self.leader_id,
+                    #     "author_answer": author_answer,
+                    #     "early_response" : early_response,
+                    #     'answer': answer,
+                    #     'description': description,
+                    #     'Class_answer': Class_answer,
+                    #     'Class_description': Class_description,
+                    # }
+                    #
+                    # self.stage["message"]["get_answer"] = group_message
+                    #
+                    # await self.channel_layer.group_send(
+                    #     self.room_group_name,
+                    #     group_message
+                    # )
 
                 elif data["type"] == "get_menu":
                     if self.room_tasks != {}:
@@ -744,8 +808,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                                 question_data["time_read"] = (len(question_data["text_question"]) // room.reading_speed) + 1
                                 question_data["time_question"] = room.question_time
                         cache.set(self.cache_key, questions, timeout=3600)
-
-
 
                     group_message = await send_question_meny()
 
@@ -804,6 +866,9 @@ class StartConsumer(AsyncWebsocketConsumer):
                     self.room_tasks[self.room_id] = task
 
                 elif data[action_type] == "pause":
+
+
+
                     self.stage["condition"] = "pause"
                     task = self.room_tasks.pop(self.room_id, None)
                     if task:
@@ -840,7 +905,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                             await self.channel_layer.group_send(
                                 self.room_group_name,
                                 {
-                                    'type': 'time_send',
+                                    'type': 'time_sender',
                                     'time': self.stage["message"]["time_read"],
                                     'class': "time_read",
                                 }
@@ -855,28 +920,31 @@ class StartConsumer(AsyncWebsocketConsumer):
                             await self.channel_layer.group_send(
                                 self.room_group_name,
                                 {
-                                    'type': 'time_send',
+                                    'type': 'time_sender',
                                     'time': self.stage["message"]["time_question"],
                                     'class': "time_question",
                                 }
                             )
                 elif data[action_type] == "like" or data[action_type] == "dislike":
                     status = ""
+                    Class = ""
                     if data[action_type] == "like":
                         self.stage["score"]["players"] += 1
                         status = "Ответ верный"
+                        Class = "correct"
 
                     elif data[action_type] == "dislike":
                         self.stage["score"]["authors"] += 1
                         status = "Ответ не верный"
+                        Class = "wrong"
 
                     group_message = {
                         'type': 'score_send',
                         "score_players" : self.stage["score"]["players"],
                         "score_authors" : self.stage["score"]["authors"],
                         "status" : status,
+                        "Class" : Class,
                         "leader_id": self.leader_id,
-
                     }
                     questions = cache.get(self.cache_key)
                     question = questions.pop(data["question"], None)
@@ -891,6 +959,55 @@ class StartConsumer(AsyncWebsocketConsumer):
                         questions = dict(sorted_questions)
                         # Сохраняем обновленный список в кэш
                         cache.set(self.cache_key, questions, timeout=3600)
+
+                    # Вернуться
+                    if room.random_order:
+
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            group_message
+                        )
+
+                        #Сделать заглушку на время break_between_questions
+                        for i in range(room.break_between_questions):
+                            await asyncio.sleep(1)
+                            print("перерыв между вопросами осталось ", room.break_between_questions-i, "скунд")
+
+
+                        questions = cache.get(self.cache_key)
+                        check_random = get_random_unused_question_key(questions)
+
+                        if check_random != False:
+                            await self.send(text_data=json.dumps({
+                                'type': 'random_question',
+                                'question_number': check_random,
+                            }))
+                            self.stage["stage"] = "random_question"
+                            self.stage["message"] = check_random
+                        else:
+                            # заглушка для конца игры конец вернуться
+                            pass
+                    else:
+                        if self.room_tasks != {}:
+                            task = self.room_tasks.pop(self.room_id, None)
+                            if task:
+                                task.cancel()
+
+                            questions = cache.get(self.cache_key)
+                            for question_id, question_data in questions.items():
+                                if question_data["frostbite"]:
+                                    question_data["time_read"] = (len(
+                                        question_data["text_question"]) // room.reading_speed) + 1
+                                    question_data["time_question"] = room.question_time
+                            cache.set(self.cache_key, questions, timeout=3600)
+
+                        group_message_2 = await send_question_meny()
+
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            group_message_2
+                        )
+
 
 
 
@@ -946,7 +1063,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'time_question': room.question_time,
                 'answer_status':False,
             }
-
         # Сохраняем вопросы в кеш
         sorted_questions = sorted(questions_dict.items())
 
@@ -963,6 +1079,7 @@ class StartConsumer(AsyncWebsocketConsumer):
             'condition': self.stage["condition"],
             'message': self.stage["message"],
             'user_id': self.stage["user_id"],
+            'score' : self.stage["score"],
         }))
 
     async def time_sender(self, event):
@@ -1000,6 +1117,16 @@ class StartConsumer(AsyncWebsocketConsumer):
             'condition': self.stage["condition"],
             'message': question,
             'user_id': self.stage["user_id"],
+            'score': self.stage["score"],
+        }))
+    async def score_send(self, event):
+        await self.send(text_data=json.dumps({
+            'type': "score",
+            'score_players': event.get('score_players'),
+            'score_authors': event.get('score_authors'),
+            'status': event.get('status'),
+            'Class': event.get('Class'),
+            'leader_id': self.leader_id,
         }))
 
     async def returned_answer(self, event):
