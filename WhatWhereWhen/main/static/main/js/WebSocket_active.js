@@ -52,8 +52,19 @@ activeSocket.onmessage = function(e) {
         };
     };
     if (data.type === "return_answer") {
-        create_answer(data)
+        let answer_arr = []
         pause_question_time()
+        if (room_game_mode === "Спорт") {
+            console.log("Спорт")
+            answer_arr.push(data);
+            create_answer_arr(answer_arr)
+        } else if (room_game_mode === "Совместный ответ") {
+            console.log("Совместный ответ")
+        } else {
+            console.log(room_game_mode)
+            create_answer(data)
+        };
+
     };
     if (data.type === "random_question") {
         activeSocket.send(JSON.stringify({

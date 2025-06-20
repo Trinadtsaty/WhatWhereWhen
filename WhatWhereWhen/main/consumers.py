@@ -426,12 +426,24 @@ class StartConsumer(AsyncWebsocketConsumer):
                     "authors": 0,
                     }
             elif room.game_mode == 1:
-                for i in range(len(room.people_on_page)):
-                    pass
-            elif room.game_mode == 2:
-                self.stage["score"] ={
-                    "players": 0,
+                self.stage["score"] = {
+                    "players": {},
                     "authors": 0,
+                }
+
+                for item in room.people_on_page.get("users", []):
+                    # login = await self.get_user(item)
+                    # login = login.login
+                    # self.stage["score"]["players"][login] = 0
+                    if item != self.leader_id:
+                        login = await self.get_user(item)
+                        login = login.login
+                        self.stage["score"]["players"][login] = 0
+
+            elif room.game_mode == 2:
+                self.stage["score"] = {
+                        "players": 0,
+                        "authors": 0,
                     }
 
         # Генерируем ключ для кеша
@@ -775,6 +787,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                             self.room_group_name,
                             group_message
                         )
+
                     elif room.game_mode == 1:
                         group_message = {
                             'type': 'returned_answer',
@@ -945,12 +958,18 @@ class StartConsumer(AsyncWebsocketConsumer):
                 elif data[action_type] == "like" or data[action_type] == "dislike":
                     status = ""
                     Class = ""
-                    if data[action_type] == "like":
-                        self.stage["score"]["players"] += 1
-                        status = "Ответ верный"
-                        Class = "correct"
+                    if room.game_mode != 1:
+                        if data[action_type] == "like":
+                            self.stage["score"]["players"] += 1
+                            status = "Ответ верный"
+                            Class = "correct"
+                    else:
+                        if data[action_type] == "like":
+                            self.stage["score"]["players"][data["author_answer"]] += 1
+                            status = "Ответ верный"
+                            Class = "correct"
 
-                    elif data[action_type] == "dislike":
+                    if data[action_type] == "dislike":
                         self.stage["score"]["authors"] += 1
                         status = "Ответ не верный"
                         Class = "wrong"
@@ -989,7 +1008,6 @@ class StartConsumer(AsyncWebsocketConsumer):
                         for i in range(room.break_between_questions):
                             await asyncio.sleep(1)
                             print("перерыв между вопросами осталось ", room.break_between_questions-i, "скунд")
-
 
                         questions = cache.get(self.cache_key)
                         check_random = get_random_unused_question_key(questions)
@@ -1254,6 +1272,7 @@ class StartConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_user(self, user_id):
+        from registration.models import Users
         return Users.objects.get(ID=user_id)
 
     @database_sync_to_async

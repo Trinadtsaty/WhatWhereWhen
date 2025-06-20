@@ -323,7 +323,7 @@ function clear_chat() {
 };
 
 function time_output (value) {
-    console.log(value)
+//    console.log(value)
     const min = Math.floor(value / 60);
     const sec = value - (min * 60);
     document.getElementById('timer_panel').textContent = `${formatNumber(min)}:${formatNumber(sec)}`
@@ -435,7 +435,8 @@ function create_answer(data) {
 //    author_answer
     document.getElementById('popup_accepting_answer').dataset.value = data.author_answer
 
-    document.getElementById('popup_accepting_answer').style.display = ""
+    document.getElementById('popup_accepting_answer').style.display = "";
+    document.getElementById('popup_accepting_answer').dataset.value = data.author_answer;
     document.getElementById('accepting_answer').textContent = "Ответ: " + data.answer;
     document.getElementById('accepting_answer').className = data.Class_answer;
 
@@ -479,6 +480,21 @@ function showe_score(score) {
         score_on_page.removeChild(score_on_page.firstChild);
     };
     if (room_game_mode === "Спорт") {
+        const authors = document.createElement('div');
+        authors.className = "score_element";
+        authors.id = "authors_score";
+        authors.textContent = `Авторы: ${formatNumber(score.authors)}`;
+        score_on_page.appendChild(authors);
+
+        for (const login in score.players) {
+//            console.log(score.players[login])
+            const authors = document.createElement('div');
+            authors.className = "score_element";
+            authors.id = "authors_score";
+            authors.textContent = `${login}: ${formatNumber(score.players[login])}`;
+            score_on_page.appendChild(authors);
+        };
+
 
     } else {
         const authors = document.createElement('div');
@@ -510,5 +526,10 @@ function send_captain_chose(number) {
 function open_answeing() {
 //    satisfy
     document.getElementById("satisfy").style.display = "";
-    pause_question_time()
-}
+    pause_question_time();
+};
+function create_answer_arr() {
+//    satisfy
+    document.getElementById("satisfy").style.display = "";
+    pause_question_time();
+};
