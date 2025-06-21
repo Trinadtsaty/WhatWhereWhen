@@ -38,9 +38,12 @@ activeSocket.onmessage = function(e) {
         if (user_id === data.leader_id) {
 
         } else {
-            document.getElementById('show_messege_people').textContent = data.status;
-            document.getElementById('show_messege_people').className = data.Class;
-            show("show_messege_people")
+//            Если режим не "Спорт" выводим сообщение о правильном или не правильном ответе
+            if (room_game_mode != "Спорт") {
+                document.getElementById('show_messege_people').textContent = data.status;
+                document.getElementById('show_messege_people').className = data.Class;
+                show("show_messege_people")
+            };
         };
     };
     if (data.type === "return") {

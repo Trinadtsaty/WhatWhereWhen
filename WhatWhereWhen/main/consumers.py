@@ -543,7 +543,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                         arr["use"].append(question_id)
                     else:
                         arr["not_use"].append(question_id)
-                    if question_data["answer_status"]:
+                    if question_data["answer_status"]["status"]:
                         arr["right"].append(question_id)
 
             self.stage["stage"] = "question_menu"
@@ -987,6 +987,30 @@ class StartConsumer(AsyncWebsocketConsumer):
                             self.stage["score"]["players"] += 1
                             status = "Ответ верный"
                             Class = "correct"
+
+                        if data[action_type] == "dislike":
+                            self.stage["score"]["authors"] += 1
+                            status = "Ответ не верный"
+                            Class = "wrong"
+
+                        if Class == "correct":
+                            questions = cache.get(self.cache_key)
+                            question = questions.pop(data["question"], None)
+                            # Проверяем, что вопрос существует
+                            if question is not None:
+                                # Обновляем значение
+                                question["answer_status"] = {
+                                    "status": True,
+                                    "user": data["author_answer"],
+                                }
+                                # Добавляем вопрос обратно в список
+                                questions[data["question"]] = question
+                                sorted_questions = sorted(questions.items())
+                                # Преобразование обратно в словарь
+                                questions = dict(sorted_questions)
+                                # Сохраняем обновленный список в кэш
+                                cache.set(self.cache_key, questions, timeout=3600)
+
                     else:
                         print(data["author_answer"])
                         print(self.stage["score"]["players"])
@@ -997,10 +1021,32 @@ class StartConsumer(AsyncWebsocketConsumer):
                             status = "Ответ верный"
                             Class = "correct"
 
-                    if data[action_type] == "dislike":
-                        self.stage["score"]["authors"][login] += 1
-                        status = "Ответ не верный"
-                        Class = "wrong"
+                        if data[action_type] == "dislike":
+                            self.stage["score"]["authors"][login] += 1
+                            status = "Ответ не верный"
+                            Class = "wrong"
+
+                        if Class == "correct":
+                            questions = cache.get(self.cache_key)
+                            question = questions.pop(data["question"], None)
+                            # Проверяем, что вопрос существует
+                            if question is not None:
+                                # Обновляем значение
+                                question["answer_status"]["status"] = True
+                                try:
+                                    question["answer_status"]["user"].append(data["author_answer"])
+                                except Exception as e:
+                                    print(e)
+                                    question["answer_status"]["user"] = [data["author_answer"]]
+
+
+                                # Добавляем вопрос обратно в список
+                                questions[data["question"]] = question
+                                sorted_questions = sorted(questions.items())
+                                # Преобразование обратно в словарь
+                                questions = dict(sorted_questions)
+                                # Сохраняем обновленный список в кэш
+                                cache.set(self.cache_key, questions, timeout=3600)
 
                     group_message_score = {
                         'type': 'score_send',
@@ -1010,39 +1056,22 @@ class StartConsumer(AsyncWebsocketConsumer):
                         "Class" : Class,
                         "leader_id": self.leader_id,
                     }
-
-                    questions = cache.get(self.cache_key)
-                    question = questions.pop(data["question"], None)
-                    # Проверяем, что вопрос существует
-                    if question is not None:
-                        # Обновляем значение
-                        question["answer_status"] = True
-                        # Добавляем вопрос обратно в список
-                        questions[data["question"]] = question
-                        sorted_questions = sorted(questions.items())
-                        # Преобразование обратно в словарь
-                        questions = dict(sorted_questions)
-                        # Сохраняем обновленный список в кэш
-                        cache.set(self.cache_key, questions, timeout=3600)
-
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        group_message_score
+                    )
 
                     # Вернуться
+                    # Если режим не "Спорт"
                     if room.game_mode != 1:
+                        # Если включен случайный порядок вопросов
                         if room.random_order:
-
-                            await self.channel_layer.group_send(
-                                self.room_group_name,
-                                group_message_score
-                            )
-
-                            #Сделать заглушку на время break_between_questions
                             for i in range(room.break_between_questions):
                                 await asyncio.sleep(1)
                                 # print("перерыв между вопросами осталось ", room.break_between_questions-i, "скунд")
 
                             questions = cache.get(self.cache_key)
                             check_random = get_random_unused_question_key(questions)
-
                             if check_random != False:
                                 await self.send(text_data=json.dumps({
                                     'type': 'random_question',
@@ -1053,12 +1082,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                             else:
                                 # заглушка для конца игры конец вернуться
                                 pass
+                        # Если включен не случайный порядок вопросов
                         else:
-                            await self.channel_layer.group_send(
-                                self.room_group_name,
-                                group_message_score
-                            )
-
                             if self.room_tasks != {}:
                                 task = self.room_tasks.pop(self.room_id, None)
                                 if task:
@@ -1078,9 +1103,12 @@ class StartConsumer(AsyncWebsocketConsumer):
                                 self.room_group_name,
                                 group_message_2
                             )
+                    # Если ржим "Спорт"
                     else:
                         print("Игроки: ",self.stage["score"]["players"])
                         print("Кол-во человек ",len(self.stage["score"]["players"]))
+
+
 
                         pass
 
@@ -1137,7 +1165,10 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'use': False,
                 'time_read': (len(question.text_question) // room.reading_speed) +1,
                 'time_question': room.question_time,
-                'answer_status':False,
+                'answer_status': {
+                    "status":False,
+                    "user": None,
+                },
             }
         # Сохраняем вопросы в кеш
         sorted_questions = sorted(questions_dict.items())
