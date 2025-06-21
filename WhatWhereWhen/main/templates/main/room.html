@@ -199,18 +199,92 @@
         </div>
     </div>
 
-    <div id="popup_accepting_answer" class="popup" style="display: none">
+
+<!--    <div id="popup_accepting_answer" class="popup">-->
+<!--        <div id="accepting_answer_open_box" onclick="open_answer('#popup_accepting_answer')">-->
+<!--            <div id="accepting_answer_open">|||</div>-->
+<!--        </div>-->
+<!--        <div id="accepting_answers_box" class="leader_answers_box">-->
+<!--            <div id="part_answers_box">-->
+<!--                <div id="button_users_answering" class="scroll">-->
+<!--                    <div class="element_users_answering">Bobr</div>-->
+<!--                    <div class="element_users_answering">User1</div>-->
+<!--                    <div class="element_users_answering">User2</div>-->
+<!--                    <div class="element_users_answering">User3</div>-->
+<!--                    <div class="element_users_answering">User4</div>-->
+<!--                    <div class="element_users_answering">User5</div>-->
+<!--                    <div class="element_users_answering">User6</div>-->
+<!--                    <div class="element_users_answering">User7</div>-->
+<!--                    <div class="element_users_answering">User8</div>-->
+<!--                </div>-->
+<!--                <div id="text_box">-->
+<!--                    <div id="accepting_answer">Ответ: Ответ</div>-->
+<!--                    <div id="accepting_answer_description" class="scroll">12-->
+<!--                        Длиннное описание 1111111111111111111111111111111111-->
+<!--                        32-->
+<!--                        32-->
+<!--                        324-->
+<!--                        23-->
+<!--                        32-->
+<!--                        23-->
+<!--                        23-->
+<!--                        23-->
+<!--                        23-->
+<!--                        в-->
+<!--                        23-->
+<!--                        23-->
+<!--                        23-->
+<!--                        23-->
+<!--                        23-->
+<!--                        23-->
+
+<!--                        23-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div id="buttons_acceptance">-->
+<!--                <div id="buttons_like_box" class="buttons_accepting_answer_box" onclick="send_like()"><img class="buttons_accepting_answer_img" id="buttons_like_img" alt="Принять" src="{% static 'main/img/like.png' %}"></div>-->
+<!--                <div id="buttons_dislike_box" class="buttons_accepting_answer_box" onclick="send_dislike()"><img class="buttons_accepting_answer_img" id="buttons_dislike_img" alt="Не принять" src="{% static 'main/img/dislike.png' %}"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <div id="popup_accepting_answer" class="popup" style="display:none">
         <div id="accepting_answer_open_box" onclick="open_answer('#popup_accepting_answer')">
             <div id="accepting_answer_open">|||</div>
         </div>
-        <div id="accepting_answer_box">
-            <div id="accepting_answer">
-            </div>
-            <div id="accepting_answer_description">
+        <div id="accepting_answers_box" class="leader_answers_box">
+            <div id="part_answers_box">
+                <div id="text_box">
+                    <div id="accepting_answer">Ответ: Ответ</div>
+                    <div id="accepting_answer_description" class="scroll">12
+                        Длиннное описание 1111111111111111111111111111111111
+                        32
+                        32
+                        324
+                        23
+                        32
+                        23
+                        23
+                        23
+                        23
+                        в
+                        23
+                        23
+                        23
+                        23
+                        23
+                        23
+
+                        23
+                    </div>
+                </div>
             </div>
             <div id="buttons_acceptance">
-                <div id="buttons_like_box" class="buttons_accepting_answer_box" onclick="send_like()"><img class="buttons_accepting_answer_img" id="buttons_like_img" alt="Принять" src="{% static 'main/img/like.png' %}"></div>
-                <div id="buttons_dislike_box" class="buttons_accepting_answer_box" onclick="send_dislike()"><img class="buttons_accepting_answer_img" id="buttons_dislike_img" alt="Не принять" src="{% static 'main/img/dislike.png' %}"></div>
+                                <div id="buttons_like_box" class="buttons_accepting_answer_box"><img class="buttons_accepting_answer_img" id="buttons_like_img" alt="Принять" src="{% static 'main/img/like.png' %}"></div>
+                <div id="buttons_dislike_box" class="buttons_accepting_answer_box"><img class="buttons_accepting_answer_img" id="buttons_dislike_img" alt="Не принять" src="{% static 'main/img/dislike.png' %}"></div>
+<!--                <div id="buttons_like_box" class="buttons_accepting_answer_box" onclick="send_like()"><img class="buttons_accepting_answer_img" id="buttons_like_img" alt="Принять" src="{% static 'main/img/like.png' %}"></div>-->
+<!--                <div id="buttons_dislike_box" class="buttons_accepting_answer_box" onclick="send_dislike()"><img class="buttons_accepting_answer_img" id="buttons_dislike_img" alt="Не принять" src="{% static 'main/img/dislike.png' %}"></div>-->
             </div>
         </div>
     </div>
@@ -285,6 +359,7 @@
         const room_number = '{{ room.ID }}';
         const user_id = {{ request.user.ID }};
         const clear_chat_check = {{ room.clear_chat|lower }};
+        let answer_arr = []
 
 //        const host_id = {{ room.host.ID }};
 //        const leader_id = {{ room.leader.ID }};

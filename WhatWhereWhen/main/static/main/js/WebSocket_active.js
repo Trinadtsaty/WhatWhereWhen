@@ -63,16 +63,19 @@ activeSocket.onmessage = function(e) {
         };
     };
     if (data.type === "return_answer") {
-        let answer_arr = []
         pause_question_time()
         if (room_game_mode === "Спорт") {
-            console.log("Спорт")
+            // Спорт
+//            console.log("Спорт")
             answer_arr.push(data);
+            console.log(answer_arr)
             create_answer_arr(answer_arr)
         } else if (room_game_mode === "Совместный ответ") {
-            console.log("Совместный ответ")
+            // Совместный ответ
+//            console.log("Совместный ответ")
         } else {
-            console.log(room_game_mode)
+            // Классика
+//            console.log(room_game_mode)
             create_answer(data)
         };
 
@@ -122,19 +125,23 @@ activeSocket.onmessage = function(e) {
         } else if (data.stage === "get_question") {
             let checking_popup = false;
             if (data.message.your_response === user_id && room_game_mode === "Классика") {
+//                Поле введите ответ
                 open_answer_popup();
                 checking_popup = true;
             };
             if (room_game_mode === "Классика") {
                 if (data.message.time_question === 0 && data.captain_id === user_id && !checking_popup) {
+                    // Плашка капитана с выбором отвечающих
                     open_answeing()
                 };
             } else if (room_game_mode === "Спорт") {
-                if (data.time === 0 && !isIdInArray(user_id, data.message.your_response)) {
+                if (data.message.time_question === 0 && !isIdInArray(user_id, data.message.your_response) && data.user_id != user_id) {
+                    // Поле введите ответ
                     open_answer_popup()
                 };
             } else if (room_game_mode === "Совместный ответ") {
                 if (data.time === 0) {
+                    // Поле введите ответ
                     open_answer_popup()
                 };
             };
@@ -145,7 +152,9 @@ activeSocket.onmessage = function(e) {
             if (clear_chat_check) {
                 clear_chat()
             };
+            // Скрываем элементы стартовой страницы в пользу элементов новых вопросов
             hide_element()
+            // Проверка на ведущего
             if (user_id === data.user_id) {
                 hide_access_user()
                 showQuestion_leader(data.message)
@@ -155,10 +164,36 @@ activeSocket.onmessage = function(e) {
                 hide_access_leader()
                 showQuestion_user(data.message)
             };
+            // Если есть полученный ответ, то останавливаем вопрос и создаём поле ответа
             if (data.message.get_answer) {
-                pause_question_time()
-                create_answer(data.message.get_answer)
-                console.log(data.message.get_answer);
+//            console.log("Получен ответ", data.message.get_answer);
+                if (room_game_mode === "Классика") {
+                    pause_question_time()
+                    create_answer(data.message.get_answer)
+                } else if (room_game_mode === "Спорт") {
+                    answer_arr = data.message.get_answer
+                    create_answer_arr(answer_arr)
+
+                    let chek_answer_user = true
+                    for (let i = 0; i < answer_arr.length; i++) {
+                        // Если пользователь ведущий уже оценил ответ пользователя, то данный ответ на отоброжается
+                        if (isIdInArray(answer_arr[i].author_answer_id, data.message.your_response)) {
+                            document.getElementById(`user_answer_id_${answer_arr[i].author_answer_id}`).style.display = "none";
+                        } else {
+                            if (chek_answer_user) {
+                                document.getElementById(`user_answer_id_${answer_arr[i].author_answer_id}`).click();
+                                chek_answer_user = false
+                            };
+                        }; // data.message.your_response
+                    };
+                    if (chek_answer_user) {
+                        document.getElementById('popup_accepting_answer').style.display = "none";
+                    };
+
+                } else if (room_game_mode === "Совместный ответ") {
+
+                }
+
             } else {
                 console.log("в статусе комнаты нет ответа");
             };
@@ -176,7 +211,7 @@ write_early_response_box_popup.style.display = "none";
 let countdownInterval = null; // Переменная для хранения интервала
 
 function startCountdown(timer_value) {
-    console.log("таймер запущен");
+    console.log("Обратный отсчет перед началом игры запущен");
 
     // Останавливаем предыдущий таймер, если он был
     if (countdownInterval) {
@@ -224,5 +259,3 @@ function checkScale(event) {
 window.addEventListener('resize', () => checkScale(timerElement));
 window.addEventListener('resize', () => checkScale(write_answer_box_popup));
 window.addEventListener('resize', () => checkScale(write_early_response_box_popup));
-
-

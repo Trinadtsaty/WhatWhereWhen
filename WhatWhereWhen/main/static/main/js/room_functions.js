@@ -310,7 +310,13 @@ function pluse_question_time (value) {
     const parts = time.split(":"); // ["01", "12"]
     const firstNumber = parseInt(parts[0], 10);  // 1
     const secondNumber = parseInt(parts[1], 10); // 12
-    time_output((firstNumber*60+secondNumber)+value)
+    let timer = (firstNumber*60+secondNumber)+value;
+    if (timer > 0) {
+        time_output((firstNumber*60+secondNumber)+value);
+    } else {
+        time_output(1);
+    }
+
     setTimeout(() => {
         canClick = true; // Разрешаем следующий клик через 500 мс
     }, 500);
@@ -436,21 +442,30 @@ function create_answer(data) {
     document.getElementById('popup_accepting_answer').dataset.value = data.author_answer
 
     document.getElementById('popup_accepting_answer').style.display = "";
-    document.getElementById('popup_accepting_answer').dataset.value = data.author_answer;
+    document.getElementById('popup_accepting_answer').dataset.value = data.author_answer_id;
     document.getElementById('accepting_answer').textContent = "Ответ: " + data.answer;
     document.getElementById('accepting_answer').className = data.Class_answer;
+    document.getElementById('accepting_answer').style.minWidth = "625px";
 
     document.getElementById('accepting_answer_description').textContent = "Примичание: " + data.description;
     document.getElementById('accepting_answer_description').className = data.Class_answer;
+    document.getElementById('accepting_answer_description').style.minWidth = "625px";
+    document.getElementById('accepting_answer_description').style.minHeight = "260px";
+
+    document.getElementById('buttons_like_box').onclick = send_like;
+    document.getElementById('buttons_dislike_box').onclick = send_dislike;
 };
 
 function send_like() {
-    if (room_game_mode === "Спорт") {
+//    if (room_game_mode === "Спорт") {
+//
+//    } else {
+//        const znach = document.getElementById('players_score').textContent.split(":");
+//        document.getElementById('players_score').textContent = znach[0] + ": " + formatNumber(parseInt(znach[1], 10)+1);
+//    };
+    const znach = document.getElementById('players_score').textContent.split(":");
+    document.getElementById('players_score').textContent = znach[0] + ": " + formatNumber(parseInt(znach[1], 10)+1);
 
-    } else {
-        const znach = document.getElementById('players_score').textContent.split(":");
-        document.getElementById('players_score').textContent = znach[0] + ": " + formatNumber(parseInt(znach[1], 10)+1);
-    };
     hide_after_answer()
     open_answer('#popup_accepting_answer')
     activeSocket.send(JSON.stringify({
@@ -480,12 +495,6 @@ function showe_score(score) {
         score_on_page.removeChild(score_on_page.firstChild);
     };
     if (room_game_mode === "Спорт") {
-        const authors = document.createElement('div');
-        authors.className = "score_element";
-        authors.id = "authors_score";
-        authors.textContent = `Авторы: ${formatNumber(score.authors)}`;
-        score_on_page.appendChild(authors);
-
         for (const login in score.players) {
 //            console.log(score.players[login])
             const authors = document.createElement('div');
@@ -529,11 +538,93 @@ function open_answeing() {
     pause_question_time();
 };
 function create_answer_arr(data) {
-    console.log("выводим массив ответов",data)
-//    satisfy
-//    document.getElementById("satisfy").style.display = "";
-//    pause_question_time();
+    document.getElementById('popup_accepting_answer').style.display = "";
+    ///static/main/img/like.png
+    ///static/main/img/dislike.png
+    //button_div.onclick = () => sendQuestion(item);
+    const answer_box = document.getElementById("part_answers_box");
+    while (answer_box.firstChild) {
+        answer_box.removeChild(answer_box.firstChild);
+    };
+    const button_users_answering = document.createElement('div');
+    button_users_answering.id = "button_users_answering"
+    button_users_answering.className = "scroll";
+    answer_box.appendChild(button_users_answering);
+
+    const accepting_answer = document.createElement('div');
+    accepting_answer.id = "accepting_answer";
+
+    const accepting_answer_description = document.createElement('div');
+    accepting_answer_description.id = "accepting_answer_description";
+    accepting_answer_description.className = "scroll";
+
+    const text_box = document.createElement('div');
+    text_box.appendChild(accepting_answer);
+    text_box.appendChild(accepting_answer_description);
+    answer_box.appendChild(text_box);
+
+    // console.log("выводим массив ответов",data)
+    for (let i = 0; i < data.length; i++) {
+        console.log(data[i]);
+
+        const element_users_answering = document.createElement('div');
+        element_users_answering.className = "element_users_answering";
+        element_users_answering.id = `user_answer_id_${data[i].author_answer_id}`
+        element_users_answering.textContent = data[i].author_answer;
+        element_users_answering.onclick = () => CreateAnswer(data[i]);
+
+        button_users_answering.appendChild(element_users_answering);
+        if (i == 0) {
+            element_users_answering.click();
+        };
+    };
 };
-function isIdInArray(id, arr) {
-  return arr.includes(id);
+function CreateAnswer(data) {
+    document.getElementById('accepting_answer').textContent = "Ответ: " + data.answer;
+    document.getElementById('accepting_answer').className = data.Class_answer;
+
+    document.getElementById('accepting_answer_description').textContent = "Примичание: " + data.description;
+    document.getElementById('accepting_answer_description').className = data.Class_description;
+
+    document.getElementById('buttons_like_box').onclick = () => send_like_sport(data.author_answer_id);
+    document.getElementById('buttons_dislike_box').onclick = () => send_dislike_sport(data.author_answer_id);
+};
+function send_like_sport(author_id) {
+    document.getElementById(`user_answer_id_${author_id}`).style.display = "none";
+    activeSocket.send(JSON.stringify({
+        'status_game': "like",
+        'author_answer': author_id,
+        "question": document.getElementById("question_screen").dataset.value,
+    }));
 }
+function send_dislike_sport(author_id) {
+    document.getElementById(`user_answer_id_${author_id}`).style.display = "none";
+    activeSocket.send(JSON.stringify({
+        'status_game': "dislike",
+        'author_answer': author_id,
+        "question": document.getElementById("question_screen").dataset.value,
+    }));
+}
+
+
+function isIdInArray(id, arr) {
+    if (!Array.isArray(arr)) {
+        return false;
+    };
+    return arr.includes(id);
+};
+//    <div id="popup_accepting_answer" class="popup" style="display: none">
+//        <div id="accepting_answer_open_box" onclick="open_answer('#popup_accepting_answer')">
+//            <div id="accepting_answer_open">|||</div>
+//        </div>
+//        <div id="accepting_answer_box">
+//            <div id="accepting_answer">
+//            </div>
+//            <div id="accepting_answer_description">
+//            </div>
+//            <div id="buttons_acceptance">
+//                <div id="buttons_like_box" class="buttons_accepting_answer_box" onclick="send_like()"><img class="buttons_accepting_answer_img" id="buttons_like_img" alt="Принять" src="{% static 'main/img/like.png' %}"></div>
+//                <div id="buttons_dislike_box" class="buttons_accepting_answer_box" onclick="send_dislike()"><img class="buttons_accepting_answer_img" id="buttons_dislike_img" alt="Не принять" src="{% static 'main/img/dislike.png' %}"></div>
+//            </div>
+//        </div>
+//    </div>
