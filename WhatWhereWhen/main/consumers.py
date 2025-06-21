@@ -431,7 +431,7 @@ class StartConsumer(AsyncWebsocketConsumer):
             elif room.game_mode == 1:
                 self.stage["score"] = {
                     "players": {},
-                    "authors": 0,
+                    "authors": {},
                 }
 
                 for item in room.people_on_page.get("users", []):
@@ -439,8 +439,10 @@ class StartConsumer(AsyncWebsocketConsumer):
                     # login = login.login
                     # self.stage["score"]["players"][login] = 0
                     if item != self.leader_id:
+                        # print("создаём поле score берём пользователя с id: ", item)
                         login = await self.get_user(item)
                         login = login.login
+                        # print("и ником: ", login)
                         self.stage["score"]["players"][login] = 0
                         self.stage["score"]["authors"][login] = 0
 
@@ -987,6 +989,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                             Class = "correct"
                     else:
                         print(data["author_answer"])
+                        print(self.stage["score"]["players"])
                         login = await self.get_user(data["author_answer"])
                         login = login.login
                         if data[action_type] == "like":

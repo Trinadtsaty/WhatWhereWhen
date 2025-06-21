@@ -564,19 +564,25 @@ function create_answer_arr(data) {
     answer_box.appendChild(text_box);
 
     // console.log("выводим массив ответов",data)
+    let chek_answer = true
     for (let i = 0; i < data.length; i++) {
         console.log(data[i]);
+        if (!isIdInArray(data[i].author_answer_id, accepted_responses_arr)) {
+            const element_users_answering = document.createElement('div');
+            element_users_answering.className = "element_users_answering";
+            element_users_answering.id = `user_answer_id_${data[i].author_answer_id}`
+            element_users_answering.textContent = data[i].author_answer;
+            element_users_answering.onclick = () => CreateAnswer(data[i]);
 
-        const element_users_answering = document.createElement('div');
-        element_users_answering.className = "element_users_answering";
-        element_users_answering.id = `user_answer_id_${data[i].author_answer_id}`
-        element_users_answering.textContent = data[i].author_answer;
-        element_users_answering.onclick = () => CreateAnswer(data[i]);
-
-        button_users_answering.appendChild(element_users_answering);
-        if (i == 0) {
-            element_users_answering.click();
+            button_users_answering.appendChild(element_users_answering);
+            if (chek_answer) {
+                element_users_answering.click();
+                chek_answer = false
+            };
         };
+    };
+    if (chek_answer) {
+        document.getElementById('popup_accepting_answer').style.display = "none";
     };
 };
 function CreateAnswer(data) {
@@ -590,6 +596,10 @@ function CreateAnswer(data) {
     document.getElementById('buttons_dislike_box').onclick = () => send_dislike_sport(data.author_answer_id);
 };
 function send_like_sport(author_id) {
+    accepted_responses_arr.push(author_id);
+    if (accepted_responses_arr.length === answer_arr.length) {
+        document.getElementById('popup_accepting_answer').style.display = "none";
+    };
     document.getElementById(`user_answer_id_${author_id}`).style.display = "none";
     activeSocket.send(JSON.stringify({
         'status_game': "like",
@@ -598,6 +608,10 @@ function send_like_sport(author_id) {
     }));
 }
 function send_dislike_sport(author_id) {
+    accepted_responses_arr.push(author_id);
+    if (accepted_responses_arr.length === answer_arr.length) {
+        document.getElementById('popup_accepting_answer').style.display = "none";
+    };
     document.getElementById(`user_answer_id_${author_id}`).style.display = "none";
     activeSocket.send(JSON.stringify({
         'status_game': "dislike",
@@ -606,25 +620,9 @@ function send_dislike_sport(author_id) {
     }));
 }
 
-
 function isIdInArray(id, arr) {
     if (!Array.isArray(arr)) {
         return false;
     };
     return arr.includes(id);
 };
-//    <div id="popup_accepting_answer" class="popup" style="display: none">
-//        <div id="accepting_answer_open_box" onclick="open_answer('#popup_accepting_answer')">
-//            <div id="accepting_answer_open">|||</div>
-//        </div>
-//        <div id="accepting_answer_box">
-//            <div id="accepting_answer">
-//            </div>
-//            <div id="accepting_answer_description">
-//            </div>
-//            <div id="buttons_acceptance">
-//                <div id="buttons_like_box" class="buttons_accepting_answer_box" onclick="send_like()"><img class="buttons_accepting_answer_img" id="buttons_like_img" alt="Принять" src="{% static 'main/img/like.png' %}"></div>
-//                <div id="buttons_dislike_box" class="buttons_accepting_answer_box" onclick="send_dislike()"><img class="buttons_accepting_answer_img" id="buttons_dislike_img" alt="Не принять" src="{% static 'main/img/dislike.png' %}"></div>
-//            </div>
-//        </div>
-//    </div>
