@@ -11,6 +11,9 @@ from django.core.exceptions import ValidationError
 # from ..questions.views import question, selection
 from questions.views import question, selection
 
+from WhatWhereWhen.wsgi import application
+
+
 class ChatConsumer(AsyncWebsocketConsumer):
     # Вызывается при установке WebSocket соединения.
     async def connect(self):
@@ -745,7 +748,16 @@ class StartConsumer(AsyncWebsocketConsumer):
                     )
 
                 elif data["type"] == "answer" or data["type"] == "early_response":
-                    self.stage["message"]["your_response"] = None
+                    if room.game_mode == 1:
+                        self.stage["message"]["your_response"] = None
+                    elif room.game_mode == 2:
+                        try:
+                            self.stage["message"]["your_response"].append(data["author_answer"])
+                        except:
+                            self.stage["message"]["your_response"] = [data["author_answer"]]
+                        # self.stage["message"]["your_response"] = []
+                    elif room.game_mode == 3:
+                        pass
 
                     early_response = False
                     if data["type"] == "early_response":

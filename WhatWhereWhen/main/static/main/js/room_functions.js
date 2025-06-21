@@ -528,8 +528,12 @@ function open_answeing() {
     document.getElementById("satisfy").style.display = "";
     pause_question_time();
 };
-function create_answer_arr() {
+function create_answer_arr(data) {
+    console.log("выводим массив ответов",data)
 //    satisfy
 //    document.getElementById("satisfy").style.display = "";
-    pause_question_time();
+//    pause_question_time();
 };
+function isIdInArray(id, arr) {
+  return arr.includes(id);
+}

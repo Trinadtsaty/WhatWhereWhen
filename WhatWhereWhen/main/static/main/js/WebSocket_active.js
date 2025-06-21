@@ -11,9 +11,20 @@ activeSocket.onmessage = function(e) {
         time_output(data.time)
         if (data.Class === "time_question" && user_id != data.leader_id) {
             show_access_user()
-            if (data.time === 0 && user_id === data.captain_id) {
-                open_answeing()
+            if (room_game_mode === "Классика") {
+                if (data.time === 0 && user_id === data.captain_id) {
+                    open_answeing()
+                };
+            } else if (room_game_mode === "Спорт") {
+                if (data.time === 0) {
+                    open_answer_popup()
+                };
+            } else if (room_game_mode === "Совместный ответ") {
+                if (data.time === 0) {
+                    open_answer_popup()
+                };
             };
+
         } else if (data.Class === "time_read") {
 //            hide_access_user()
         };
@@ -110,13 +121,27 @@ activeSocket.onmessage = function(e) {
             }));
         } else if (data.stage === "get_question") {
             let checking_popup = false;
-            if (data.message.your_response === user_id) {
+            if (data.message.your_response === user_id && room_game_mode === "Классика") {
                 open_answer_popup();
                 checking_popup = true;
             };
-            if (data.message.time_question === 0 && data.captain_id === user_id && !checking_popup) {
-                open_answeing()
+            if (room_game_mode === "Классика") {
+                if (data.message.time_question === 0 && data.captain_id === user_id && !checking_popup) {
+                    open_answeing()
+                };
+            } else if (room_game_mode === "Спорт") {
+                if (data.time === 0 && !isIdInArray(user_id, data.message.your_response)) {
+                    open_answer_popup()
+                };
+            } else if (room_game_mode === "Совместный ответ") {
+                if (data.time === 0) {
+                    open_answer_popup()
+                };
             };
+
+//            if (data.message.time_question === 0 && data.captain_id === user_id && !checking_popup) {
+//                open_answeing()
+//            };
             if (clear_chat_check) {
                 clear_chat()
             };
