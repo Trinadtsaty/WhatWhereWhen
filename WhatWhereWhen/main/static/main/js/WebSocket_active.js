@@ -8,7 +8,15 @@ activeSocket.onmessage = function(e) {
     console.log(data);
 
     if (data.type === "time") {
-        time_output(data.time)
+        if (data.Class === "break_between_questions") {
+            console.log("Мы тут",data.time)
+            show_timer(data.time)
+            if (data.time == 0) {
+                document.getElementById('timer').style.display = "none";
+            };
+        } else {
+            time_output(data.time)
+        };
         if (data.Class === "time_question" && user_id != data.leader_id) {
             show_access_user()
             if (room_game_mode === "Классика") {
@@ -126,6 +134,8 @@ activeSocket.onmessage = function(e) {
                 'type' : "open_question",
             }));
         } else if (data.stage === "get_question") {
+            document.getElementById("write_answer_box_popup").style.display = "none";
+            document.getElementById("write_early_response_box_popup").style.display = "none";
             let checking_popup = false;
             if (data.message.your_response === user_id && room_game_mode === "Классика") {
 //                Поле введите ответ
@@ -138,7 +148,7 @@ activeSocket.onmessage = function(e) {
                     open_answeing()
                 };
             } else if (room_game_mode === "Спорт") {
-                if (data.message.time_question === 0 && !isIdInArray(user_id, data.message.your_response) && data.user_id != user_id) {
+                if (data.message.time_question === 0 && !containsKey(user_id, data.message.your_response) && data.user_id != user_id) {
                     // Поле введите ответ
                     open_answer_popup()
                 };
@@ -178,24 +188,32 @@ activeSocket.onmessage = function(e) {
                     create_answer_arr(answer_arr)
 
                     let chek_answer_user = true
+                    const tuple = data.message.your_response
+                    console.log("tuple",tuple)
                     for (let i = 0; i < answer_arr.length; i++) {
+                        const key = answer_arr[i].author_answer_id
+                        console.log("key",key)
+//                        console.log(tuple)
+                        console.log("tuple[key]",tuple[key])
+                        console.log("containsKey(key, tuple)",containsKey(key, tuple))
                         // Если пользователь ведущий уже оценил ответ пользователя, то данный ответ на отоброжается
-                        if (isIdInArray(answer_arr[i].author_answer_id, data.message.your_response)) {
-                            document.getElementById(`user_answer_id_${answer_arr[i].author_answer_id}`).style.display = "none";
-                        } else {
-                            if (chek_answer_user) {
-                                document.getElementById(`user_answer_id_${answer_arr[i].author_answer_id}`).click();
-                                chek_answer_user = false
+                        if (containsKey(key, tuple)) {
+                            if (tuple[key]) {
+                                document.getElementById(`user_answer_id_${answer_arr[i].author_answer_id}`).style.display = "none";
+                            } else {
+                                if (chek_answer_user) {
+                                    document.getElementById(`user_answer_id_${answer_arr[i].author_answer_id}`).click();
+                                    chek_answer_user = false
+                                };
                             };
                         }; // data.message.your_response
                     };
                     if (chek_answer_user) {
                         document.getElementById('popup_accepting_answer').style.display = "none";
                     };
-
                 } else if (room_game_mode === "Совместный ответ") {
 
-                }
+                };
 
             } else {
                 console.log("в статусе комнаты нет ответа");
@@ -219,17 +237,19 @@ function startCountdown(timer_value) {
     // Останавливаем предыдущий таймер, если он был
     if (countdownInterval) {
         clearInterval(countdownInterval);
-    }
-
-    timerElement.textContent = timer_value;
-    let value = parseInt(timerElement.textContent, 10);
+    };
+    show_timer(timer_value)
+//    timerElement.textContent = timer_value;
+//    let value = parseInt(timerElement.textContent, 10);
+    let value = timer_value
     checkScale(timerElement);
-    timerElement.style.display = "";
+//    timerElement.style.display = "";
 
     countdownInterval = setInterval(() => {
         if (value > 0) {
             value -= 1;
-            timerElement.textContent = value;
+            show_timer(value)
+//            timerElement.textContent = value;
         } else {
             clearInterval(countdownInterval);
             timerElement.style.display = "none"; // Скрываем таймер по окончанию

@@ -181,7 +181,9 @@ function hide_access_user() {
     });
 };
 function show_access_user() {
-    document.getElementById("gives_answer_button").pointerEvents = "";
+    if (document.getElementById("gives_answer_button")) {
+        document.getElementById("gives_answer_button").pointerEvents = "";
+    };
     document.querySelectorAll(".access_user").forEach(item => {
         item.style.display = "";
 //        console.log("вы тут")
@@ -597,10 +599,21 @@ function CreateAnswer(data) {
 };
 function send_like_sport(author_id) {
     accepted_responses_arr.push(author_id);
-    if (accepted_responses_arr.length === answer_arr.length) {
+//    if (accepted_responses_arr.length === answer_arr.length) {
+//        document.getElementById('popup_accepting_answer').style.display = "none";
+//    };
+    document.getElementById(`user_answer_id_${author_id}`).style.display = "none";
+    let chek = true
+    const buttons = document.querySelectorAll(".element_users_answering").forEach(item => {
+        if (item.style.display != "none" && chek) {
+            item.click();
+            chek = false;
+        };
+    });
+    if (chek) {
         document.getElementById('popup_accepting_answer').style.display = "none";
     };
-    document.getElementById(`user_answer_id_${author_id}`).style.display = "none";
+
     activeSocket.send(JSON.stringify({
         'status_game': "like",
         'author_answer': author_id,
@@ -609,10 +622,22 @@ function send_like_sport(author_id) {
 }
 function send_dislike_sport(author_id) {
     accepted_responses_arr.push(author_id);
-    if (accepted_responses_arr.length === answer_arr.length) {
+//    if (accepted_responses_arr.length === answer_arr.length) {
+//        document.getElementById('popup_accepting_answer').style.display = "none";
+//    };
+    document.getElementById(`user_answer_id_${author_id}`).style.display = "none";
+    let chek = true
+    const buttons = document.querySelectorAll(".element_users_answering").forEach(item => {
+        if (item.style.display != "none" && chek) {
+            item.click();
+            chek = false;
+        };
+    });
+    if (chek) {
         document.getElementById('popup_accepting_answer').style.display = "none";
     };
-    document.getElementById(`user_answer_id_${author_id}`).style.display = "none";
+
+
     activeSocket.send(JSON.stringify({
         'status_game': "dislike",
         'author_answer': author_id,
@@ -626,9 +651,39 @@ function isIdInArray(id, arr) {
     };
     return arr.includes(id);
 };
+function containsKey(key, tuple) {
+  if (!tuple || typeof tuple !== 'object') {
+    return false;
+  }
+  return Object.prototype.hasOwnProperty.call(tuple, key);
+}
 function NextQuestion() {
     activeSocket.send(JSON.stringify({
         'question': "random_question",
         'type' : "random_question",
     }));
-}
+};
+function show_timer(value) {
+    const timerElement = document.getElementById('timer');
+    timerElement.textContent = value;
+    timerElement.style.display = "";
+};
+
+
+
+function jointResponse_like(author_id) {
+    activeSocket.send(JSON.stringify({
+        'status_game': "like",
+        'type': "captan",
+        'author_answer': author_id,
+        "question": document.getElementById("question_screen").dataset.value,
+    }));
+};
+function jointResponse_dislike(author_id) {
+    activeSocket.send(JSON.stringify({
+        'status_game': "dislike",
+        'type': "captan",
+        'author_answer': author_id,
+        "question": document.getElementById("question_screen").dataset.value,
+    }));
+};
