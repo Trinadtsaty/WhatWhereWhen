@@ -1150,10 +1150,10 @@ class StartConsumer(AsyncWebsocketConsumer):
                             )
                     # Если режим "Спорт"
                     elif room.game_mode == 1:
-                        print("Игроки: ",self.stage["score"]["players"])
-                        print("Кол-во человек ",len(self.stage["score"]["players"]))
-                        print("Ответы",self.stage["message"]["your_response"])
-                        print("Кол-во ответов",len(self.stage["message"]["your_response"]))
+                        # print("Игроки: ",self.stage["score"]["players"])
+                        # print("Кол-во человек ",len(self.stage["score"]["players"]))
+                        # print("Ответы",self.stage["message"]["your_response"])
+                        # print("Кол-во ответов",len(self.stage["message"]["your_response"]))
 
 
                         if self.check_like == len(room.people_on_page.get("users", []))-1:
