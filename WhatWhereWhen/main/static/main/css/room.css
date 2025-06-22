@@ -924,7 +924,7 @@ body {
     align-items: center;      /* Вертикальное центрирование */
     font-size: 55px;
 }
-#choose_question {
+#choose_question, #next_question {
     display: flex;
     width: 300px;
     justify-content: center;  /* Горизонтальное центрирование */

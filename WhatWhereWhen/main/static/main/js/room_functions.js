@@ -626,3 +626,9 @@ function isIdInArray(id, arr) {
     };
     return arr.includes(id);
 };
+function NextQuestion() {
+    activeSocket.send(JSON.stringify({
+        'question': "random_question",
+        'type' : "random_question",
+    }));
+}

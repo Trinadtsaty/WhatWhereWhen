@@ -407,11 +407,14 @@ import traceback
 
 
 class StartConsumer(AsyncWebsocketConsumer):
+    time_waiting = 60
     time = 1
     # переношу в кэш
     # question = {}
     stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None, "score": None, "captain_id": None}
     room_tasks = {}
+    # timer_Nsec_tasks = {}
+    check_like = 0
 
     async def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
@@ -560,6 +563,21 @@ class StartConsumer(AsyncWebsocketConsumer):
             }
             return group_message
 
+        # Вернуться
+        async def chek_timer_Nsec():
+            for i in range(self.time_waiting):
+                await asyncio.sleep(1)
+
+            group_message = {
+                'type': 'send_skip',
+                "message": "skip",
+                # "leader_id": self.leader_id,
+            }
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                group_message
+            )
+
 
         async def time_question():
             # Вернуться
@@ -596,10 +614,13 @@ class StartConsumer(AsyncWebsocketConsumer):
                             time_send(self.stage["message"]['time_question'], "time_question", self.leader_id)
                         )
 
-
                     # print(f"Обратный отсчет ответа на вопрос: {i//60}:{i-i//60*60}")
                 if self.stage["message"]['time_question'] < 0:
                     self.stage["message"]['time_question'] = 0
+
+                # if self.timer_Nsec_tasks == {}:
+                #     timer = asyncio.create_task(chek_timer_Nsec())
+                    # self.timer_Nsec_tasks[self.room_id] = timer
 
                 # print("Вопрос закончился")
             except asyncio.CancelledError:
@@ -632,6 +653,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                         self.stage["message"] = check_random
                     else:
                         # заглушка для конца игры конец вернуться
+                        print("Вопросы кончились")
                         pass
 
                 else:
@@ -869,6 +891,27 @@ class StartConsumer(AsyncWebsocketConsumer):
                         self.room_group_name,
                         group_message
                     )
+                elif data["type"] == "random_question":
+                    # Вернуться
+                    self.check_like = 0
+                    if self.room_tasks != {}:
+                        task = self.room_tasks.pop(self.room_id, None)
+                        if task:
+                            task.cancel()
+
+                    questions = cache.get(self.cache_key)
+                    check_random = get_random_unused_question_key(questions)
+                    if check_random != False:
+                        await self.send(text_data=json.dumps({
+                            'type': 'random_question',
+                            'question_number': check_random,
+                        }))
+                        self.stage["stage"] = "random_question"
+                        self.stage["message"] = check_random
+                    else:
+                        # заглушка для конца игры конец вернуться
+                        print("Вопросы кончились")
+                        pass
                 elif data["type"] == "delete":
                     question_id = data[action_type]
                     if question_id in questions:
@@ -1012,8 +1055,9 @@ class StartConsumer(AsyncWebsocketConsumer):
                                 cache.set(self.cache_key, questions, timeout=3600)
 
                     else:
-                        print(data["author_answer"])
-                        print(self.stage["score"]["players"])
+                        self.check_like += 1
+                        # print(data["author_answer"])
+                        # print(self.stage["score"]["players"])
                         login = await self.get_user(data["author_answer"])
                         login = login.login
                         if data[action_type] == "like":
@@ -1062,8 +1106,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                     )
 
                     # Вернуться
-                    # Если режим не "Спорт"
-                    if room.game_mode != 1:
+                    # Если режим не "Классика"
+                    if room.game_mode == 0:
                         # Если включен случайный порядок вопросов
                         if room.random_order:
                             for i in range(room.break_between_questions):
@@ -1081,6 +1125,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                                 self.stage["message"] = check_random
                             else:
                                 # заглушка для конца игры конец вернуться
+                                print("Вопросы кончились")
                                 pass
                         # Если включен не случайный порядок вопросов
                         else:
@@ -1103,17 +1148,64 @@ class StartConsumer(AsyncWebsocketConsumer):
                                 self.room_group_name,
                                 group_message_2
                             )
-                    # Если ржим "Спорт"
-                    else:
+                    # Если режим "Спорт"
+                    elif room.game_mode == 1:
                         print("Игроки: ",self.stage["score"]["players"])
                         print("Кол-во человек ",len(self.stage["score"]["players"]))
+                        print("Ответы",self.stage["message"]["your_response"])
+                        print("Кол-во ответов",len(self.stage["message"]["your_response"]))
 
-                        # Написать асинхронную ф-цию, которая ждёт минуту и после чего отправляет сообщение ведущему
-                        # За которым последует возможность последнего нажать на кнопку "дальше"
 
+                        if self.check_like == len(room.people_on_page.get("users", []))-1:
+                            self.check_like = 0
+                            # task = self.timer_Nsec_tasks.pop(self.room_id, None)
+                            # if task:
+                            #     task.cancel()
+
+                            if room.random_order:
+                                for i in range(room.break_between_questions):
+                                    await asyncio.sleep(1)
+                                    # print("перерыв между вопросами осталось ", room.break_between_questions-i, "скунд")
+
+                                questions = cache.get(self.cache_key)
+                                check_random = get_random_unused_question_key(questions)
+                                if check_random != False:
+                                    await self.send(text_data=json.dumps({
+                                        'type': 'random_question',
+                                        'question_number': check_random,
+                                    }))
+                                    self.stage["stage"] = "random_question"
+                                    self.stage["message"] = check_random
+                                else:
+                                    # заглушка для конца игры конец вернуться
+                                    print("Вопросы кончились")
+                                    pass
+                            # Если включен не случайный порядок вопросов
+                            else:
+                                if self.room_tasks != {}:
+                                    task = self.room_tasks.pop(self.room_id, None)
+                                    if task:
+                                        task.cancel()
+
+                                    questions = cache.get(self.cache_key)
+                                    for question_id, question_data in questions.items():
+                                        if question_data["frostbite"]:
+                                            question_data["time_read"] = (len(
+                                                question_data["text_question"]) // room.reading_speed) + 1
+                                            question_data["time_question"] = room.question_time
+                                    cache.set(self.cache_key, questions, timeout=3600)
+
+                                group_message_2 = await send_question_meny()
+
+                                await self.channel_layer.group_send(
+                                    self.room_group_name,
+                                    group_message_2
+                                )
+
+
+
+                        #Вернуться
                         #Заметка на полях, дать такую возможность в остальных режимах
-
-                        pass
 
 
 
@@ -1192,6 +1284,13 @@ class StartConsumer(AsyncWebsocketConsumer):
             'captain_id': self.stage["captain_id"],
             'score' : self.stage["score"],
         }))
+
+    async def send_skip(self, event):
+        if self.leader_id == self.user_id:
+            await self.send(text_data=json.dumps({
+                'type': "skip",
+            }))
+
 
     async def time_sender(self, event):
         try:
