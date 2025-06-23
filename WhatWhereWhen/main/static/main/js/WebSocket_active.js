@@ -83,9 +83,14 @@ activeSocket.onmessage = function(e) {
             create_answer_arr(answer_arr)
         } else if (room_game_mode === "Совместный ответ") {
             if (user_id === data.captain_id) {
+
                 answer_arr.push(data);
 //                console.log(answer_arr)
-                create_answer_captain(answer_arr)
+//                create_answer_captain(answer_arr)
+                if (!check_send_answer) {
+                    create_answer_captain(answer_arr)
+                };
+
             } else {
                 create_answer(data)
             }
@@ -105,6 +110,9 @@ activeSocket.onmessage = function(e) {
 
     if (data.type === "get_question") {
         answer_arr = []
+        if (room_game_mode === "Совместный ответ") {
+            check_send_answer = false
+        };
         if (clear_chat_check) {
             clear_chat()
         };
@@ -161,7 +169,13 @@ activeSocket.onmessage = function(e) {
             } else if (room_game_mode === "Совместный ответ") {
                 if (data.message.time_question === 0 && !containsKey(user_id, data.message.your_response) && data.user_id != user_id) {
                     // Поле введите ответ
-                    open_answer_popup()
+                    console.log("Мы тут", data.message.get_answer)
+                    if (data.message.get_answer) {
+                        console.log("Мы внутри")
+                        if (!data.message.get_answer.type) {
+                            open_answer_popup()
+                        };
+                    };
                 };
             };
 
@@ -183,6 +197,7 @@ activeSocket.onmessage = function(e) {
                 hide_access_leader()
                 showQuestion_user(data.message)
             };
+
             // Если есть полученный ответ, то останавливаем вопрос и создаём поле ответа
             if (data.message.get_answer) {
 //            console.log("Получен ответ", data.message.get_answer);
@@ -219,11 +234,11 @@ activeSocket.onmessage = function(e) {
                     };
                 } else if (room_game_mode === "Совместный ответ") {
                     if (user_id === data.captain_id && !data.message.get_answer.type) {
-                        console.log("Это массив")
+//                        console.log("Это массив")
                         answer_arr = data.message.get_answer
                         create_answer_captain(answer_arr)
-                    } else if (user_id === data.user_id && data.message.get_answer.type ) {
-                        console.log("Это кортеж")
+                    } else if (user_id === data.user_id && data.message.get_answer.type) {
+//                        console.log("Это кортеж")
                         pause_question_time()
                         create_answer(data.message.get_answer)
                     };

@@ -299,6 +299,10 @@
         let answer_arr = []
         let accepted_responses_arr = []
 
+        {% if room.game_mode == 2 %}
+        let check_send_answer = false;
+        {% endif %}
+
 //        const host_id = {{ room.host.ID }};
 //        const leader_id = {{ room.leader.ID }};
 //        const captain_id = {{ room.captain.ID }};

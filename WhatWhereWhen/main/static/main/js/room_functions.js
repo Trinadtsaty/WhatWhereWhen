@@ -258,6 +258,7 @@ function click_note() {
     document.querySelector('#note_button').style.top = "0px";
 };
 function send_menu() {
+    document.getElementById('popup_accepting_answer').style.display = "none";
     activeSocket.send(JSON.stringify({
         'question': "pass",
         'type': "get_menu",
@@ -660,6 +661,7 @@ function containsKey(key, tuple) {
   return Object.prototype.hasOwnProperty.call(tuple, key);
 }
 function NextQuestion() {
+    document.getElementById('popup_accepting_answer').style.display = "none";
     activeSocket.send(JSON.stringify({
         'question': "random_question",
         'type' : "random_question",
@@ -751,6 +753,7 @@ function CreateAnswerCaptain(data, N) {
 };
 function send_like_capyain(data) {
     document.getElementById('popup_accepting_answer').style.display = "none";
+    check_send_answer = true
     answer_arr = [];
 //    console.log('like');
     activeSocket.send(JSON.stringify({

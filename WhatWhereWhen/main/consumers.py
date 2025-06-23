@@ -1362,7 +1362,8 @@ class StartConsumer(AsyncWebsocketConsumer):
                                     self.room_group_name,
                                     group_message_2
                                 )
-                    elif room.game_mode == 2:
+                    elif room.game_mode == 2 and data['type'] == "leader":
+
                         # Если включен случайный порядок вопросов
                         if room.random_order:
                             for i in range(room.break_between_questions):
@@ -1556,8 +1557,14 @@ class StartConsumer(AsyncWebsocketConsumer):
             question['text_question'] = None
 
         if room.game_mode == 2:
-            if type(self.stage["message"]["get_answer"]) == list and self.user_id == self.stage["captain_id"]:
-                question["get_answer"] = self.stage["message"]["get_answer"]
+            try:
+                if type(self.stage["message"]["get_answer"]) == list and self.user_id == self.stage["captain_id"]:
+                    question["get_answer"] = self.stage["message"]["get_answer"]
+            except Exception as e:
+                print("ошибка", e)
+                question["get_answer"] = None
+
+
 
         await self.send(text_data=json.dumps({
             'type': 'status_room',
