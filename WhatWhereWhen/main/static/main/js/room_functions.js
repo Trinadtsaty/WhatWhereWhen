@@ -472,8 +472,9 @@ function send_like() {
     open_answer('#popup_accepting_answer')
     activeSocket.send(JSON.stringify({
         'status_game': "like",
+        'type': "leader",
         'author_answer': document.getElementById('popup_accepting_answer').dataset.value,
-        "question": document.getElementById("question_screen").dataset.value,
+        "question_number": document.getElementById("question_screen").dataset.value,
     }));
 };
 function send_dislike() {
@@ -487,8 +488,9 @@ function send_dislike() {
     open_answer('#popup_accepting_answer')
     activeSocket.send(JSON.stringify({
         'status_game': "dislike",
+        'type': "leader",
         'author_answer': document.getElementById('popup_accepting_answer').dataset.value,
-        "question": document.getElementById("question_screen").dataset.value,
+        "question_number": document.getElementById("question_screen").dataset.value,
     }));
 };
 function showe_score(score) {
@@ -617,7 +619,7 @@ function send_like_sport(author_id) {
     activeSocket.send(JSON.stringify({
         'status_game': "like",
         'author_answer': author_id,
-        "question": document.getElementById("question_screen").dataset.value,
+        "question_number": document.getElementById("question_screen").dataset.value,
     }));
 }
 function send_dislike_sport(author_id) {
@@ -641,7 +643,7 @@ function send_dislike_sport(author_id) {
     activeSocket.send(JSON.stringify({
         'status_game': "dislike",
         'author_answer': author_id,
-        "question": document.getElementById("question_screen").dataset.value,
+        "question_number": document.getElementById("question_screen").dataset.value,
     }));
 }
 
@@ -669,21 +671,98 @@ function show_timer(value) {
     timerElement.style.display = "";
 };
 
+//function jointResponse_like(author_id) {
+//    activeSocket.send(JSON.stringify({
+//        'status_game': "like",
+//        'type': "captan",
+//        'author_answer': author_id,
+//        "question_number": document.getElementById("question_screen").dataset.value,
+//    }));
+//};
+//function jointResponse_dislike(author_id) {
+//    activeSocket.send(JSON.stringify({
+//        'status_game': "dislike",
+//        'type': "captan",
+//        'author_answer': author_id,
+//        "question_number": document.getElementById("question_screen").dataset.value,
+//    }));
+//};
+function create_answer_captain(data) {
+    document.getElementById('popup_accepting_answer').style.display = "";
+    document.getElementById('buttons_dislike_box').style.display = "none";
+    ///static/main/img/like.png
+    ///static/main/img/dislike.png
+    //button_div.onclick = () => sendQuestion(item);
+    const answer_box = document.getElementById("part_answers_box");
+    while (answer_box.firstChild) {
+        answer_box.removeChild(answer_box.firstChild);
+    };
+    const button_users_answering = document.createElement('div');
+    button_users_answering.id = "button_users_answering";
+    button_users_answering.className = "scroll";
+    answer_box.appendChild(button_users_answering);
 
+    const accepting_answer = document.createElement('div');
+    accepting_answer.id = "accepting_answer";
 
-function jointResponse_like(author_id) {
+    const accepting_answer_description = document.createElement('div');
+    accepting_answer_description.id = "accepting_answer_description";
+    accepting_answer_description.className = "scroll";
+
+    const text_box = document.createElement('div');
+    text_box.appendChild(accepting_answer);
+    text_box.appendChild(accepting_answer_description);
+    answer_box.appendChild(text_box);
+
+    let chek_answer = true
+    for (let i = 0; i < data.length; i++) {
+        console.log(data[i]);
+
+        const element_users_answering = document.createElement('div');
+        element_users_answering.className = "element_users_answering";
+        element_users_answering.id = `user_answer_id_${data[i].author_answer_id}`;
+        element_users_answering.textContent = data[i].author_answer;
+        element_users_answering.onclick = () => CreateAnswerCaptain(data[i], i);
+
+        button_users_answering.appendChild(element_users_answering);
+
+        if (document.getElementById('popup_accepting_answer').dataset.check) {
+            if (document.getElementById('popup_accepting_answer').dataset.check == i) {
+                console.log("мы тут",document.getElementById('popup_accepting_answer').dataset.check, "номер вставки", i)
+                element_users_answering.click();
+            };
+        } else {
+            if (i === 0) {
+                element_users_answering.click();
+            };
+        };
+    };
+};
+function CreateAnswerCaptain(data, N) {
+    document.getElementById('popup_accepting_answer').dataset.check = N;
+
+    document.getElementById('accepting_answer').textContent = "Ответ: " + data.answer;
+    document.getElementById('accepting_answer').className = data.Class_answer;
+
+    document.getElementById('accepting_answer_description').textContent = "Примичание: " + data.description;
+    document.getElementById('accepting_answer_description').className = data.Class_description;
+
+    document.getElementById('buttons_like_box').onclick = () => send_like_capyain(data);
+};
+function send_like_capyain(data) {
+    document.getElementById('popup_accepting_answer').style.display = "none";
+    answer_arr = [];
+//    console.log('like');
     activeSocket.send(JSON.stringify({
         'status_game': "like",
-        'type': "captan",
-        'author_answer': author_id,
-        "question": document.getElementById("question_screen").dataset.value,
-    }));
-};
-function jointResponse_dislike(author_id) {
-    activeSocket.send(JSON.stringify({
-        'status_game': "dislike",
-        'type': "captan",
-        'author_answer': author_id,
-        "question": document.getElementById("question_screen").dataset.value,
+        'author_answer': data.author_answer_id,
+        'type': "captain",
+        'answer': data.answer,
+        'description': data.description,
+        'Class_answer': data.Class_answer,
+        'Class_description': data.Class_description,
+        'author_answer': data.author_answer,
+        'author_answer_id':data.author_answer_id,
+        "question_number": document.getElementById("question_screen").dataset.value,
     }));
 };

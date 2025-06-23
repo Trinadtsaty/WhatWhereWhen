@@ -82,8 +82,13 @@ activeSocket.onmessage = function(e) {
             console.log(answer_arr)
             create_answer_arr(answer_arr)
         } else if (room_game_mode === "Совместный ответ") {
-            // Совместный ответ
-//            console.log("Совместный ответ")
+            if (user_id === data.captain_id) {
+                answer_arr.push(data);
+//                console.log(answer_arr)
+                create_answer_captain(answer_arr)
+            } else {
+                create_answer(data)
+            }
         } else {
             // Классика
 //            console.log(room_game_mode)
@@ -99,6 +104,7 @@ activeSocket.onmessage = function(e) {
     };
 
     if (data.type === "get_question") {
+        answer_arr = []
         if (clear_chat_check) {
             clear_chat()
         };
@@ -153,7 +159,7 @@ activeSocket.onmessage = function(e) {
                     open_answer_popup()
                 };
             } else if (room_game_mode === "Совместный ответ") {
-                if (data.time === 0) {
+                if (data.message.time_question === 0 && !containsKey(user_id, data.message.your_response) && data.user_id != user_id) {
                     // Поле введите ответ
                     open_answer_popup()
                 };
@@ -192,10 +198,10 @@ activeSocket.onmessage = function(e) {
                     console.log("tuple",tuple)
                     for (let i = 0; i < answer_arr.length; i++) {
                         const key = answer_arr[i].author_answer_id
-                        console.log("key",key)
-//                        console.log(tuple)
-                        console.log("tuple[key]",tuple[key])
-                        console.log("containsKey(key, tuple)",containsKey(key, tuple))
+//                        console.log("key",key)
+////                        console.log(tuple)
+//                        console.log("tuple[key]",tuple[key])
+//                        console.log("containsKey(key, tuple)",containsKey(key, tuple))
                         // Если пользователь ведущий уже оценил ответ пользователя, то данный ответ на отоброжается
                         if (containsKey(key, tuple)) {
                             if (tuple[key]) {
@@ -212,8 +218,17 @@ activeSocket.onmessage = function(e) {
                         document.getElementById('popup_accepting_answer').style.display = "none";
                     };
                 } else if (room_game_mode === "Совместный ответ") {
-
+                    if (user_id === data.captain_id && !data.message.get_answer.type) {
+                        console.log("Это массив")
+                        answer_arr = data.message.get_answer
+                        create_answer_captain(answer_arr)
+                    } else if (user_id === data.user_id && data.message.get_answer.type ) {
+                        console.log("Это кортеж")
+                        pause_question_time()
+                        create_answer(data.message.get_answer)
+                    };
                 };
+
 
             } else {
                 console.log("в статусе комнаты нет ответа");

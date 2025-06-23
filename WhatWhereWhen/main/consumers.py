@@ -422,7 +422,7 @@ class StartConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'action_{self.room_id}'
         room = await self.get_room(self.room_id)
         self.leader_id = await self.get_your_id(room, "leader")
-        # self.captain_id = await self.get_your_id(room, "captain")
+        self.stage["captain_id"] = await self.get_your_id(room, "captain")
 
         # score
         if self.stage["score"] == None:
@@ -836,7 +836,9 @@ class StartConsumer(AsyncWebsocketConsumer):
                     if room.game_mode == 0:
                         group_message = {
                             'type': 'returned_answer',
+                            'game_mode': 0,
                             "leader_id": self.leader_id,
+                            "captain_id": self.stage["captain_id"],
                             "author_answer": author_answer,
                             "author_answer_id": author_answer_id,
                             "early_response": early_response,
@@ -856,7 +858,9 @@ class StartConsumer(AsyncWebsocketConsumer):
                     elif room.game_mode == 1:
                         group_message = {
                             'type': 'returned_answer',
+                            'game_mode': 1,
                             "leader_id": self.leader_id,
+                            "captain_id": self.stage["captain_id"],
                             "author_answer": author_answer,
                             "author_answer_id": author_answer_id,
                             "early_response": early_response,
@@ -874,7 +878,9 @@ class StartConsumer(AsyncWebsocketConsumer):
                     elif room.game_mode == 2:
                         group_message = {
                             'type': 'returned_answer',
+                            'game_mode': 2,
                             "leader_id": self.leader_id,
+                            "captain_id": self.stage["captain_id"],
                             "author_answer": author_answer,
                             "author_answer_id": author_answer_id,
                             "early_response": early_response,
@@ -882,6 +888,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                             'description': description,
                             'Class_answer': Class_answer,
                             'Class_description': Class_description,
+                            'whom': "captain",
                         }
                         try:
                             self.stage["message"]["get_answer"].append(group_message)
@@ -1076,7 +1083,7 @@ class StartConsumer(AsyncWebsocketConsumer):
 
                         if Class == "correct":
                             questions = cache.get(self.cache_key)
-                            question = questions.pop(data["question"], None)
+                            question = questions.pop(data["question_number"], None)
                             # Проверяем, что вопрос существует
                             if question is not None:
                                 # Обновляем значение
@@ -1085,7 +1092,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                                     "user": data["author_answer"],
                                 }
                                 # Добавляем вопрос обратно в список
-                                questions[data["question"]] = question
+                                questions[data["question_number"]] = question
                                 sorted_questions = sorted(questions.items())
                                 # Преобразование обратно в словарь
                                 questions = dict(sorted_questions)
@@ -1096,9 +1103,9 @@ class StartConsumer(AsyncWebsocketConsumer):
                         self.check_like += 1
                         # print(data["author_answer"])
                         # print(self.stage["score"]["players"])
-                        print("Все your_response-ы",self.stage["message"]["your_response"])
-                        print("Автор ответа",data["author_answer"])
-                        print("Значение your_response-а",self.stage["message"]["your_response"][data["author_answer"]])
+                        # print("Все your_response-ы",self.stage["message"]["your_response"])
+                        # print("Автор ответа",data["author_answer"])
+                        # print("Значение your_response-а",self.stage["message"]["your_response"][data["author_answer"]])
                         self.stage["message"]["your_response"][data["author_answer"]] = True
 
                         login = await self.get_user(data["author_answer"])
@@ -1115,7 +1122,7 @@ class StartConsumer(AsyncWebsocketConsumer):
 
                         if Class == "correct":
                             questions = cache.get(self.cache_key)
-                            question = questions.pop(data["question"], None)
+                            question = questions.pop(data["question_number"], None)
                             # Проверяем, что вопрос существует
                             if question is not None:
                                 # Обновляем значение
@@ -1128,33 +1135,88 @@ class StartConsumer(AsyncWebsocketConsumer):
 
 
                                 # Добавляем вопрос обратно в список
-                                questions[data["question"]] = question
+                                questions[data["question_number"]] = question
                                 sorted_questions = sorted(questions.items())
                                 # Преобразование обратно в словарь
                                 questions = dict(sorted_questions)
                                 # Сохраняем обновленный список в кэш
                                 cache.set(self.cache_key, questions, timeout=3600)
 
-                    elif room.game_mode != 2:
-                        if data['type'] == "captan":
-                            self.check_like += 1
+                    elif room.game_mode == 2:
+                        # Вернуться
+                        if data['type'] == "captain":
+                            group_message = {
+                                'type': 'returned_answer',
+                                'game_mode': 2,
+                                "leader_id": self.leader_id,
+                                "captain_id": self.stage["captain_id"],
+                                "author_answer": data['author_answer'],
+                                "author_answer_id": data['author_answer_id'],
+                                'answer': data['answer'],
+                                'description': data['description'],
+                                'Class_answer': data['Class_answer'],
+                                'Class_description': data['Class_description'],
+                                'whom': "leader",
+                            }
+                            self.stage["message"]["get_answer"] = group_message
+                        elif data['type'] == "leader":
+                            if data[action_type] == "like":
+                                self.stage["score"]["players"] += 1
+                                status = "Ответ верный"
+                                Class = "correct"
+
+                            if data[action_type] == "dislike":
+                                self.stage["score"]["authors"] += 1
+                                status = "Ответ не верный"
+                                Class = "wrong"
+
+                            if Class == "correct":
+                                questions = cache.get(self.cache_key)
+                                question = questions.pop(data["question_number"], None)
+                                # Проверяем, что вопрос существует
+                                if question is not None:
+                                    # Обновляем значение
+                                    question["answer_status"] = {
+                                        "status": True,
+                                        "user": data["author_answer"],
+                                    }
+                                    # Добавляем вопрос обратно в список
+                                    questions[data["question_number"]] = question
+                                    sorted_questions = sorted(questions.items())
+                                    # Преобразование обратно в словарь
+                                    questions = dict(sorted_questions)
+                                    # Сохраняем обновленный список в кэш
+                                    cache.set(self.cache_key, questions, timeout=3600)
 
 
+                    if room.game_mode != 2:
+                        group_message_score = {
+                            'type': 'score_send',
+                            "score_players" : self.stage["score"]["players"],
+                            "score_authors" : self.stage["score"]["authors"],
+                            "status" : status,
+                            "Class" : Class,
+                            "leader_id": self.leader_id,
+                        }
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            group_message_score
+                        )
+                    elif data['type'] == "leader":
+                        group_message_score = {
+                            'type': 'score_send',
+                            "score_players": self.stage["score"]["players"],
+                            "score_authors": self.stage["score"]["authors"],
+                            "status": status,
+                            "Class": Class,
+                            "leader_id": self.leader_id,
+                        }
+                        await self.channel_layer.group_send(
+                            self.room_group_name,
+                            group_message_score
+                        )
 
-                        pass
 
-                    group_message_score = {
-                        'type': 'score_send',
-                        "score_players" : self.stage["score"]["players"],
-                        "score_authors" : self.stage["score"]["authors"],
-                        "status" : status,
-                        "Class" : Class,
-                        "leader_id": self.leader_id,
-                    }
-                    await self.channel_layer.group_send(
-                        self.room_group_name,
-                        group_message_score
-                    )
 
                     # Вернуться
                     # Если режим "Классика"
@@ -1180,6 +1242,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                                     }
                                 )
                                 await asyncio.sleep(1)
+                                print("перерыв между вопросами осталось ", room.break_between_questions - i, "скунд")
                             await self.channel_layer.group_send(
                                 self.room_group_name,
                                 {
@@ -1188,7 +1251,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                                     'Class': "break_between_questions",
                                 }
                             )
-                                # print("перерыв между вопросами осталось ", room.break_between_questions-i, "скунд")
+
 
                             await send_random()
 
@@ -1252,7 +1315,7 @@ class StartConsumer(AsyncWebsocketConsumer):
                                         }
                                     )
                                     await asyncio.sleep(1)
-                                    # print("перерыв между вопросами осталось ", room.break_between_questions-i, "скунд")
+                                    print("перерыв между вопросами осталось ", room.break_between_questions-i, "скунд")
                                 await self.channel_layer.group_send(
                                     self.room_group_name,
                                     {
@@ -1299,14 +1362,56 @@ class StartConsumer(AsyncWebsocketConsumer):
                                     self.room_group_name,
                                     group_message_2
                                 )
+                    elif room.game_mode == 2:
+                        # Если включен случайный порядок вопросов
+                        if room.random_order:
+                            for i in range(room.break_between_questions):
+                                await self.channel_layer.group_send(
+                                    self.room_group_name,
+                                    {
+                                        'type': 'time_sender',
+                                        'time': room.break_between_questions - i,
+                                        'Class': "break_between_questions",
+                                    }
+                                )
+                                await asyncio.sleep(1)
+                                print("перерыв между вопросами осталось ", room.break_between_questions-i, "скунд")
 
+                            await self.channel_layer.group_send(
+                                self.room_group_name,
+                                {
+                                    'type': 'time_sender',
+                                    'time': 0,
+                                    'Class': "break_between_questions",
+                                }
+                            )
 
+                            await send_random()
+
+                        # Если включен не случайный порядок вопросов
+                        else:
+                            if self.room_tasks != {}:
+                                task = self.room_tasks.pop(self.room_id, None)
+                                if task:
+                                    task.cancel()
+
+                                questions = cache.get(self.cache_key)
+                                for question_id, question_data in questions.items():
+                                    if question_data["frostbite"]:
+                                        question_data["time_read"] = (len(
+                                            question_data["text_question"]) // room.reading_speed) + 1
+                                        question_data["time_question"] = room.question_time
+                                cache.set(self.cache_key, questions, timeout=3600)
+
+                            group_message_2 = await send_question_meny()
+
+                            await self.channel_layer.group_send(
+                                self.room_group_name,
+                                group_message_2
+                            )
 
                         #Вернуться
                         #Заметка на полях, дать такую возможность в остальных режимах
-
-
-
 
             # Отправляем в группу
             try:
@@ -1410,8 +1515,11 @@ class StartConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"Ошибка отправки сообщения: {e}")
 
+
+
     async def notify_stage_not_leader(self,room):
         try:
+
             question = {
                 'question_id': self.stage["message"]["question_id"],
                 'question_name': self.stage["message"]["question_name"],
@@ -1424,7 +1532,9 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'time_question': self.stage["message"]["time_question"],
                 'your_response': self.stage["message"]["your_response"],
             }
+
         except Exception as e:
+
             question = {
                 'question_id': self.stage["message"]["question_id"],
                 'question_name': self.stage["message"]["question_name"],
@@ -1437,25 +1547,17 @@ class StartConsumer(AsyncWebsocketConsumer):
                 'time_question': self.stage["message"]["time_question"],
                 'your_response': None,
             }
+
             if e != 'your_response':
                 print("Произошла ошибка: ",e)
                 traceback.print_exc()
 
-        # question = {
-        #         'question_id': self.stage["message"]["question_id"],
-        #         'question_name': self.stage["message"]["question_name"],
-        #         'text_question': self.stage["message"]["text_question"],
-        #         'note': None,
-        #         'answer': None,
-        #         'answer_description': None,
-        #         'question_number': self.stage["message"]["question_number"],
-        #         'time_read' : self.stage["message"]["time_read"],
-        #         'time_question' : self.stage["message"]["time_question"],
-        #         'your_response' : self.stage["message"]["your_response"],
-        #     }
-
         if not room.show_question:
             question['text_question'] = None
+
+        if room.game_mode == 2:
+            if type(self.stage["message"]["get_answer"]) == list and self.user_id == self.stage["captain_id"]:
+                question["get_answer"] = self.stage["message"]["get_answer"]
 
         await self.send(text_data=json.dumps({
             'type': 'status_room',
@@ -1478,18 +1580,47 @@ class StartConsumer(AsyncWebsocketConsumer):
         }))
 
     async def returned_answer(self, event):
-        if event["leader_id"] == self.user_id:
-            response = {
-                'type': "return_answer",
-                "early_response": event.get('early_response'),
-                "answer": event.get('answer'),
-                "description": event.get('description'),
-                "Class_answer": event.get('Class_answer'),
-                "Class_description": event.get('Class_description'),
-                "author_answer": event.get('author_answer'),
-                "author_answer_id": event.get('author_answer_id'),
-            }
-            await self.send(text_data=json.dumps(response))
+        if event["game_mode"] != 2:
+            if event["leader_id"] == self.user_id:
+                response = {
+                    'type': "return_answer",
+                    "early_response": event.get('early_response'),
+                    "answer": event.get('answer'),
+                    "description": event.get('description'),
+                    "Class_answer": event.get('Class_answer'),
+                    "Class_description": event.get('Class_description'),
+                    "author_answer": event.get('author_answer'),
+                    "author_answer_id": event.get('author_answer_id'),
+                }
+                await self.send(text_data=json.dumps(response))
+        elif event["game_mode"] == 2:
+            if event["captain_id"] == self.user_id and event["whom"] == "captain":
+                response = {
+                    'type': "return_answer",
+                    "early_response": event.get('early_response'),
+                    "answer": event.get('answer'),
+                    "description": event.get('description'),
+                    "Class_answer": event.get('Class_answer'),
+                    "Class_description": event.get('Class_description'),
+                    "author_answer": event.get('author_answer'),
+                    "author_answer_id": event.get('author_answer_id'),
+                    "captain_id": event.get('captain_id'),
+                    "whom": event.get('whom'),
+                }
+                await self.send(text_data=json.dumps(response))
+            elif event["leader_id"] == self.user_id and event["whom"] == "leader":
+                response = {
+                    'type': "return_answer",
+                    "early_response": event.get('early_response'),
+                    "answer": event.get('answer'),
+                    "description": event.get('description'),
+                    "Class_answer": event.get('Class_answer'),
+                    "Class_description": event.get('Class_description'),
+                    "author_answer": event.get('author_answer'),
+                    "author_answer_id": event.get('author_answer_id'),
+                    "whom": event.get('whom'),
+                }
+                await self.send(text_data=json.dumps(response))
 
     async def ready_respond_users(self, event):
         if event["user_id"] == self.user_id:
