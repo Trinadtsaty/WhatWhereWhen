@@ -12,7 +12,7 @@
     <div class="container">
         <form class="forms" id="Log_In" action="{% url 'Login' %}" method="post">
             {% csrf_token %}
-            <p>admin@example.com</p>
+<!--            <p>admin@example.com</p>-->
             <input class="input_line" placeholder="E-mail" type="text" id="Mail" name="mail" value="{{ usermail|default:'' }}">
             <input class="input_line" placeholder="Пароль" type="password" id="Password" name="password" value="{{ password|default:'' }}">
             <input class="form_button" type="submit" value="Вход" id="register_button">
