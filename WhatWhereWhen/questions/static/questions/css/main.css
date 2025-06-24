@@ -68,7 +68,7 @@ body {
     float: left;
     width: 25%;
     height: 100%;
-    background-color: red;
+/*    background-color: red;*/
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -80,13 +80,13 @@ body {
     float: left;
     width: 50%;
     height: 100%;
-    background-color: grey;
+/*    background-color: grey;*/
 }
 #random_question_box{
     float: left;
     width: 25%;
     height: 100%;
-    background-color: green;
+/*    background-color: green;*/
 }
 
 .input_select {
