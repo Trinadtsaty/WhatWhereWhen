@@ -39,8 +39,10 @@ class Users_mainAPI(generics.ListAPIView):
 @not_authenticated
 def user_login(request):
     if request.method == 'POST':
-        usermail = request.POST.get('mail')
-        password = request.POST.get('password')
+        # usermail = request.POST.get('mail')
+        # password = request.POST.get('password')
+        usermail = escape(request.POST.get('mail', '').strip())
+        password = escape(request.POST.get('password', '').strip())
 
         if usermail:
             try:
@@ -81,6 +83,7 @@ def user_login(request):
 def menu(request):
     # Извлечение всех титулов
     titles = Titles.objects.all()
+    user = request.user
     # Извлечение всех связей пользователей и титулов ТОЛЬКО СВЯЗНЫХ
     users_and_titles = Users_and_Titles.objects.select_related('users', 'titles').all()
 
@@ -93,9 +96,10 @@ def menu(request):
     context = {
         'titles': titles,
         'users_and_titles': users_and_titles,
-        'user_active': get_active_users(),
-        'user_count': Users.objects.count(),
-        "questions_count":questions
+        # 'user_active': get_active_users(),
+        # 'user_count': Users.objects.count(),
+        "questions_count":questions,
+        "user":user,
     }
     return render(request, "registration/main_page.html", context)
 
@@ -249,3 +253,42 @@ def hint(request):
 
 def author(request):
     return render(request, "registration/plug.html")
+
+
+
+from django.utils.html import escape
+from django.core.exceptions import ValidationError
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
+# Улучшеный код
+# @not_authenticated
+# def user_login(request):
+#     context = {}
+#
+#     if request.method == 'POST':
+#         # Безопасное получение и очистка данных
+#         usermail = escape(request.POST.get('mail', '').strip())
+#         password = escape(request.POST.get('password', '').strip())
+#         context['usermail'] = usermail  # Сохраняем для повторного отображения в форме
+#
+#         # Валидация почты
+#         if not usermail:
+#             context['error'] = 'Пожалуйста, введите почту'
+#             return render(request, "registration/login.html", context)
+#
+#         # Валидация пароля
+#         if not password:
+#             context['error'] = 'Пожалуйста, введите пароль'
+#             return render(request, "registration/login.html", context)
+#
+#         # Аутентификация пользователя
+#         user = authenticate(request, email=usermail.lower(), password=password)
+#         if user is not None:
+#             login(request, user)
+#             return redirect('Menu')
+#
+#         context['error'] = 'Неверная почта или пароль'
+#         return render(request, "registration/login.html", context)
+#
+#     return render(request, "registration/login.html")
