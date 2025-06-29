@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Регистрация</title>
+    <title>Смена</title>
     <link rel="stylesheet" href="{% static 'registration/css/reg_log.css' %}">
 </head>
 <body>
@@ -15,7 +15,6 @@
             {% else %}
                 <div class="profile_photo_box" id="image"><img class="profile_photo change" id="IMG" alt="Фото профиля" src="{% static 'registration/img/Avatar.png' %}"></div>
             {% endif %}
-
             <input class="input_line" placeholder="Ник" type="text" id="nick_name_change" name="nick_name" value="{{ username|default:user.login }}">
             <input style="display: none;" type="file"  id="Image_User" name="image_user">
             <input style="display: none;" type="submit" id="register_button">

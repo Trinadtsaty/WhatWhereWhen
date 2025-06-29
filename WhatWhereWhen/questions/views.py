@@ -21,9 +21,9 @@ def question_note(name):
 
 def question_answer_name(name):
     if len(name) < 3:
-        raise ValidationError('Текст ответа слишком короткий, пожалуйста придумайте ответ от 3 до 50 символов')
-    if len(name) > 50:
-        raise ValidationError('Текст ответа слишком длинный, пожалуйста придумайте ответ от 3 до 50 символов')
+        raise ValidationError('Текст ответа слишком короткий, пожалуйста придумайте ответ от 3 до 150 символов')
+    if len(name) > 150:
+        raise ValidationError('Текст ответа слишком длинный, пожалуйста придумайте ответ от 3 до 150 символов')
 
 def question_name_text_edit(name):
     if len(name) < 20:

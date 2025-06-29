@@ -422,7 +422,7 @@ class StartConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'action_{self.room_id}'
         room = await self.get_room(self.room_id)
         self.leader_id = await self.get_your_id(room, "leader")
-        self.stage["captain_id"] = await self.get_your_id(room, "captain")
+        # self.stage["captain_id"] = await self.get_your_id(room, "captain")
 
         # score
         if self.stage["score"] == None:
