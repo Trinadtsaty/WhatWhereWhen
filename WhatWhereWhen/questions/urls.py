@@ -16,9 +16,10 @@ urlpatterns = [
     path('selectionClaim/',  views.selectionClaim, name="Claim_Tag"),
     path('selection/',  views.selectionCreate, name="Selection_Create"),
     path('<int:question_number>/edit/', views.question_edit, name="Question_Edit"),
-    path('api/v1', Question_Evaluation_API.as_view()),
-    path('api/v2', Tag_Question_API.as_view()),
-    path('api/v3', Selection_Questions_API.as_view()),
-    path('api/v4/<int:question_id>/', Selection_API.as_view()),
+
+    path('api/v1', Question_Evaluation_API.as_view()), # Оценка
+    path('api/v2', Tag_Question_API.as_view()), # Теги
+    path('api/v3', Selection_Questions_API.as_view()), # Коллекции
+    path('api/v4/<int:question_id>/', Selection_API.as_view()), # получение коллекций по вопросу
 ]
 

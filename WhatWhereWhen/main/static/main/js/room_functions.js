@@ -571,8 +571,9 @@ function create_answer_arr(data) {
     // console.log("выводим массив ответов",data)
     let chek_answer = true
     for (let i = 0; i < data.length; i++) {
-        console.log(data[i]);
+        console.log("!isIdInArray(data[i].author_answer_id, accepted_responses_arr)",!isIdInArray(data[i].author_answer_id, accepted_responses_arr));
         if (!isIdInArray(data[i].author_answer_id, accepted_responses_arr)) {
+
             const element_users_answering = document.createElement('div');
             element_users_answering.className = "element_users_answering";
             element_users_answering.id = `user_answer_id_${data[i].author_answer_id}`

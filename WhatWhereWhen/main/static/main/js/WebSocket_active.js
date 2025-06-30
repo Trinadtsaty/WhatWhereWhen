@@ -77,9 +77,9 @@ activeSocket.onmessage = function(e) {
         pause_question_time()
         if (room_game_mode === "Спорт") {
             // Спорт
-//            console.log("Спорт")
+
             answer_arr.push(data);
-            console.log(answer_arr)
+            console.log("Мы тут", answer_arr)
             create_answer_arr(answer_arr)
         } else if (room_game_mode === "Совместный ответ") {
             if (user_id === data.captain_id) {
@@ -110,6 +110,7 @@ activeSocket.onmessage = function(e) {
 
     if (data.type === "get_question") {
         answer_arr = []
+        accepted_responses_arr = []
         if (room_game_mode === "Совместный ответ") {
             check_send_answer = false
         };

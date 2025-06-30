@@ -64,7 +64,7 @@ function POST_Selection(data, URL) {
         // Здесь можно вывести сообщение об ошибке пользователю
         alert('Ошибка: ' + error.message); // Например, используем alert для отображения ошибки
     });
-}
+};
 
 function delete_Selection(data, URL) {
     fetch(URL, {

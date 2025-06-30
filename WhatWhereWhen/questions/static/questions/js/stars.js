@@ -72,7 +72,6 @@ function stars_ligt(number) {
         const element_unfull = document.querySelector(`#star_${i}_unfull`);
         element_full.style.display = 'block';
         element_unfull.style.display = 'none';
-
     };
 };
 
@@ -82,8 +81,6 @@ function stars_unligt(number) {
         const element_unfull = document.querySelector(`#star_${i}_unfull`);
         element_full.style.display = 'none';
         element_unfull.style.display = 'block';
-
-
     };
 };
 

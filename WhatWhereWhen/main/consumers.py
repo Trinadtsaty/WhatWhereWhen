@@ -306,7 +306,7 @@ class PeopleConsumer(AsyncWebsocketConsumer):
                 room.save()
                 # print("Пользователей на странице выход",len(room.people_on_page["users"]))
 
-                #Раскомитить когда завершу отладку
+                #Раскомитить когда завершу отладку вернутся
                 # if len(room.people_on_page["users"]) ==0:
                 #     room.delete()
 
@@ -408,7 +408,7 @@ import traceback
 
 class StartConsumer(AsyncWebsocketConsumer):
     time_waiting = 60
-    time = 1
+    time = 5
     # переношу в кэш
     # question = {}
     stage = {"stage":"collecting", "condition":"expectation", "message":None, "user_id": None, "score": None, "captain_id": None}
@@ -422,7 +422,7 @@ class StartConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'action_{self.room_id}'
         room = await self.get_room(self.room_id)
         self.leader_id = await self.get_your_id(room, "leader")
-        self.stage["captain_id"] = await self.get_your_id(room, "captain")
+        # self.stage["captain_id"] = await self.get_your_id(room, "captain")
 
         # score
         if self.stage["score"] == None:
@@ -497,7 +497,11 @@ class StartConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         room = await self.get_room(self.room_id)
         self.leader_id = await self.get_your_id(room, "leader")
-        self.stage["captain_id"] = await self.get_your_id(room, "captain")
+        try:
+            self.stage["captain_id"] = await self.get_your_id(room, "captain")
+        except Exception as e:
+            print("ошибка назначения капитана", e)
+
         # self.leader_id = await self.get_your_id(room, "leader")
         # Получаем вопросы из кеша
         questions = cache.get(self.cache_key)
@@ -977,16 +981,22 @@ class StartConsumer(AsyncWebsocketConsumer):
             elif action_type == "status_game":
                 # question_tasks = {"stage": "collecting", "condition": "expectation"}
                 if data[action_type] == "start":
-                    group_message = {
-                        'type': 'handle_action_game',  # Важно: должно соответствовать имени метода
-                        'action_type': "start_timer",
-                        'message': self.time,
-                        'user_id': self.user_id,
-                        'timestamp': str(datetime.now())
-                    }
-                    task = asyncio.create_task(timer_5_sec())
-                    self.room_tasks[self.room_id] = task
+                    if len(room.people_on_page["users"]) >=3 and room.leader != None and room.captain != None:
+                        room.room_limit = len(room.people_on_page["users"])
+                        # room.save()
+                        await self.update_room(room, len(room.people_on_page["users"]))
 
+                        group_message = {
+                            'type': 'handle_action_game',  # Важно: должно соответствовать имени метода
+                            'action_type': "start_timer",
+                            'message': self.time,
+                            'user_id': self.user_id,
+                            'timestamp': str(datetime.now())
+                        }
+                        task = asyncio.create_task(timer_5_sec())
+                        self.room_tasks[self.room_id] = task
+                    else:
+                        print("Ошибка запуска")
 
                 elif data[action_type] == "cancellation":
                     task = self.room_tasks.pop(self.room_id, None)
@@ -1738,3 +1748,8 @@ class StartConsumer(AsyncWebsocketConsumer):
             return room.captain.ID
         elif type == "leader":
             return room.leader.ID
+
+    @sync_to_async
+    def update_room(self, room, new_limit):
+        room.room_limit = new_limit
+        room.save()
