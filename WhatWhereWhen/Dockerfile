@@ -1,32 +1,32 @@
-# Используем официальный образ Python 3.13
+# Используем официальный образ Python
 FROM python:3.13-slim
 
-# Устанавливаем переменную окружения, чтобы Python не буферизовал вывод
-ENV PYTHONUNBUFFERED=1
-
-# Создаем рабочую директорию внутри контейнера
-WORKDIR /app
-
-# Копируем файл с зависимостями
-COPY requirements.txt /app/
-
-# Устанавливаем системные зависимости (если нужны)
+# Устанавливаем системные зависимости для сборки mysqlclient
 RUN apt-get update && apt-get install -y \
     build-essential \
+    default-libmysqlclient-dev \
+    python3-dev \
+    libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем зависимости Python
+# Создаём рабочую директорию
+WORKDIR /app
+
+# Копируем файлы зависимостей
+COPY requirements.txt .
+
+# Устанавливаем Python-зависимости
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-# Копируем весь проект в контейнер
-COPY . /app/
+# Копируем весь проект
+COPY . .
 
-# Собираем статику (если используется)
-RUN python manage.py collectstatic --noinput
+# Экспортируем переменные окружения (если хотите, можно задавать через docker-compose)
+ENV PYTHONUNBUFFERED=1
 
-# Открываем порт 8000 (для HTTP) и 8001 (если нужен отдельный порт для Channels, можно настроить)
-EXPOSE 8000
+# Собираем статику (опционально, если хотите делать это в образе)
+# RUN python manage.py collectstatic --noinput
 
-# Запускаем ASGI-сервер Daphne для поддержки Channels
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "WhatWhereWhen.asgi:application"]
+# Команда запуска (можно переопределить в docker-compose)
+CMD ["gunicorn", "your_project_name.wsgi:application", "--bind", "0.0.0.0:8000"]
