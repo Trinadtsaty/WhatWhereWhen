@@ -30,4 +30,4 @@ ENV PYTHONUNBUFFERED=1
 # RUN python manage.py collectstatic --noinput
 
 # Команда запуска (можно переопределить в docker-compose)
-CMD ["gunicorn", "your_project_name.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "WhatWhereWhen.wsgi:application", "--bind", "0.0.0.0:8000"]
