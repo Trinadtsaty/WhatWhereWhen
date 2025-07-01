@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
 # DEBUG = True
 DEBUG = False
 
-ALLOWED_HOSTS = ['treewh.ru', 'www.treewh.ru', '185.73.215.161']
+ALLOWED_HOSTS = ['treewh.ru', 'www.treewh.ru', '185.73.215.161', 'localhost', '127.0.0.1']
 
 
 # Application definition
