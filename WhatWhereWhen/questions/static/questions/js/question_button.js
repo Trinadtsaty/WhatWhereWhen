@@ -1,6 +1,7 @@
 //const question = document.querySelectorAll('.link_box_question');
 //
 ////const URL_server = 'http://127.0.0.1:8000';
+//const URL_server = window.location.origin
 const URL_Selection = '/questions/api/v3';
 
 

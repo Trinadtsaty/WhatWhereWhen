@@ -12,7 +12,8 @@ if (!estimation_ball_bol) {
     che = true
 };
 
-const URL_server = 'http://127.0.0.1:8000'
+//const URL_server = 'http://127.0.0.1:8000'
+const URL_server = window.location.origin;
 const URL_adress = '/questions/api/v1'
 
 function getCookie(name) {

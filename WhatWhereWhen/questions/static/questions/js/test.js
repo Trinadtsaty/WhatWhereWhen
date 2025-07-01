@@ -35,7 +35,8 @@ function POST(data, URL) {
 
 const test_POST = document.querySelector('#test_post');
 
-const URL_server = 'http://127.0.0.1:8000';
+//const URL_server = 'http://127.0.0.1:8000';
+const URL_server = window.location.origin;
 const URL_adress = '/questions/';
 
 if (test_POST) {

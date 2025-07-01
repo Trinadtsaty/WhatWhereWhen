@@ -379,7 +379,8 @@ window.POST = POST;
 
 
 
-const URL_server = 'http://127.0.0.1:8000';
+//const URL_server = 'http://127.0.0.1:8000';
+const URL_server = window.location.origin;
 const URL_adress = '/questions/';
 
 
