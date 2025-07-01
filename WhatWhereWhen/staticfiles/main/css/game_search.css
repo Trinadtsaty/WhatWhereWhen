@@ -1,0 +1,227 @@
+@font-face {
+    font-family: 'Oswald'; /* Название шрифта */
+    src: url('../fonts/Oswald-VariableFont_wght.ttf') format('truetype'); /* Можно указать несколько форматов */
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    font-family: 'Oswald', sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+
+    background-image: url('../img/background.png'); /* Укажите путь к вашему изображению */
+    background-size: cover; /* Это свойство позволяет изображению покрывать весь элемент */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Отключает повторение изображения */
+}
+#main_page {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #C0A610;
+    border: 2px solid #524F52;
+    border-radius: 20px;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    text-align: center;
+
+    font-size: 45px;
+    height: 75px;
+    width: 300px;
+
+    cursor: pointer;
+    transition: .5s;
+    box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
+}
+#main_page:hover {
+    background-color: #524F52;
+    border: 0.6vh solid #C0A610;
+}
+#page {
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: auto;
+    width: 100vw;
+    height: 100vh;
+}
+#tools_search {
+    flex: 0 0 auto;
+/*    float: left;*/
+    height: 100%;
+    width: 25%;
+    min-width: 350px;
+}
+#rooms {
+    flex: 0 0 auto;
+/*    float: left;*/
+    height: 100%;
+    width: 40%;
+    margin-left: 5%;
+    min-width: 550px;
+}
+#info_room {
+/*    float: left;*/
+    flex: 0 0 auto;
+    margin-left: 5%;
+    background-color: rgba(136, 128, 136, 1);
+    height: 100%;
+    width: 25%;
+    min-width: 350px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.button {
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+    border-radius: 30px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: #524F52;
+    border: 3px solid #C0A610;
+}
+#button_create {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 25px;
+    font-size: 64px;
+}
+#input_box {
+    background-color: rgba(82, 79, 82, 1);
+    margin-top: 25px;
+    width: 90%;
+    height: 100px;
+    margin-left: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+#input_search {
+    width: 90%;
+    color: white;
+}
+.input_select {
+    border: none; /* Убирает рамку */
+    outline: none; /* Убирает контур при фокусировке */
+    box-shadow: none; /* Убирает тень */
+    background: transparent; /* Убирает фон */
+    color: white; /* Устанавливает цвет текста как у родителя */
+    border-bottom: 3px solid rgba(0, 0, 0, 1);
+    font-size: 32px;
+}
+.input_select::placeholder {
+    font-size: 32px;
+}
+.input_select:focus{
+    font-size: 32px;
+}
+#select_box {
+    width: 90%;
+    margin-left: 5%;
+    color: white;
+    font-size: 32px;
+}
+#button_search {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 25px;
+    font-size: 64px;
+}
+#refresh_button {
+    margin-top: 25px;
+    width: 40%;
+    margin-left: 30%;
+}
+#img_refresh {
+    width: 100%;
+}
+#room_scroll_box {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+}
+#list_rooms {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.room {
+    margin-top: 5px;
+    height: 40px;
+    color: white;
+    font-size: 30px;
+    background-color: rgba(82, 79, 82, 1);
+    cursor: pointer;
+/*    width: 95%;*/
+}
+.img_lock {
+    float: right;
+    height: 100%;
+}
+
+.info_text_box {
+    margin-top: 20px;
+    width: 100%;
+    font-size: 32px;
+    color: white;
+    background-color: rgba(82, 79, 82, 1);
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+
+/* Для первого блока увеличенный отступ сверху */
+.info_text_box:first-child {
+    margin-top: 50px;
+}
+#room_description {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 30%;
+    white-space: normal;
+    word-wrap: break-word; /* для переноса длинных слов */
+    word-break: break-word; /* для поддержки в разных браузерах */
+
+}
+
+
+/* Кнопке можно добавить стили, например, чтобы она была шириной 100% */
+#button_connect {
+    width: 90%;
+    margin-left: 5%;
+    margin-bottom: 20px;
+    font-size: 48px;
+    height: 125px;
+
+    display: flex;                /* Включаем flexbox */
+    align-items: center;          /* Центрируем по вертикали */
+    justify-content: center;      /* Центрируем по горизонтали */
+}
+#claim_error {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f44336; /* Красный цвет */
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Поверх всех элементов */
+}
+

@@ -1,0 +1,418 @@
+@font-face {
+    font-family: 'Oswald'; /* Название шрифта */
+    src: url('../fonts/Oswald-VariableFont_wght.ttf') format('truetype'); /* Можно указать несколько форматов */
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Oswald', sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+
+
+    background-image: url('../img/background.png'); /* Укажите путь к вашему изображению */
+    background-size: cover; /* Это свойство позволяет изображению покрывать весь элемент */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Отключает повторение изображения */
+}
+h1,li {
+    color: white;
+}
+
+#main_page {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.main_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #C0A610;
+    border: 2px solid #524F52;
+    border-radius: 20px;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    -webkit-text-stroke: 0.2vh black;
+    text-align: center;
+
+    font-size: 45px;
+    height: 75px;
+    width: 300px;
+
+    cursor: pointer;
+    transition: .5s;
+    box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.main_button:hover {
+    background-color: #524F52;
+    border: 0.6vh solid #C0A610;
+}
+
+#question_box {
+    margin-top: 5vh;
+    float: left;
+    margin-left: 2.5vw;
+    height: 80vh;
+    width: 60vw;
+/*    background-color: grey;*/
+}
+
+#tools_box {
+    margin-top: 5vh;
+    float: left;
+    margin-left: 5vw;
+    height: 80vh;
+    width: 30vw;
+    background-color: rgba(136, 128, 136, 1);
+}
+
+#tegs_box{
+    background-color: rgba(82, 79, 82, 1);
+    width: 95%;
+    margin-left: 2%;
+    margin-top: 1%;
+    margin-right: 2%;
+    padding: 1%;
+    border-radius: 10px;
+}
+
+#tegs_box_name {
+    margin-left: 5px;
+    font-size: 40px;
+    color: white;
+    margin-bottom: 5px;
+
+/*    margin-left: 5px;*/
+/*    color: white;*/
+/*    font-size: 40px;*/
+/*    -webkit-text-stroke: 0.5px black;*/
+
+}
+
+.tegs {
+    /* Убираем точку и делаем запись в строку с возможностью переноса на новую строчку*/
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0;
+	margin: 0;
+
+
+}
+
+.teg {
+    margin-left: 0.5vw;
+    border-radius: 15px;
+    background-color: rgba(136, 128, 136, 1);
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+    margin-bottom: 0.5vh; /* Увеличиваем отступ снизу */
+
+    cursor:pointer;
+/*    font-size: 25px;*/
+}
+
+.teg:hover {
+    background-color: #504b4b;
+}
+
+#add_teg {
+    color: white;
+    margin-left: 0.5vw;
+
+    font-size: 25px;
+    border-radius: 50%;
+    height: 26px;
+    width: 26px;
+    background-color: #918c8c;
+    cursor:pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#add_teg:hover {
+    background-color: #504b4b;
+}
+
+#question_button_box {
+    margin-left: 2%;
+    margin-top: 2%;
+    width: 90%;
+}
+
+#question_button_list {
+    list-style-type: none;
+    display: flex;
+    font-size: 30px;
+    padding:0;
+    margin:0;
+}
+
+.question_button:first-child {
+    margin-left:0;
+}
+
+.question_button:hover{
+    background-color: #504b4b;
+}
+
+
+.question_button {
+    margin-left: 1%;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-top: 2px solid rgba(82, 79, 82, 1); /* Обводка сверху */
+    border-left: 2px solid rgba(82, 79, 82, 1); /* Обводка слева */
+    border-right: 2px solid rgba(82, 79, 82, 1); /* Обводка справа */
+    border-bottom: none;
+    border-top-left-radius: 10px; /* Закругление верхнего левого угла */
+    border-top-right-radius: 10px; /* Закругление верхнего правого угла */
+    background-color: #918c8c;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+#question_text_box {
+    background-color: rgba(136, 128, 136, 1);
+    margin: 0;
+    margin-left: 2%;
+
+    min-width: 425px;
+    width: 90%;
+    height: 85%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: -2px;
+
+    border-top: 2px solid rgba(82, 79, 82, 1);
+    border-left: 2px solid rgba(82, 79, 82, 1);
+    border-right: 2px solid rgba(82, 79, 82, 1);
+    border-bottom: 2px solid rgba(82, 79, 82, 1);
+    border-bottom-left-radius: 10px; /* Закругление верхнего левого угла */
+    border-bottom-right-radius: 10px; /* Закругление верхнего правого угла */
+}
+
+.appears_text {
+    font-size: 40px;
+}
+
+.exemple {
+    margin-left: 5px;
+    font-size: 40px;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.name_appears_text {
+    text-align: center;
+    font-size: 50px;
+    color: rgba(192, 166, 16, 1);
+}
+
+#star_box {
+    background-color: rgba(82, 79, 82, 1);
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap to the next line */
+    flex-direction: column;      /* Устанавливаем вертикальное направление */
+    justify-content: center;     /* Центрируем по вертикали */
+
+    width: 95%;
+    height: 15%;
+    border-radius: 10px;
+    margin-left: 2%;
+    margin-top: 1%;
+    margin-right: 2%;
+    padding: 1%;
+}
+
+.star {
+    height: 90%;
+    width: auto;
+    cursor: pointer;
+}
+
+
+.dialog {
+    background-color: rgba(136, 128, 136, 1);
+    border: 3px solid rgba(33, 32, 32, 1);
+/*    max-height: 40vh;*/
+    height: 500px;
+    width: 250px;
+}
+
+.dialog_close {
+    cursor: pointer;
+    background-color: #C0A610;
+    width: 30%;
+    text-align: center;
+    color: white;
+    border: 3px solid rgba(82, 79, 82, 1);
+    margin-bottom: 5px;
+    float: right;
+    font-size: 20px;
+}
+
+
+.dialog_box_scroll {
+    width: 100%;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+}
+
+#all_tags {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.all_tag {
+    font-size: 32px;
+    background-color: #C0A610;
+    text-align: left;
+    border: 3px solid rgba(82, 79, 82, 1);
+    margin-top: 5px;
+    color: white;
+
+    cursor: pointer;
+}
+
+.all_tag:hover {
+    background-color: rgba(82, 79, 82, 1);
+    border: 3px solid #C0A610;
+}
+
+#message{
+    color: black;
+}
+
+.dialog_button {
+    margin-top: 3vh;
+    cursor: pointer;
+
+
+    background-color: #C0A610;
+    width: 50%;
+    text-align: center;
+    color: white;
+    border: 3px solid rgba(82, 79, 82, 1);
+    margin-bottom: 5px;
+    float: right;
+    font-size: 20px;
+}
+
+.dialog_button_box {
+    display: flex;               /* Включаем Flexbox */
+    justify-content: center;     /* Центрируем по горизонтали */
+    align-items: center;         /* Центрируем по вертикали */
+}
+
+.input_dialog {
+    width: 90%;
+    font-size: 50px;
+    border: none; /* Убирает рамку */
+    outline: none; /* Убирает контур при фокусировке */
+    box-shadow: none; /* Убирает тень */
+    background: transparent; /* Убирает фон */
+    color: white; /* Устанавливает цвет текста как у родителя */
+/*    font: inherit; *//* Устанавливает шрифт как у родителя */
+    border-bottom: 3px solid rgba(82, 79, 82, 1);
+    font-size: 32px;
+}
+
+.input_dialog::placeholder {
+    font-size: 32px;
+}
+
+.input_line::placeholder {
+    font-size: 32px;
+}
+
+
+#login {
+    display: none;
+    color: white;
+    position: absolute;
+    width: 27.5%;
+    height: 100px;
+    font-size: 2.5vw;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#star_box:hover #login {
+    display: block; /* Показываем текст при наведении на контейнер */
+}
+
+
+#author_box {
+    border: 5px solid black;
+    border-radius: 25px;
+/*    height: 8vh;*/
+/*    width: 22vh;*/
+    height: 76px;
+    width: 210px;
+    display: flex; /* Используем flexbox для расположения элементов */
+}
+
+#author_login {
+/*    font-size: 12px;*/
+    border-right: 5px solid black;
+    height: 100%; /* Занимает всю высоту контейнера */
+    width: 60%; /* Устанавливаем ширину для логина */
+    display: flex; /* Используем flexbox для центрирования текста */
+    align-items: center; /* Центрируем по вертикали */
+    justify-content: center; /* Центрируем по горизонтали */
+}
+
+#author_img_box {
+    height: 100%; /* Занимает всю высоту контейнера */
+    width: 40%; /* Устанавливаем ширину для изображения */
+    display: flex; /* Используем flexbox для центрирования изображения */
+    align-items: center; /* Центрируем по вертикали */
+    justify-content: center; /* Центрируем по горизонтали */
+    overflow: hidden; /* Скрываем лишнюю часть изображения */
+}
+
+#author_img {
+    height: 100%; /* Занимает всю высоту блока для изображения */
+    width: 100%; /* Занимает всю ширину блока для изображения */
+    object-fit: cover; /* Обеспечивает, что изображение сохраняет пропорции и заполняет блок */
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+
+.scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+}
+.scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background-color: #C0A610;
+}
+.scroll::-webkit-scrollbar-track {
+  background-color: rgba(217, 217, 217, 0.7);
+}

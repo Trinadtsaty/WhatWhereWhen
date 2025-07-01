@@ -1,0 +1,418 @@
+@font-face {
+    font-family: 'Oswald'; /* Название шрифта */
+    src: url('../fonts/Oswald-VariableFont_wght.ttf') format('truetype'); /* Можно указать несколько форматов */
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    font-family: 'Oswald', sans-serif;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+
+    background-image: url('../img/background.png'); /* Укажите путь к вашему изображению */
+    background-size: cover; /* Это свойство позволяет изображению покрывать весь элемент */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Отключает повторение изображения */
+}
+#main_page {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #C0A610;
+    border: 2px solid #524F52;
+    border-radius: 20px;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    text-align: center;
+
+    font-size: 45px;
+    height: 75px;
+    width: 300px;
+
+    cursor: pointer;
+    transition: .5s;
+    box-shadow: -4px -5px 4px 0px rgba(0, 0, 0, 0.25);
+}
+#main_page:hover {
+    background-color: #524F52;
+    border: 0.6vh solid #C0A610;
+}
+.button {
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: #524F52;
+    border: 3px solid #C0A610;
+}
+#page {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+.page_element {
+    flex: 0 0 auto;
+/*    float: left;*/
+    width: 30%;
+    height: 100%;
+}
+#page_center, #page_right, #page_hidden {
+    margin-left: 5%;
+}
+#page_left {
+/*    background-color: green;*/
+    min-width: 440px;
+}
+#page_center {
+    min-width: 480px;
+/*    background-color: grey;*/
+}
+#page_right, #page_hidden {
+    min-width: 530px;
+/*    background-color: red;*/
+}
+.block.search, .block.return{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#popup_roles {
+/*    display: none;*/
+    height: 250px;
+    width: 500px;
+}
+#popup_modes {
+/*    display: none;*/
+    height: 250px;
+    width: 500px;
+}
+.popup {
+    padding-top: 15px;
+    padding-left: 32.5px;
+    box-sizing: border-box;
+
+    position: fixed;
+    flex-direction: column;
+    border: 3px solid black;
+    background-color: rgba(136, 128, 136, 1);
+
+    z-index: 1000;
+}
+
+.select_button {
+    width: 435px;
+    height: 60px;
+    font-size: 32px;
+
+
+    margin-top: 5px;
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.select_button:hover {
+    background-color: #524F52;
+    border: 3px solid #C0A610;
+}
+#popup_selections {
+    width: 500px;
+    height: 300px;
+
+    position: fixed;
+    flex-direction: column;
+    border: 3px solid black;
+    background-color: rgba(136, 128, 136, 1);
+
+    z-index: 1000;
+}
+#select_Selections_name {
+    margin-top: 25px;
+    width: 90%;
+    margin-left: 5%;
+
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    color: white;
+    border-bottom: 3px solid rgba(82, 79, 82, 1);
+    font-size: 32px;
+}
+#select_Selections_name::placeholder {
+    font-size: 32px;
+}
+#select_Selections_name:focus {
+    font-size: 32px;
+}
+#scroll_selection {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 70%;
+
+    margin-left: 5%;
+    width: 90%;
+
+    scrollbar-width: thin;
+    scrollbar-color: #C0A610 rgba(82, 79, 82, 1);
+}
+#spis_selections {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.li_element {
+    width: 430px;
+    height: 30px;
+    font-size: 16px;
+    margin-top: 5px;
+
+    background-color: #C0A610;
+    border: 3px solid #524F52;
+    cursor: pointer;
+}
+.li_element:hover {
+    background-color: #524F52;
+    border: 3px solid #C0A610;
+}
+#claim_error {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f44336; /* Красный цвет */
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Поверх всех элементов */
+}
+.block.check {
+    border: 3px solid white;
+    background-color: rgba(217, 217, 217, 0.7);
+    height: 65px;
+    font-size: 32px;
+/*    padding-left: 5px;*/
+    box-sizing: border-box;
+}
+.img_check {
+    margin-top: -3px;
+    margin-right: -3px;
+    float: right;
+    height: 65px;
+    width: 65px;
+    cursor: pointer;
+}
+.block.text {
+    width: 100%;
+}
+.input_text {
+    outline: none;
+    border: 3px solid black;
+    background-color: rgba(82, 79, 82, 1);
+    color: black;
+    font-size: 32px;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+.input_text::placeholder {
+    font-size: 32px;
+}
+.input_text:focus {
+    font-size: 32px;
+}
+
+#select_Selections_name {
+    margin-top: 25px;
+    width: 90%;
+    margin-left: 5%;
+
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    color: white;
+    border-bottom: 3px solid rgba(82, 79, 82, 1);
+    font-size: 32px;
+
+}
+.block {
+    margin-top: 5px;
+}
+
+#room_password_box {
+    margin-left: 5%;
+    width: 95%;
+}
+.block.search {
+    position: relative;
+    background-color: rgba(217, 217, 217, 0.7);
+    border: 3px solid white;
+    height: 65px;
+/*    box-sizing: border-box;*/
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 32px;
+}
+.button.panel {
+    font-size: 40px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 180px;
+    height: 65px;
+    margin-top: -3px;
+    margin-right: -3px;
+/*    box-sizing: border-box;*/
+}
+#number_of_players {
+    color: white;
+    width: 100%;
+    height: 65px;
+    background-color: rgba(217, 217, 217, 0.7);
+    border: 3px solid white;
+    box-sizing: border-box;
+    font-size: 32px;
+}
+.block.return {
+    position: relative;
+    height: 65px;
+/*    box-sizing: border-box;*/
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 32px;
+
+    background-color: rgba(217, 217, 217, 0.7);
+    border: 3px solid white;
+}
+#slider_return {
+    font-size: 40px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 180px;
+    height: 65px;
+    margin-top: -3px;
+    margin-right: -3px;
+    border-radius: 15px;
+    text-align: center;
+
+    border: 3px solid black;
+    background-color: rgba(82, 79, 82, 1);
+    color: black;
+}
+.block.text_right {
+    position: relative;
+    background-color: rgba(217, 217, 217, 0.7);
+    border: 3px solid white;
+    height: 65px;
+/*    box-sizing: border-box;*/
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 32px;
+
+}
+.input_text_number {
+    font-size: 40px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 120px;
+    height: 65px;
+    margin-top: -3px;
+    margin-right: -3px;
+    border-radius: 15px;
+    text-align: center;
+
+
+    padding: 0;
+    border: 3px solid black;
+    background-color: rgba(82, 79, 82, 1);
+    color: black;
+    outline: none;
+}
+
+.input_text_number::placeholder {
+    font-size: 40px;
+}
+.input_text_number:focus {
+    font-size: 40px;
+}
+.input_text.text {
+    padding: 0;
+    margin: 0;
+    height: 50%;
+}
+#room_people_limit {
+    -webkit-appearance: none; /* Убираем стандартный стиль для WebKit-браузеров */
+    width: 60%; /* Ширина ползунка */
+    height: 3px; /* Высота трека */
+    background: black; /* Цвет трека */
+    border-radius: 0; /* Скругление углов трека */
+    outline: none; /* Убираем обводку */
+}
+#room_people_limit::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 5px;
+  height: 20px;
+  background: black;
+  border-radius: 0;
+  cursor: pointer;
+}
+#room_people_limit::-moz-range-thumb {
+  -webkit-appearance: none;
+  width: 5px;
+  height: 20px;
+  background: black;
+  border-radius: 0;
+  cursor: pointer;
+}
+#room_people_limit:focus {
+    outline: none; /* Убираем стандартную обводку при фокусе */
+}
+h2 {
+    text-align: center;
+    font-size: 65px;
+    text-shadow: 4px 30px 8px rgba(0, 0, 0, 0.34);
+}
+b {
+    font-size: 100px;
+}
+
+#button_submit {
+    height: 150px;
+    width: 70%;
+    margin-left: 15%;
+
+    font-size: 70px;
+    border-radius: 30px;
+    box-shadow: -10px -29px 4px 0 rgba(0, 0, 0, 0.25);
+}
+#accept_additional_settings {
+    margin-top: 25px;
+    width: 70%;
+    margin-left: 15%;
+    font-size: 50px;
+/*    box-shadow: -10px -29px 4px 0 rgba(0, 0, 0, 0.25);*/
+    border-radius: 30px;
+    text-align: center;
+}
