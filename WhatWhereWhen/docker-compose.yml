@@ -4,7 +4,7 @@ services:
   django_app:
     build:
       context: .
-      dockerfile: Dockerfile.django
+      dockerfile: Dockerfile
     container_name: django_app
     restart: unless-stopped
     volumes:
@@ -16,6 +16,11 @@ services:
       - "8001:8001"
     environment:
       - DJANGO_SETTINGS_MODULE=project.settings.production
+      - MYSQL_DATABASE=django_db
+      - MYSQL_USER=Admin
+      - MYSQL_PASSWORD=1234567Ff123
+      - MYSQL_HOST=mysql_db
+      - MYSQL_PORT=3306
       - DATABASE_URL=mysql://Admin:1234567Ff123@192.168.10.20:3306/django_db
       - REDIS_URL=redis://:UEo2y4auhv1I@192.168.10.30:6379/0
     deploy:
