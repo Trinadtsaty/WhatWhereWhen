@@ -8,14 +8,15 @@ services:
     container_name: django_app
     restart: unless-stopped
     volumes:
-      - ./django_app:/app
+      - ./:/app
+#      - ./django_app:/app
       - media_volume:/app/media
       - static_volume:/app/static
     ports:
       - "8000:8000"
       - "8001:8001"
     environment:
-      - DJANGO_SETTINGS_MODULE=WhatWhereWhen.settings.production
+      - DJANGO_SETTINGS_MODULE=WhatWhereWhen.settings
       - MYSQL_DATABASE=django_db
       - MYSQL_USER=Admin
       - MYSQL_PASSWORD=1234567Ff123
