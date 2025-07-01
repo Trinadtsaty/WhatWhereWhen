@@ -15,7 +15,7 @@ services:
       - "8000:8000"
       - "8001:8001"
     environment:
-      - DJANGO_SETTINGS_MODULE=project.settings.production
+      - DJANGO_SETTINGS_MODULE=WhatWhereWhen.settings.production
       - MYSQL_DATABASE=django_db
       - MYSQL_USER=Admin
       - MYSQL_PASSWORD=1234567Ff123
@@ -38,7 +38,7 @@ services:
       - redis
 
   mysql_db:
-    image: mysql:8.0
+    image: mysql:5.7
     container_name: mysql_db
     networks:
       default:
