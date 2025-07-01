@@ -264,7 +264,7 @@ def Room(request, room_number):
     room = get_object_or_404(game_rooms, ID=room_number)
     if room.clos_room:
         if not request.session.get(f'access_{room_number}'):
-            return redirect(reverse('Room_passwoed') + f'?pas={room_number}')
+            return redirect(reverse('Room_password') + f'?pas={room_number}')
     user_on_page = request.user
 
     array = room.people_on_page['users']

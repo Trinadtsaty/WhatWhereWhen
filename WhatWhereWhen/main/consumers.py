@@ -217,7 +217,7 @@ class PeopleConsumer(AsyncWebsocketConsumer):
         # Запускаем задачу с задержкой удаления пользователя
         async def delayed_remove():
             try:
-                await asyncio.sleep(1)  # ждем 10 секунд
+                await asyncio.sleep(3)  # ждем 3 секунды
                 await self.remove_user_from_room()
                 await self.notify_all_about_users()
             except asyncio.CancelledError:
