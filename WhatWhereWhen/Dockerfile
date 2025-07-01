@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     python3-dev \
     libssl-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Создаём рабочую директорию
