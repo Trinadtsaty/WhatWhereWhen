@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  django_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    container_name: django_app
+    restart: unless-stopped
+    volumes:
+      - ./django_app:/app
+      - media_volume:/app/media
+      - static_volume:/app/static
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    environment:
+      - DJANGO_SETTINGS_MODULE=project.settings.production
+      - DATABASE_URL=mysql://Admin:1234567Ff123@192.168.10.20:3306/django_db
+      - REDIS_URL=redis://:UEo2y4auhv1I@192.168.10.30:6379/0
+    deploy:
+      resources:
+        limits:
+          cpus: "0.7"
+          memory: "900M"
+        reservations:
+          memory: "400M"
+    logging:
+      options:
+        max-size: "100m"
+    depends_on:
+      - mysql_db
+      - redis
+
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_db
+    networks:
+      default:
+        ipv4_address: 192.168.10.20
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backups/mysql:/backups
+    environment:
+      - MYSQL_ROOT_PASSWORD=UEo2y4auhv1I
+      - MYSQL_DATABASE=django_db
+      - MYSQL_USER=Admin
+      - MYSQL_PASSWORD=1234567Ff123
+      - MYSQL_INNODB_BUFFER_POOL_SIZE=300M
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: "700M"
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis
+    command: redis-server --requirepass UEo2y4auhv1I --maxmemory 80mb
+    networks:
+      default:
+        ipv4_address: 192.168.10.30
+    deploy:
+      resources:
+        limits:
+          memory: "90M"
+
+volumes:
+  media_volume:
+  mysql_data:
+  static_volume:
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.10.0/24
