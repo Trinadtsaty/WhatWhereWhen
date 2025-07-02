@@ -19,21 +19,16 @@ COPY requirements.txt .
 # Устанавливаем Python-зависимости
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN python3 -m venv venv
-RUN source venv/bin/activate
-RUN apt-get update && apt-get install -y pkg-config default-libmysqlclient-dev
-RUN apt-get install -y pkg-config default-libmysqlclient-dev
-RUN sudo apt install -y build-essential python3-dev default-libmysqlclient-dev pkg-config
-RUN pip install -r requirements.txt
 
 # Копируем весь проект
 COPY . .
 
 # Экспортируем переменные окружения (если хотите, можно задавать через docker-compose)
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 # Собираем статику (опционально, если хотите делать это в образе)
 # RUN python manage.py collectstatic --noinput
-
+RUN python manage.py collectstatic --noinput
 # Команда запуска (можно переопределить в docker-compose)
 CMD ["gunicorn", "WhatWhereWhen.wsgi:application", "--bind", "0.0.0.0:8000"]
