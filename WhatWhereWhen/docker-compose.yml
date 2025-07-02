@@ -27,13 +27,13 @@ services:
     depends_on:
       - mysql_db
       - redis
-    deploy:
-      resources:
+#    deploy:
+#      resources:
 #        limits:
 #          cpus: "0.7"
 #          memory: "900M"
-        reservations:
-          memory: "400M"
+#        reservations:
+#          memory: "400M"
     logging:
       options:
         max-size: "100m"
@@ -50,8 +50,8 @@ services:
       - media_volume:/media:ro
     depends_on:
       - django_app
-    deploy:
-      resources:
+#    deploy:
+#      resources:
 #        limits:
 #          cpus: "0.3"
 #          memory: "300M"
@@ -71,8 +71,8 @@ services:
       - MYSQL_USER=Admin
       - MYSQL_PASSWORD=1234567Ff123
       - MYSQL_INNODB_BUFFER_POOL_SIZE=300M
-    deploy:
-      resources:
+#    deploy:
+#      resources:
 #        limits:
 #          cpus: "0.3"
 #          memory: "700M"
@@ -84,8 +84,8 @@ services:
     networks:
       default:
         ipv4_address: 192.168.10.30
-    deploy:
-      resources:
+#    deploy:
+#      resources:
 #        limits:
 #          memory: "90M"
 
