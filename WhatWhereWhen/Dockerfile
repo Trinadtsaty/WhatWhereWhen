@@ -19,7 +19,7 @@ COPY requirements.txt .
 # Устанавливаем Python-зависимости
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-
+RUN pip install gunicorn
 # Копируем весь проект
 COPY . .
 
