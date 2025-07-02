@@ -17,11 +17,14 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Устанавливаем Python-зависимости
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 RUN cd WhatWhereWhen
 RUN python3 -m venv venv
 RUN source venv/bin/activate
 RUN apt-get update && apt-get install -y pkg-config default-libmysqlclient-dev
-RUN pip install --upgrade pip
+RUN apt-get install -y pkg-config default-libmysqlclient-dev
+RUN sudo apt install -y build-essential python3-dev default-libmysqlclient-dev pkg-config
 RUN pip install -r requirements.txt
 
 # Копируем весь проект
