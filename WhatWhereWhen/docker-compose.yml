@@ -11,6 +11,7 @@ services:
       - ./:/app
       - media_volume:/app/media
       - static_volume:/app/staticfiles   # поменял на staticfiles для соответствия Django STATIC_ROOT
+
     ports:
       - "8000:8000"   # Gunicorn (внутренний)
       - "8001:8001"   # Если нужен дополнительный порт — оставил
@@ -28,9 +29,9 @@ services:
       - redis
     deploy:
       resources:
-        limits:
-          cpus: "0.7"
-          memory: "900M"
+#        limits:
+#          cpus: "0.7"
+#          memory: "900M"
         reservations:
           memory: "400M"
     logging:
@@ -51,9 +52,9 @@ services:
       - django_app
     deploy:
       resources:
-        limits:
-          cpus: "0.3"
-          memory: "300M"
+#        limits:
+#          cpus: "0.3"
+#          memory: "300M"
 
   mysql_db:
     image: mysql:5.7
@@ -72,9 +73,9 @@ services:
       - MYSQL_INNODB_BUFFER_POOL_SIZE=300M
     deploy:
       resources:
-        limits:
-          cpus: "0.3"
-          memory: "700M"
+#        limits:
+#          cpus: "0.3"
+#          memory: "700M"
 
   redis:
     image: redis:7.0-alpine
@@ -85,8 +86,8 @@ services:
         ipv4_address: 192.168.10.30
     deploy:
       resources:
-        limits:
-          memory: "90M"
+#        limits:
+#          memory: "90M"
 
 volumes:
   media_volume:
