@@ -114,11 +114,11 @@ ASGI_APPLICATION = "WhatWhereWhen.asgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_db',
-        'USER': 'youruser',
-        'PASSWORD': 'yourpassword',
-        'HOST': 'mysql_db',
-        'PORT': '3306',
+        'NAME': os.environ.get('MYSQL_DATABASE'),
+        'USER': os.environ.get('MYSQL_USER'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+        'HOST': os.environ.get('MYSQL_HOST', 'mysql_db'),
+        'PORT': os.environ.get('MYSQL_PORT', '3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET NAMES utf8mb4",
