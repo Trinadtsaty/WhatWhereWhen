@@ -2,8 +2,8 @@ from datetime import datetime
 from http.client import responses
 
 from channels.generic.websocket import AsyncWebsocketConsumer
-from registration.models import Users
-from .models import ChatMessage, game_rooms
+# from registration.models import Users
+# from .models import ChatMessage, game_rooms
 from channels.db import database_sync_to_async
 import asyncio
 from django.core.exceptions import ValidationError
@@ -123,15 +123,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Декоратор database_sync_to_async позволяет выполнять синхронные ORM запросы.
     @database_sync_to_async
     def get_user(self, user_id):
+        from registration.models import Users
         return Users.objects.get(ID=user_id)
 
     @database_sync_to_async
     def get_room(self, room_id):
+        from .models import game_rooms
         return game_rooms.objects.get(ID=room_id)
 
     # Вспомогательный метод для сохранения сообщения в БД.
     @database_sync_to_async
     def save_message(self, room, user, message):
+        from .models import ChatMessage
         # print("мы в save_message")
         return ChatMessage.objects.create(room=room, user=user, message=message)
 
@@ -1734,6 +1737,7 @@ class StartConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_room(self, room_id):
+        from .models import game_rooms
         return game_rooms.objects.get(ID=room_id)
     @database_sync_to_async
     def delete_all_messages_in_room(self, room_id):
