@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-=4@oy19qa_-f&enqy)9vp7h&f=h@nusx68tu_*@m7n$+v1^&63
 # DEBUG = True
 DEBUG = False
 
-ALLOWED_HOSTS = ['treewh.ru', 'www.treewh.ru', '185.73.215.161', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ["http://185.73.215.161",'treewh.ru', 'www.treewh.ru', '185.73.215.161', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -248,8 +248,8 @@ CACHE_TTL = 60 * 60  # 1 час
 # Добавьте настройки безопасности:
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 X_FRAME_OPTIONS = 'DENY'
 SECURE_HSTS_SECONDS = 3600  # включите после тестирования
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
