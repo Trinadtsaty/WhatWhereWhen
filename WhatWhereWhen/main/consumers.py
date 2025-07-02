@@ -307,8 +307,8 @@ class PeopleConsumer(AsyncWebsocketConsumer):
                 # print("Пользователей на странице выход",len(room.people_on_page["users"]))
 
                 #Раскомитить когда завершу отладку вернутся
-                # if len(room.people_on_page["users"]) ==0:
-                #     room.delete()
+                if len(room.people_on_page["users"]) ==0:
+                    room.delete()
 
                 first_player = Users.objects.get(ID=room.people_on_page["users"][0])
                 if room.host.ID == self.user_id:
